@@ -47,7 +47,7 @@ class SepaUtilities
                               20,  21,  22,  23,  24,  25,  26,  27,  28,  29,
                               30,  31,  32,  33,  34,  35);
 
-        $ci = preg_replace('/\s+/', '', $ci);   // remove whitespaces
+        $ci = preg_replace('/\s+/u', '', $ci);   // remove whitespaces
         $ci = strtoupper($ci);                  // todo does this breaks the ci?
 
         if(!self::checkRestrictedPersonIdentifierSEPA($ci))
@@ -60,7 +60,7 @@ class SepaUtilities
         $check = substr($ci, 0,4);
         $concat = $nationalIdentifier . $check;
 
-        $concat = preg_replace('#[^a-zA-Z0-9]#','',$concat);      // remove all non-alpha-numeric characters
+        $concat = preg_replace('#[^a-zA-Z0-9]#u','',$concat);      // remove all non-alpha-numeric characters
 
         $concat = $check = str_replace($alph, $alphValues, $concat);
 
@@ -84,7 +84,7 @@ class SepaUtilities
                               20,  21,  22,  23,  24,  25,  26,  27,  28,  29,
                               30,  31,  32,  33,  34,  35);
 
-        $iban = preg_replace('/\s+/', '' , $iban );     // remove whitespaces
+        $iban = preg_replace('/\s+/u', '' , $iban );     // remove whitespaces
         $iban = strtoupper($iban);
 
         if(!preg_match('/^' . self::PATTERN_IBAN . '$/',$iban))
@@ -128,7 +128,7 @@ class SepaUtilities
      */
     public static function checkBIC($bic)
     {
-        $bic = preg_replace('/\s+/', '' , $bic );   // remove whitespaces
+        $bic = preg_replace('/\s+/u', '' , $bic );   // remove whitespaces
         $bic = strtoupper($bic);                    // use only capital letters
 
         if(preg_match('/^' . self::PATTERN_BIC . '$/', $bic))
@@ -447,51 +447,19 @@ class SepaUtilities
                                array('Ae','ae','Oe','oe','Ue','ue','ss'),
                                $str);
 
-        // replace some special chars using best practice guide
-        $search  = array('[',']','{','}','\\','|','~','_','`', '¿','€','&');
-        $replace = array('(',')','(',')','/', '/','-','-','\'','?','E','.');
+        // remove characters
+        $str = str_replace(array('"','&','<','>'),'',$str);
+
+        // replace all kinds of whitespaces by a space
+        $str = preg_replace('#\s+#u',' ',$str);
+
+        // special replacement for some characters
+        $search  = array(';','[','\\',']','^','_','`', '{','|','}','~','¿','À','Á','Â','Ã','Ä','Å','Æ','Ç','È','É','Ê','Ë','Ì','Í','Î','Ï','Ð','Ñ','Ò','Ó','Ô','Õ','Ö','Ø','Ù','Ú','Û','Ü','Ý','Þ','ß','à','á','â','ã','ä','å','æ','ç','è','é','ê','ë','ì','í','î','ï','ð','ñ','ò','ó','ô','õ','ö','ø','ù','ú','û','ü','ý','þ','ÿ','Ā','ā','Ă','ă','Ą','ą','Ć','ć','Ĉ','ĉ','Ċ','ċ','Č','č','Ď','ď','Đ','đ','Ē','ē','Ĕ','ĕ','Ė','ė','Ę','ę','Ě','ě','Ĝ','ĝ','Ğ','ğ','Ġ','ġ','Ģ','ģ','Ĥ','ĥ','Ħ','ħ','Ĩ','ĩ','Ī','ī','Ĭ','ĭ','Į','į','İ','ı','Ĳ','ĳ','Ĵ','ĵ','Ķ','ķ','ĸ','Ĺ','ĺ','Ļ','ļ','Ľ','ľ','Ŀ','ŀ','Ł','ł','Ń','ń','Ņ','ņ','Ň','ň','Ő','ő','Œ','œ','Ŕ','ŕ','Ŗ','ŗ','Ř','ř','Ś','ś','Ŝ','ŝ','Ş','ş','Š','š','Ţ','ţ','Ť','ť','Ŧ','ŧ','Ũ','ũ','Ū','ū','Ŭ','ŭ','Ů','ů','Ű','ű','Ų','ų','Ŵ','ŵ','Ŷ','ŷ','Ÿ','Ź','ź','Ż','ż','Ž','ž','Ș','ș','Ț','ț','Ά','Έ','Ή','Ί','Ό','Ύ','Ώ','ΐ','Α','Β','Γ','Δ','Ε','Ζ','Η','Θ' ,'Ι','Κ','Λ','Μ','Ν','Ξ','Ο','Π','Ρ','Σ','Τ','Υ','Φ','Χ', 'Ψ', 'Ω','Ϊ','Ϋ','ά','έ','ή','ί','ΰ','α','β','γ','δ','ε','ζ','η','θ', 'ι','κ','λ','μ','ν','ξ','ο','π','ρ','ς','σ','τ','υ','φ','χ', 'ψ', 'ω','ϊ','ϋ','ό','ύ','ώ','А','Б','В','Г','Д','Е','Ж', 'З','И','Й','К','Л','М','Н','О','П','Р','С','Т','У','Ф','Х','Ц', 'Ч', 'Ш', 'Щ',  'Ъ','Ь','Ю', 'Я', 'а','б','в','г','д','е','ж', 'з','и','й','к','л','м','н','о','п','р','с','т','у','ф','х','ц', 'ч', 'ш', 'щ',  'ъ','ь','ю', 'я', '€');
+        $replace = array(',','(','/', ')','.','-','\'','(','/',')','-','?','A','A','A','A','A','A','A','C','E','E','E','E','I','I','I','I','D','N','O','O','O','O','O','O','U','U','U','U','Y','T','s','a','a','a','a','a','a','a','c','e','e','e','e','i','i','i','i','d','n','o','o','o','o','o','o','u','u','u','u','y','t','y','A','a','A','a','A','a','C','c','C','c','C','c','C','c','D','d','D','d','E','e','E','e','E','e','E','e','E','e','G','g','G','g','G','g','G','g','H','h','H','h','I','i','I','i','I','i','I','i','I','i','I','i','J','j','K','k','.','L','l','L','l','L','l','L','l','L','l','N','n','N','n','N','n','O','o','O','o','R','r','R','r','R','r','S','s','S','s','S','s','S','s','T','t','T','t','T','t','U','u','U','u','U','u','U','u','U','u','U','u','W','w','Y','y','Y','Z','z','Z','z','Z','z','S','s','T','t','A','E','I','I','O','Y','O','i','A','V','G','D','E','Z','I','TH','I','K','L','M','N','X','O','P','R','S','T','Y','F','CH','PS','O','I','Y','a','e','i','i','y','a','v','g','d','e','z','i','th','i','k','l','m','n','x','o','p','r','s','s','t','y','f','ch','ps','o','i','y','o','y','o','A','B','V','G','D','E','ZH','Z','I','Y','K','L','M','N','O','P','R','S','T','U','F','H','TS','CH','SH','SHT','A','Y','YU','YA','a','b','v','g','d','e','zh','z','i','y','k','l','m','n','o','p','r','s','t','u','f','h','ts','ch','sh','sht','a','y','yu','ya','E');
         $str = str_replace($search,$replace,$str);
 
-        // replace Cyrillic chars
-        $cyrillic = array('А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н',
-                          'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы',
-                          'Ь', 'Э', 'Ю', 'Я', 'а', 'б', 'в', 'г', 'д', 'е', 'ж', 'з', 'и', 'й',
-                          'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч',
-                          'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я');
-        $latin    = array('A', 'B', 'V', 'G', 'D', 'E', 'ZH', 'Z', 'I', 'Y', 'K', 'L', 'M',
-                          'N', 'O', 'P', 'R', 'S', 'T', 'U', 'F', 'H', 'TS', 'CH', 'SH', 'SHT',
-                          'A', '.', 'Y', '.', 'YU', 'YA', 'a', 'b', 'v', 'g', 'd', 'e', 'zh',
-                          'z', 'i', 'y', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'u', 'f',
-                          'h', 'ts', 'ch', 'sh', 'sht', 'a', '.', 'y', '.', 'yu', 'ya');
-        $str = str_replace($cyrillic,$latin,$str);
-
-        // turning all special chars into html entities. Then they look like '&' + char + modification + ';'
-        $str = htmlentities($str, ENT_COMPAT, 'utf-8');
-        // remove '&' + modification + ';' -> left only the char
-        $str = preg_replace('/&([a-z]{1,2})(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|elig|zlig);/i', '$1', $str );
-
-        // replace greek chars
-        $greek = array( '&Alpha;', '&Beta;', '&Gamma;', '&Delta;', '&Epsilon;', '&Zeta;',
-                        '&Eta;', '&Theta;', '&Iota;', '&Kappa;', '&Lambda;', '&Mu;', '&Nu;',
-                        '&Xi;', '&Omicron;', '&Pi;', '&Rho;', '&Sigma;', '&Tau;', '&Upsilon;',
-                        '&Phi;', '&Chi;', '&Psi;', '&Omega;', '&alpha;', '&beta;', '&gamma;',
-                        '&delta;', '&epsilon;', '&zeta;', '&eta;', '&theta;', '&iota;',
-                        '&kappa;', '&lambda;', '&mu;', '&nu;', '&xi;', '&omicron;', '&pi;',
-                        '&rho;', '&sigmaf;', '&sigma;', '&tau;', '&upsilon;', '&phi;', '&chi;',
-                        '&psi;', '&omega;', '&upsih;');
-
-        $latin = array( 'A', 'V', 'G', 'D', 'E', 'Z', 'I', 'TH', 'I', 'K', 'L', 'M', 'N', 'X',
-                        'O', 'P', 'R', 'S', 'T', 'Y', 'F', 'CH', 'PS', 'O', 'a', 'v', 'g', 'd',
-                        'e', 'z', 'i', 'th', 'i', 'k', 'l', 'm', 'n', 'x', 'o', 'p', 'r', 's',
-                        's', 't', 'y', 'f', 'ch', 'ps', 'o', 'y' );
-
-        $str = str_replace($greek, $latin, $str);
-
-        // remove all HTML entities left
-        $str = html_entity_decode($str, ENT_COMPAT, 'utf-8');
-
-        // remove everything not allowed in sepa files
-        $str = preg_replace('[^a-zA-Z0-9/\-?:().,\'+ ]','.',$str);
+        // replace everything not allowed in sepa files by . (a dot)
+        $str = preg_replace('#[^a-zA-Z0-9/\-?:().,\'+ ]#u','.',$str);
 
         // remove leading and closing whitespaces
         return trim($str);
