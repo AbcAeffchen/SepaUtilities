@@ -1,12 +1,14 @@
 SepaUtilities - A PHP class to check and sanitize you SEPA inputs
 ===============
 
+[![Build Status](https://travis-ci.org/AbcAeffchen/SepaUtilities.svg?branch=master)](https://travis-ci.org/AbcAeffchen/SepaUtilities)
+
 ###General###
 SepaUtilities can be used by any PHP class or script to check nearly all inputs used in SEPA files
 such as IBAN numbers and creditor identifiers and to sanitize names and other text.
 
 ###Requirements###
-Sephpa was tested on PHP version 5.3.
+Sephpa was tested on PHP version 5.3. 
 
 ###Using the Utilities###
 The SepaUtilities class depends not on Sephpa, so it can also be used in any other project.
