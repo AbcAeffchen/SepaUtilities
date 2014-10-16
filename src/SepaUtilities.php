@@ -163,13 +163,13 @@ class SepaUtilities
      * a sunday, the next day is returned.
      *
      * @param int    $workdayOffset a positive number of workdays to skip.
-     * @param string $inputFormat
      * @param string $today         if set, this date is used as today
+     * @param string $inputFormat
      * @return string|false YYYY-MM-DD
      */
-    public static function getDateWithOffset($workdayOffset, $inputFormat = 'd.m.Y', $today = null)
+    public static function getDateWithOffset($workdayOffset, $today = null, $inputFormat = 'd.m.Y')
     {
-        if(empty( $today))
+        if(empty($today))
             $dateTimeObj = new \DateTime();
         else
             $dateTimeObj = \DateTime::createFromFormat($inputFormat, $today);
@@ -206,7 +206,7 @@ class SepaUtilities
     {
         $targetDateObj = \DateTime::createFromFormat($inputFormat,$target);
 
-        $earliestDate = self::getDateWithOffset($workdayMinOffset, $inputFormat, $today);
+        $earliestDate = self::getDateWithOffset($workdayMinOffset, $today, $inputFormat);
 
         if($targetDateObj === false || $earliestDate === false)
             return false;

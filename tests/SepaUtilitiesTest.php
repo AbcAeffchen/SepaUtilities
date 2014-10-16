@@ -154,22 +154,22 @@ class SepaUtilitiesTest extends PHPUnit_Framework_TestCase
     {
         // to small offset
         $this->assertSame('2014-10-23',SepaUtilities::getDateWithMinOffsetFromToday('23.10.2014',
-                                                                                    3,
+                                                                                    3, 'd.m.Y',
                                                                                     '15.10.2014'));
 
         // to target and earliest date are equal
         $this->assertSame('2014-10-23',SepaUtilities::getDateWithMinOffsetFromToday('23.10.2014',
-                                                                                    7,
+                                                                                    7, 'd.m.Y',
                                                                                     '15.10.2014'));
 
         // to target < earliest date
         $this->assertSame('2014-10-24',SepaUtilities::getDateWithMinOffsetFromToday('23.10.2014',
-                                                                                    8,
+                                                                                    8, 'd.m.Y',
                                                                                     '15.10.2014'));
 
         // to target < earliest date
         $this->assertSame('2014-10-27',SepaUtilities::getDateWithMinOffsetFromToday('23.10.2014',
-                                                                                    10,
+                                                                                    10, 'd.m.Y',
                                                                                     '15.10.2014'));
 
 
