@@ -1,6 +1,6 @@
 <?php
 
-use SepaUtilities\SepaUtilities;
+use AbcAeffchen\SepaUtilities\SepaUtilities;
 
 require __DIR__ . '/../src/SepaUtilities.php';
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace SepaUtilities;
+namespace AbcAeffchen\SepaUtilities;
 
 /**
  * Class SepaUtilities
