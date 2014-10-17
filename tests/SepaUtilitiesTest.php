@@ -174,9 +174,8 @@ class SepaUtilitiesTest extends PHPUnit_Framework_TestCase
         $this->assertSame('2014-10-27',SepaUtilities::getDateWithMinOffsetFromToday('23.10.2014',
                                                                                     10, 'd.m.Y',
                                                                                     '15.10.2014'));
-
-
     }
+
 
 
 

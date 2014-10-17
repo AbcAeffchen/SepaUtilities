@@ -1,5 +1,5 @@
 {
-    "name": "AbcAeffchen/SepaUtilities",
+    "name": "abcaeffchen/sepa-utilities",
     "type": "library",
     "description": "SepaUtilities provides useful methods for validating and sanitizing inputs used in sepa files.",
     "keywords": ["sepa","validate","sanitize","iban"],
