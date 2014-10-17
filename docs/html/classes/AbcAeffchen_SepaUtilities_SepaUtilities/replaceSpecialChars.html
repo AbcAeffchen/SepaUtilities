@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
+  <head>
+    <title>phpDox - Test Method</title>
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../../index.html">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../../namespaces.html">Namespaces</a>
+        </li>
+        <li>
+          <a href="../../classes.html">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../../source/index.html">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../../index.html">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../../classes.html">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../../classes.html#AbcAeffchen_SepaUtilities">AbcAeffchen\SepaUtilities</a>
+          </li>
+          <li class="separator">
+            <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../../classes/AbcAeffchen_SepaUtilities_SepaUtilities.html">SepaUtilities</a>
+          </li>
+          <li class="separator">replaceSpecialChars</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#parameter">Parameter</a>
+          </li>
+          <li>
+            <a href="#return">Return</a>
+          </li>
+          <li>
+            <a href="../../source/SepaUtilities.php.xhtml#line442">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1><small>AbcAeffchen\SepaUtilities\SepaUtilities::</small>replaceSpecialChars</h1>
+        <h4>Replaces all special chars like á, ä, â, à, å, ã, æ, Ç, Ø, Š, ", ’ and &amp; with a latin char.</h4>
+        <p>All special characters that can not be replaced with a latin char (such like quotes) will
+be removed as long as they can not converted. See http://www.europeanpaymentscouncil.eu/index.cfm/knowledge-bank/epc-documents/sepa-requirements-for-an-extended-character-set-unicode-subset-best-practices/
+for more information about converting characters.</p>
+        <ul/>
+        <h2 id="signature">Signature</h2>
+        <div class="styled synopsis">
+          <code>public function replaceSpecialChars(string
+        $str,
+            [integer
+        $flags = 0] )
+            </code>
+        </div>
+        <h2 id="parameterlist">Parameters</h2>
+        <dl class="styled">
+          <dt><code>$str</code>
+                —
+                string</dt>
+          <dd/>
+          <dt><code>$flags</code>
+                —
+                integer</dt>
+          <dd>Use the SepaUtilities::FLAG_ALT_REPLACEMENT_* constants. This will<br/>ignore the best practice replacement and use a more common one.<br/>                     You can use more than one flag by using the | (bitwise or) operator.</dd>
+        </dl>
+        <h2 id="return">Returns</h2>
+        <dl class="styled">
+          <dt>string</dt>
+          <dd/>
+        </dl>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.7.0 - Copyright (C) 2010 - 2014 by Arne Blankerts</span>
+    </footer>
+  </body>
+</html>

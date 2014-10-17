@@ -3,7 +3,7 @@
  * This is just an example to show how to use the Utilities class
  */
 
-use SepaUtilities\SepaUtilities;
+use AbcAeffchen\SepaUtilities\SepaUtilities;
 
 require_once '../src/SepaUtilities.php';
 

@@ -3,8 +3,7 @@
 namespace AbcAeffchen\SepaUtilities;
 
 /**
- * Class SepaUtilities
- * Useful functions to validate an sanitize sepa input data
+ * Useful methods to validate an sanitize input used in SEPA files
  */
 class SepaUtilities
 {
@@ -289,7 +288,7 @@ class SepaUtilities
     }
 
     /**
-     * Checks the input and If it is not valid it tries to sanitize it.
+     * Checks the input and if it is not valid it tries to sanitize it.
      * @param string $field all fields check and/or sanitize supports
      * @param mixed $input
      * @return mixed|false

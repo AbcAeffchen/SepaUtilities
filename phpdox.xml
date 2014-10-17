@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<phpdox xmlns="http://xml.phpdox.net/config" silent="false">
+
+    <bootstrap />
+
+    <!-- A phpDox project to process, you can have multiple projects in one config file -->
+    <project name="SepaUtilities" source="${basedir}/src" workdir="${basedir}/build/phpdox/xml">
+
+        <collector publiconly="true" backend="parser">
+
+            <!--  <include / exclude filter for filelist generator, mask must follow fnmatch() requirements  -->
+            <include mask="*.php" />
+            <exclude mask="" />
+
+            <!--  How to handle inheritance -->
+            <inheritance resolve="true">
+            </inheritance>
+
+        </collector>
+
+        <!--  Configuration of generation process -->
+        <generator output="${basedir}/docs">
+
+            <enrich base="${basedir}/build">
+
+                <source type="build" />
+
+                 <source type="phploc" />
+
+                <source type="git">
+                    <history enabled="true" limit="15" cache="${phpDox.project.workdir}/gitlog.xml" />
+                </source>
+
+            </enrich>
+
+            <build engine="html" enabled="true" output="html">
+                <template dir="${phpDox.home}/templates/html" />
+                <file extension="html" />
+            </build>
+
+        </generator>
+    </project>
+
+</phpdox>
