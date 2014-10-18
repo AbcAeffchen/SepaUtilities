@@ -1,7 +1,7 @@
 Sephpa - Change Log
 ===============
 
-##1.0.1 - not yet released##
+##1.0.1 - Oct 18, '14##
 - added `sanitizeShortText()` and `sanitizeLongText()`
 - added `checkAndSanitizeAll()`
 - added `crossCheckIbanBic()`
