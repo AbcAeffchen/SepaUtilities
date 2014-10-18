@@ -210,6 +210,14 @@ class SepaUtilities
             return false;
     }
 
+    private static function checkDateFormat($input)
+    {
+        if($input === \DateTime::createFromFormat('Y-m-d', $input)->format('Y-m-d'))
+            return true;
+        else
+            return false;
+    }
+
     /**
      * Reformat a date string from a given format to the ISODate format. Notice: 20.13.2014 is
      * valid and becomes 2015-01-20.
@@ -302,7 +310,8 @@ class SepaUtilities
      * @param string $field   Valid fields are: 'orgnlcdtrschmeid_id','ci','msgid','pmtid','pmtinfid',
      *                        'orgnlmndtid','mndtid','initgpty','cdtr','dbtr','orgnlcdtrschmeid_nm',
      *                        'ultmtcdrt','ultmtdebtr','rmtinf','orgnldbtracct_iban','iban','bic',
-     *                        'ccy','amendment', 'btchbookg','instdamt','seqtp','lclinstrm','elctrncsgntr'
+     *                        'ccy','amendment', 'btchbookg','instdamt','seqtp','lclinstrm',
+     *                        'elctrncsgntr','reqdexctndt'
      * @param mixed  $input
      * @param array  $options see `checkBic()` and `checkLocalInstrument()` for details
      * @return mixed|false The checked input or false, if it is not valid
@@ -336,6 +345,7 @@ class SepaUtilities
             case 'seqtp': return self::checkSeqType($input);
             case 'lclinstrm': return self::checkLocalInstrument($input, $options);
             case 'elctrncsgntr': return (self::checkLength($input, 1025) && self::checkCharset($input)) ? $input : false;
+            case 'reqdexctndt': return self::checkDateFormat($input);
             default: return false;
         }
     }
@@ -449,7 +459,7 @@ class SepaUtilities
                 return false;
         }
 
-        return !self::containsNotAllKeys($inputs,$requiredKeys);
+        return self::containsAllKeys($inputs,$requiredKeys);
     }
 
     public static function checkRequiredPaymentKeys(array $inputs, $version)
@@ -471,24 +481,24 @@ class SepaUtilities
             default: return false;
         }
 
-        return !self::containsNotAllKeys($inputs,$requiredKeys);
+        return self::containsAllKeys($inputs,$requiredKeys);
     }
 
     /**
      * Checks if $arr misses one of the given $keys
      * @param array $arr
      * @param array $keys
-     * @return bool true, if at least one key is missing, else false
+     * @return bool false, if at least one key is missing, else true
      */
-    public static function containsNotAllKeys(array $arr, array $keys)
+    public static function containsAllKeys(array $arr, array $keys)
     {
         foreach($keys as $key)
         {
             if( !isset( $arr[$key] ) )
-                return true;
+                return false;
         }
 
-        return false;
+        return true;
     }
 
     /**

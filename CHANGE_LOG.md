@@ -13,6 +13,7 @@ Sephpa - Change Log
   - `msgid`: message identifier
   - `amdmntind`: amendment indicator
   - `elctrncsgntr`: electronic signature
+  - `reqdexctndt`: requested execution date
 - added constants for SEPA version
 - added constants for the fields `lclInst` and `seqTp`
 - added constant `BIC_REQUIRED_THRESHOLD`

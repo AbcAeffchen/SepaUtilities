@@ -88,10 +88,10 @@ class SepaUtilitiesTest extends PHPUnit_Framework_TestCase
 
     public function testContainsNotAllKeys()
     {
-        $this->assertTrue(SepaUtilities::containsNotAllKeys(array('a' => 1, 'b' => 2, 'd' => 2),
+        $this->assertFalse(SepaUtilities::containsAllKeys(array('a' => 1, 'b' => 2, 'd' => 2),
                                                             array('a', 'b', 'c')));
 
-        $this->assertFalse(SepaUtilities::containsNotAllKeys(array('a' => 1, 'b' => 2, 'd' => 2),
+        $this->assertTrue(SepaUtilities::containsAllKeys(array('a' => 1, 'b' => 2, 'd' => 2),
                                                              array('a', 'b', 'd')));
     }
 
@@ -176,6 +176,53 @@ class SepaUtilitiesTest extends PHPUnit_Framework_TestCase
                                                                                     '15.10.2014'));
     }
 
+    public function testCheckCcy()
+    {
+        $this->assertSame('EUR',SepaUtilities::check('ccy', 'EUR'));
+        $this->assertSame('EUR',SepaUtilities::check('ccy', 'Eur'));
+        $this->assertFalse(SepaUtilities::check('ccy', 'Eu'));
+        $this->assertFalse(SepaUtilities::check('ccy', '€'));
+        $this->assertFalse(SepaUtilities::check('ccy', 'euro'));
+    }
+
+    public function testCheckRequiredCollectionKeys()
+    {
+        $collectionInfo1 = array(
+            'pmtInfId'      => 'PaymentID-1234',    // ID of the payment collection
+            'dbtr'          => 'Name of Debtor2',   // (max 70 characters)
+            'iban'          => 'DE21500500001234567897',// IBAN of the Debtor
+            'bic'           => 'BELADEBEXXX',       // BIC of the Debtor
+        );
+        $collectionInfo2 = array(
+            'pmtInfId'      => 'PaymentID-1234',    // ID of the payment collection
+            'dbtr'          => 'Name of Debtor2',   // (max 70 characters)
+            'iban'          => 'DE21500500001234567897',// IBAN of the Debtor
+        );
+
+        $this->assertTrue(SepaUtilities::checkRequiredCollectionKeys($collectionInfo1,SepaUtilities::SEPA_PAIN_001_002_03));
+        $this->assertFalse(SepaUtilities::checkRequiredCollectionKeys($collectionInfo2,SepaUtilities::SEPA_PAIN_001_002_03));
+        $this->assertTrue(SepaUtilities::checkRequiredCollectionKeys($collectionInfo2,SepaUtilities::SEPA_PAIN_001_003_03));
+
+    }
+
+    public function testCheckAndSanitizeAll()
+    {
+        $collectionInfo = array(
+            // needed information about the payer
+            'pmtInfId'      => 'PaymentID-1234',    // ID of the payment collection
+            'dbtr'          => 'Name of Debtor2',   // (max 70 characters)
+            'iban'          => 'DE21500500001234567897',// IBAN of the Debtor
+            'bic'           => 'BELADEBEXXX',       // BIC of the Debtor
+            // optional
+            'ccy'           => 'EUR',               // Currency. Default is 'EUR'
+            'btchBookg'     => 'true',              // BatchBooking, only 'true' or 'false'
+            //'ctgyPurp'      => ,                  // Do not use this if you do not know how. For further information read the SEPA documentation
+            'reqdExctnDt'   => '2013-11-25',        // Date: YYYY-MM-DD
+            'ultmtDebtr'    => 'Ultimate Debtor Name'   // just an information, this do not affect the payment (max 70 characters)
+        );
+
+        $this->assertTrue(SepaUtilities::checkAndSanitizeAll($collectionInfo));
+    }
 
 
 
