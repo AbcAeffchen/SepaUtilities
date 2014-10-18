@@ -280,5 +280,10 @@ class SepaUtilitiesTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(SepaUtilities::checkAndSanitizeAll($directDebitPaymentInformation));
     }
 
+    public function testCheckCreateDateTime()
+    {
+        $this->assertSame('2014-10-19T00:36:11',SepaUtilities::checkCreateDateTime('2014-10-19T00:36:11'));
+    }
+
 }
  
