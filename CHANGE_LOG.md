@@ -1,6 +1,9 @@
 Sephpa - Change Log
 ===============
 
+##1.0.3 - Oct 19, '14##
+- added `checkCreateDateTime()`
+
 ##1.0.2 - Oct 18, '14##
 - added to `check()`:
   - `purp`: Purpose

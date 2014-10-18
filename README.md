@@ -105,5 +105,9 @@ The `HTML_PATTERN` constants can be used as HTML5 pattern attribute. It is user 
 the corresponding `PATTERN` as they allows lowercase characters and whitespaces. This is corrected 
 by the `check` methods.
 
+##Thanks##
+Thanks to [Herrmann Herz](https://github.com/Heart1010) who supported me debugging and with great 
+ideas to improve Sephpa.
+
 ##Licence##
 SepaUtilities is licensed under the MIT Licence.

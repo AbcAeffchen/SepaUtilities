@@ -218,6 +218,14 @@ class SepaUtilities
             return false;
     }
 
+    public static function checkCreateDateTime($input)
+    {
+        if($input === \DateTime::createFromFormat('Y-m-d\TH:i:s', $input)->format('Y-m-d\TH:i:s'))
+            return $input;
+        else
+            return false;
+    }
+
     /**
      * Reformat a date string from a given format to the ISODate format. Notice: 20.13.2014 is
      * valid and becomes 2015-01-20.
