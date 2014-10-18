@@ -15,6 +15,7 @@ Sephpa - Change Log
   - `elctrncsgntr`: electronic signature
   - `reqdexctndt`: requested execution date
   - `reqdcolltndt`: requested collection date
+  - `dtofsgntr`: date of signature
 - added constants for SEPA version
 - added constants for the fields `lclInst` and `seqTp`
 - added constant `BIC_REQUIRED_THRESHOLD`
