@@ -205,6 +205,35 @@ class SepaUtilitiesTest extends PHPUnit_Framework_TestCase
 
     }
 
+    public function testCheckRequiredPaymentKeys()
+    {
+        $directDebitPayment = array(
+            // needed information about the
+            'pmtId'         => 'TransferID-1235-1',     // ID of the payment (EndToEndId)
+            'instdAmt'      => 2.34,                    // amount
+            'mndtId'        => 'Mandate-Id',            // Mandate ID
+            'dtOfSgntr'     => '2010-04-12',            // Date of signature
+            'bic'           => 'BELADEBEXXX',           // BIC of the Debtor
+            'dbtr'          => 'Name of Debtor',        // (max 70 characters)
+            'iban'          => 'DE87200500001234567890',// IBAN of the Debtor
+            // optional
+            'amdmntInd'     => 'false',                 // Did the mandate change
+            'elctrncSgntr'  => 'test',                  // do not use this if there is a paper-based mandate
+            'ultmtDbtr'     => 'Ultimate Debtor Name',  // just an information, this do not affect the payment (max 70 characters)
+            //'purp'        => ,                        // Do not use this if you not know how. For further information read the SEPA documentation
+            'rmtInf'        => 'Remittance Information',// unstructured information about the remittance (max 140 characters)
+            // only use this if 'amdmntInd' is 'true'. at least one must be used
+            'orgnlMndtId'           => 'Original-Mandat-ID',
+            'orgnlCdtrSchmeId_nm'   => 'Creditor-Identifier Name',
+            'orgnlCdtrSchmeId_id'   => 'DE98AAA09999999999',
+            'orgnlDbtrAcct_iban'    => 'DE87200500001234567890',// Original Debtor Account
+            'orgnlDbtrAgt'          => 'SMNDA'          // only 'SMNDA' allowed if used
+
+        );
+
+        $this->assertTrue(SepaUtilities::checkRequiredPaymentKeys($directDebitPayment,SepaUtilities::SEPA_PAIN_008_002_02));
+    }
+
     public function testCheckAndSanitizeAll()
     {
         $collectionInfo = array(
@@ -221,10 +250,32 @@ class SepaUtilitiesTest extends PHPUnit_Framework_TestCase
             'ultmtDebtr'    => 'Ultimate Debtor Name'   // just an information, this do not affect the payment (max 70 characters)
         );
 
+        $directDebitPaymentInformation = array(
+            // needed information about the
+            'pmtId'         => 'TransferID-1235-1',     // ID of the payment (EndToEndId)
+            'instdAmt'      => 2.34,                    // amount
+            'mndtId'        => 'Mandate-Id',            // Mandate ID
+            'dtOfSgntr'     => '2010-04-12',            // Date of signature
+            'bic'           => 'BELADEBEXXX',           // BIC of the Debtor
+            'dbtr'          => 'Name of Debtor',        // (max 70 characters)
+            'iban'          => 'DE87200500001234567890',// IBAN of the Debtor
+            // optional
+            'amdmntInd'     => 'false',                 // Did the mandate change
+            'elctrncSgntr'  => 'test',                  // do not use this if there is a paper-based mandate
+            'ultmtDbtr'     => 'Ultimate Debtor Name',  // just an information, this do not affect the payment (max 70 characters)
+            //'purp'        => ,                        // Do not use this if you not know how. For further information read the SEPA documentation
+            'rmtInf'        => 'Remittance Information',// unstructured information about the remittance (max 140 characters)
+            // only use this if 'amdmntInd' is 'true'. at least one must be used
+            'orgnlMndtId'           => 'Original-Mandat-ID',
+            'orgnlCdtrSchmeId_nm'   => 'Creditor-Identifier Name',
+            'orgnlCdtrSchmeId_id'   => 'DE98AAA09999999999',
+            'orgnlDbtrAcct_iban'    => 'DE87200500001234567890',// Original Debtor Account
+            'orgnlDbtrAgt'          => 'SMNDA'          // only 'SMNDA' allowed if used
+        );
+
         $this->assertTrue(SepaUtilities::checkAndSanitizeAll($collectionInfo));
+        $this->assertTrue(SepaUtilities::checkAndSanitizeAll($directDebitPaymentInformation));
     }
-
-
 
 }
  
