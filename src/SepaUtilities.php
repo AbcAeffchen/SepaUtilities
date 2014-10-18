@@ -460,7 +460,7 @@ class SepaUtilities
                 $requiredKeys = array('pmtId', 'instdAmt', 'iban', 'bic', 'cdtr');
                 break;
             case self::SEPA_PAIN_001_003_03:
-                $requiredKeys = array(\'pmtId', 'instdAmt', 'iban', 'cdtr');
+                $requiredKeys = array('pmtId', 'instdAmt', 'iban', 'cdtr');
                 break;
             case self::SEPA_PAIN_008_002_02:
                 $requiredKeys = array('pmtId', 'instdAmt', 'mndtId', 'dtOfSgntr', 'dbtr', 'iban','bic');
