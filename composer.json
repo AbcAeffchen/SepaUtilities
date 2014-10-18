@@ -25,5 +25,8 @@
         "psr-4": {
             "AbcAeffchen\\SepaUtilities\\": "src/"
         }
+    },
+    "archive": {
+        "exclude": ["references"]
     }
 }

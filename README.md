@@ -35,35 +35,50 @@ PHP files. Make sure you use the namespace `AbcAeffchen\SepaUtilities\`.
 - `checkIBAN($iban)`: Checks if the IBAN is valid by checking the format and by calculating the checksum and also removes whitespaces and changes all letters to upper case.
 - `checkBIC($bic)`: Checks if the BIC is valid by checking the format and also removes whitespaces
 and changes all letters to upper case.
+- `crossCheckIbanBic($iban, $bic)`: Checks if IBAN and BIC belong to the same country.
+- `isNationalTransaction($iban1,$iban2)`: Checks if both IBANs are belong to the same country.
 - `checkCharset($str)`: Checks if the string contains only allowed characters.
-- `check($field, $input)`: Checks if the input fits the field. This function also does little
+- `check($field, $input, $options)`: Checks if the input fits the field. This function also does little
 formatting changes, e.g. correcting letter case. Possible field values are:
-  - `pmtinfid`: Payment-Information-ID
-  - `dbtr`: Debtor Name
-  - `iban`
-  - `bic`
-  - `ccy`: Currency
-  - `btchbookg`: Batch Booking (boolean as string)
-  - `ultmtdebtr`: Ultimate Debtor
+  - `initgpty`: Initiating Party
+  - `msgid`: Message ID
   - `pmtid`: Payment ID
-  - `instdamt`: Instructed Amount
+  - `pmtinfid`: Payment Information ID
   - `cdtr`: Creditor Name
   - `ultmtcdrt`: Ultimate Creditor
+  - `dbtr`: Debtor Name
+  - `ultmtdebtr`: Ultimate Debtor
+  - `iban`: IBAN
+  - `bic`: BIC
+  - `ccy`: Currency
+  - `btchbookg`: Batch Booking (boolean as string)
+  - `instdamt`: Instructed Amount
   - `rmtinf`: Remittance Information
   - `ci`: Creditor Identifier
+  - `seqtp`: Sequence Type
+  - `lclinstrm`: Local Instrument
   
 ###Sanitizing###
 - `sanitizeLength($input, $maxLen)`: Shortens the string if it is to long.
+- `sanitizeShortText($input,$allowEmpty, $flags)`: Sanitizes the the charset and shortens the text if necessary.
+- `sanitizeLongText($input,$allowEmpty, $flags)`: Sanitizes the the charset and shortens the text if necessary.
 - `replaceSpecialChars($str)`: replaces all characters that are not allowed in sepa files by a
 allowed one or removes them. Take a look at this [.xls file](http://www.europeanpaymentscouncil.eu/index.cfm/knowledge-bank/epc-documents/sepa-requirements-for-an-extended-character-set-unicode-subset-best-practices/) for more information
 *Notice:* Cyrillic is not supported yet, but greek letters are.
-- `sanitize($field, $input)`: tries to sanitize the input so it fits the field. Possible fields are
+- `sanitize($field, $input, $flags)`: tries to sanitize the input so it fits the field. Possible fields are
   - `cdtr`
   - `dbtr`
-  - `rmtInf`
-  - `ultmtCdrt`
-  - `ultmtDebtr`
-- `checkAndSanitize($field, $input)`: Checks the input and if it is not valid it tries to sanitize it.
+  - `rmtinf`
+  - `ultmtcdrt`
+  - `ultmtdebtr`
+
+###Wrappers###
+- `checkAndSanitize($field, $input, $flags, $options)`: Checks the input and if it is not valid 
+it tries to sanitize it.
+- `checkAndSanitizeAll(&$inputs, $flags, $options)`: Takes an array of inputs (field => value)
+and checks and sanitizes each of the fields. The input array is handed over as reference, so the
+result will be direct effect the input array. The return value is true, if everything is ok and
+else a string with problematic fields.
 
 ###Date functions###
 - `getDate($date, $inputFormat)`: Returns $date in a Sepa-valid format. You can specify the

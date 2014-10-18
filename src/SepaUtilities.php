@@ -7,6 +7,13 @@ namespace AbcAeffchen\SepaUtilities;
  */
 class SepaUtilities
 {
+    // credit transfers version
+    const SEPA_PAIN_001_002_03 = 100203;
+    const SEPA_PAIN_001_003_03 = 100303;
+    // direct debit versions
+    const SEPA_PAIN_008_002_02 = 800202;
+    const SEPA_PAIN_008_003_02 = 800302;
+
     const HTML_PATTERN_IBAN = '([a-zA-Z]\s*){2}([0-9]\s?){2}\s*([a-zA-Z0-9]\s*){1,30}';
     const HTML_PATTERN_BIC = '([a-zA-Z]\s*){6}[a-zA-Z2-9]\s*[a-nA-Np-zP-Z0-9]\s*(([A-Z0-9]\s*){3}){0,1}';
 
@@ -30,7 +37,20 @@ class SepaUtilities
 
     const FLAG_ALT_REPLACEMENT_GERMAN = 1;
 
+    const SEQUENCE_TYPE_FIRST     = 'FRST';
+    const SEQUENCE_TYPE_RECURRING = 'RCUR';
+    const SEQUENCE_TYPE_ONCE      = 'OOFF';
+    const SEQUENCE_TYPE_FINAL     = 'FNAL';
+
+    const LOCAL_INSTRUMENT_CORE_DIRECT_DEBIT     = 'CORE';
+    const LOCAL_INSTRUMENT_CORE_DIRECT_DEBIT_D_1 = 'COR1';
+    const LOCAL_INSTRUMENT_BUSINESS_2_BUSINESS   = 'B2B';
     /**
+     * @type int BIC_REQUIRED_THRESHOLD Until 2016-01-31 (incl.) the BIC is required for international
+     *           payment transactions
+     */
+    const BIC_REQUIRED_THRESHOLD = 20160131;
+    /*
      * Checks if an creditor identifier (ci) is valid. Note that also if the ci is valid it does
      * not have to exist
      *
@@ -122,16 +142,70 @@ class SepaUtilities
 
     /**
      * Checks if a bic is valid. Note that also if the bic is valid it does not have to exist
+     *
      * @param string $bic
+     * @param array  $options Takes the following keys:
+     *                        - `allowEmptyBic`: (bool) The BIC can be empty.
+     *                        - `forceLongBic`: (bool) If the BIC has exact 8 characters, `forceLongBicStr`
+     *                        is added. (default false)
+     *                        - `forceLongBicStr`: string (default 'XXX')
+     * @internal param bool $forceLongBic If true all 8 character BIC's will extended with 'XXX'
      * @return string|false the valid bic or false if it is not valid
      */
-    public static function checkBIC($bic)
+    public static function checkBIC($bic, array $options = null)
     {
         $bic = preg_replace('/\s+/u', '' , $bic );   // remove whitespaces
+
+        if(!empty($options['forceLongBic']))
+            $bic .= empty($options['forceLongBicStr']) ? 'XXX' : $options['forceLongBicStr'];
+
+        if(empty($bic) && !empty($options['allowEmptyBic']))
+            return '';
+
         $bic = strtoupper($bic);                    // use only capital letters
 
         if(preg_match('/^' . self::PATTERN_BIC . '$/', $bic))
             return $bic;
+        else
+            return false;
+    }
+
+    /**
+     * Checks if both IBANs are belong to the same country.
+     * @param string $iban1
+     * @param string $iban2
+     * @return bool
+     */
+    public static function isNationalTransaction($iban1, $iban2)
+    {
+        // remove whitespaces
+        $iban1 = preg_replace('#\s+#','',$iban1);
+        $iban2 = preg_replace('#\s+#','',$iban2);
+
+        // check the country code
+        if(strtoupper(substr($iban1,0,2)) === strtoupper(substr($iban2,0,2)))
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * Checks if IBAN and BIC belong to the same country. If not, the also can not belong to
+     * each other.
+     *
+     * @param string $iban
+     * @param string $bic
+     * @return bool
+     */
+    public static function crossCheckIbanBic($iban, $bic)
+    {
+        // remove whitespaces
+        $iban = preg_replace('#\s+#','',$iban);
+        $bic  = preg_replace('#\s+#','',$bic);
+
+        // check the country code
+        if(strtoupper(substr($iban,0,2)) === strtoupper(substr($bic,4,2)))
+            return true;
         else
             return false;
     }
@@ -225,20 +299,22 @@ class SepaUtilities
     /**
      * Checks if the input holds for the field.
      *
-     * @param string $field Valid fields are: 'pmtinfid', 'dbtr', 'iban', 'bic', 'ccy',
-     *                      'btchbookg', 'mndtid', 'orgnlmndtid', 'orgnlcdtrschmeid_nm',
-     *                      'orgnlcdtrschmeid_id', 'orgnldbtracct_iban', 'ultmtdebtr', 'pmtid',
-     *                      'instdamt', 'cdtr', 'ultmtcdrt', 'rmtinf', 'ci', 'initgpty'
+     * @param string $field   Valid fields are: 'orgnlcdtrschmeid_id','ci','msgid','pmtid','pmtinfid',
+     *                        'orgnlmndtid','mndtid','initgpty','cdtr','dbtr','orgnlcdtrschmeid_nm',
+     *                        'ultmtcdrt','ultmtdebtr','rmtinf','orgnldbtracct_iban','iban','bic',
+     *                        'ccy','amendment', 'btchbookg','instdamt','seqtp','lclinstrm','elctrncsgntr'
      * @param mixed  $input
+     * @param array  $options see `checkBic()` and `checkLocalInstrument()` for details
      * @return mixed|false The checked input or false, if it is not valid
      */
-    public static function check($field, $input)
+    public static function check($field, $input, array $options = null)
     {
         $field = strtolower($field);
         switch($field)      // fall-through's are on purpose
         {
             case 'orgnlcdtrschmeid_id':
             case 'ci': return self::checkCreditorIdentifier($input);
+            case 'msgid':
             case 'pmtid':   // next line
             case 'pmtinfid': return self::checkRestrictedIdentificationSEPA1($input);
             case 'orgnlmndtid':
@@ -252,10 +328,14 @@ class SepaUtilities
             case 'rmtinf': return (self::checkLength($input, 140) && self::checkCharset($input)) ? $input : false;
             case 'orgnldbtracct_iban':
             case 'iban': return self::checkIBAN($input);
-            case 'bic': return self::checkBIC($input);
+            case 'bic': return self::checkBIC($input,$options);
             case 'ccy': return self::checkActiveOrHistoricCurrencyCode($input);
-            case 'btchbookg': return self::checkBatchBookingIndicator($input);
+            case 'amendment':
+            case 'btchbookg': return self::checkBoolean($input);
             case 'instdamt': return self::checkAmountFormat($input);
+            case 'seqtp': return self::checkSeqType($input);
+            case 'lclinstrm': return self::checkLocalInstrument($input, $options);
+            case 'elctrncsgntr': return (self::checkLength($input, 1025) && self::checkCharset($input)) ? $input : false;
             default: return false;
         }
     }
@@ -263,43 +343,135 @@ class SepaUtilities
     /**
      * Tries to sanitize the the input so it fits in the field.
      *
-     * @param string $field Valid fields are: 'cdtr', 'dbtr', 'rmtinf', 'ultmtcdrt', 'ultmtdebtr', 'initgpty', 'orgnlcdtrschmeid_nm'
+     * @param string $field Valid fields are: 'ultmtcdrt', 'ultmtdebtr',
+     *                      'orgnlcdtrschmeid_nm', 'initgpty', 'cdtr', 'dbtr', 'rmtinf'
      * @param mixed  $input
      * @param int    $flags Flags used in replaceSpecialChars()
-     * @return mixed|false The sanitized input or false if the input is not sanitizeable or invalid
-     *                      also after sanitizing.
+     * @return mixed|false The sanitized input or false if the input is not sanitizeable or
+     *                      invalid also after sanitizing.
      */
     public static function sanitize($field, $input, $flags = 0)
     {
         $field = strtolower($field);
-        switch($field)
+        switch($field)          // fall-through's are on purpose
         {
             case 'ultmtcdrt':
-            case 'ultmtdebtr': return self::sanitizeLength(self::replaceSpecialChars($input, $flags), 70);
+            case 'ultmtdebtr': return self::sanitizeShortText($input,true,$flags);
             case 'orgnlcdtrschmeid_nm':
             case 'initgpty':
             case 'cdtr':
             case 'dbtr':
-                $res = self::sanitizeLength(self::replaceSpecialChars($input, $flags), 70);
-                return (empty($res) ? false : $res);
-            case 'rmtinf': return self::sanitizeLength(self::replaceSpecialChars($input, $flags), 140);
+                return self::sanitizeShortText($input,false,$flags);
+            case 'rmtinf': return self::sanitizeLongText($input,true,$flags);
             default: return false;
         }
     }
 
     /**
      * Checks the input and if it is not valid it tries to sanitize it.
+     *
      * @param string $field all fields check and/or sanitize supports
-     * @param mixed $input
+     * @param mixed  $input
+     * @param int    $flags
+     * @param array  $options see `checkBic` for details
      * @return mixed|false
      */
-    public static function checkAndSanitize($field, $input)
+    public static function checkAndSanitize($field, $input, $flags = 0, array $options = null)
     {
-        $checkedInput = self::check($field, $input);
+        $checkedInput = self::check($field, $input, $options);
         if($checkedInput !== false)
             return $checkedInput;
 
-        return self::sanitize($field,$input);
+        return self::sanitize($field,$input,$flags);
+    }
+
+    /**
+     * @param array $inputs A reference to an input array (field => value)
+     * @param int   $flags  Flags for sanitizing
+     * @param array $options Options for checking
+     * @return true|string returns true, if everything is ok or could be sanitized. Otherwise a
+     *                     string with fields, that could not be sanitized is returned.
+     */
+    public static function checkAndSanitizeAll(array &$inputs, $flags = 0, array $options = null)
+    {
+        $fieldsWithErrors = array();
+        foreach($inputs as $field => &$input)
+        {
+            $input = self::checkAndSanitize($field, $input, $flags, $options);
+            if($input === false)
+                $fieldsWithErrors[] = $field;
+        }
+
+        if(empty($fieldsWithErrors))
+            return true;
+        else
+            return implode(', ', $fieldsWithErrors);
+    }
+
+    public static function sanitizeShortText($input,$allowEmpty = false, $flags = 0)
+    {
+        $res = self::sanitizeLength(self::replaceSpecialChars($input, $flags), 70);
+
+        if($allowEmpty || !empty($res))
+            return $res;
+
+        return false;
+    }
+
+    public static function sanitizeLongText($input,$allowEmpty = false, $flags = 0)
+    {
+        $res = self::sanitizeLength(self::replaceSpecialChars($input, $flags), 140);
+
+        if($allowEmpty || !empty($res))
+            return $res;
+
+        return false;
+    }
+
+    public static function checkRequiredCollectionKeys(array $inputs, $version)
+    {
+        switch($version)
+        {
+            case self::SEPA_PAIN_001_002_03:
+                $requiredKeys = array('pmtInfId', 'dbtr', 'iban', 'bic');
+                break;
+            case self::SEPA_PAIN_001_003_03:
+                $requiredKeys = array('pmtInfId', 'dbtr', 'iban');
+                break;
+            case self::SEPA_PAIN_008_002_02:
+                $requiredKeys = array('pmtInfId', 'lclInstrm', 'seqTp', 'cdtr', 'iban', 'bic',
+                                      'ci');
+                break;
+            case self::SEPA_PAIN_008_003_02:
+                $requiredKeys = array('pmtInfId', 'lclInstrm', 'seqTp', 'cdtr', 'iban', 'ci');
+                break;
+            default:
+                return false;
+        }
+
+        return !self::containsNotAllKeys($inputs,$requiredKeys);
+    }
+
+    public static function checkRequiredPaymentKeys(array $inputs, $version)
+    {
+        switch($version)
+        {
+            case self::SEPA_PAIN_001_002_03:
+                $requiredKeys = array('pmtId', 'instdAmt', 'iban', 'bic', 'cdtr');
+                break;
+            case self::SEPA_PAIN_001_003_03:
+                $requiredKeys = array(\'pmtId', 'instdAmt', 'iban', 'cdtr');
+                break;
+            case self::SEPA_PAIN_008_002_02:
+                $requiredKeys = array('pmtId', 'instdAmt', 'mndtId', 'dtOfSgntr', 'dbtr', 'iban','bic');
+                break;
+            case self::SEPA_PAIN_008_003_02:
+                $requiredKeys = array('pmtId', 'instdAmt', 'mndtId', 'dtOfSgntr', 'dbtr', 'iban');
+                break;
+            default: return false;
+        }
+
+        return !self::containsNotAllKeys($inputs,$requiredKeys);
     }
 
     /**
@@ -352,17 +524,24 @@ class SepaUtilities
     }
 
     /**
-     * Checks if $bbi is a valid batch booking indicator, i.e. bbi equals 'true' or 'false'
-     * @param string $bbi
-     * @return string|false The batch booking indicator (in lower case only) or false if not valid
+     * Checks if $bbi is a valid batch booking indicator. Returns 'true' for "1", "true", "on"
+     * and "yes", returns 'false' for "0", "false", "off", "no", and ""
+     *
+     * @param mixed $input
+     * @return string|false The batch booking indicator (in lower case only) or false if not
+     *                      valid
      */
-    private static function checkBatchBookingIndicator( $bbi )
+    private static function checkBoolean($input )
     {
-        $bbi = strtolower($bbi);
-        if($bbi === 'true' || $bbi === 'false')
-            return $bbi;
-        else
-            return false;
+        $bbi = filter_var($input,FILTER_VALIDATE_BOOLEAN,FILTER_NULL_ON_FAILURE);
+
+        if($bbi === true)
+            return 'true';
+
+        if($bbi === false)
+            return 'false';
+
+        return false;
     }
 
     /**
@@ -492,5 +671,55 @@ class SepaUtilities
 
         return $amount;
     }
+
+    /**
+     * Checks if the sequence type is valid.
+     *
+     * @param string $seqTp
+     * @return string|false
+     */
+    private function checkSeqType($seqTp)
+    {
+        $seqTp = strtoupper($seqTp);
+
+        if( in_array($seqTp, array(self::SEQUENCE_TYPE_FIRST, self::SEQUENCE_TYPE_RECURRING,
+                                   self::SEQUENCE_TYPE_ONCE, self::SEQUENCE_TYPE_FINAL)) )
+            return $seqTp;
+
+        return false;
+    }
+
+    /**
+     * @param string $input
+     * @param array $options
+     * @return bool|string
+     */
+    private static function checkLocalInstrument($input, array $options = null)
+    {
+        $version = empty($options['version']) ? self::SEPA_PAIN_008_002_02 : $options['version'];
+
+        $input = strtoupper($input);
+
+        switch($version)
+        {
+            case self::SEPA_PAIN_008_002_02:
+                $validCases = array(self::LOCAL_INSTRUMENT_CORE_DIRECT_DEBIT,
+                                    self::LOCAL_INSTRUMENT_BUSINESS_2_BUSINESS);
+                break;
+            case self::SEPA_PAIN_008_003_02:
+                $validCases = array(self::LOCAL_INSTRUMENT_CORE_DIRECT_DEBIT,
+                                    self::LOCAL_INSTRUMENT_CORE_DIRECT_DEBIT_D_1,
+                                    self::LOCAL_INSTRUMENT_BUSINESS_2_BUSINESS);
+                break;
+            default:
+                return false;
+        }
+
+        if( in_array($input, $validCases) )
+            return $input;
+
+        return false;
+    }
+
 
 }
