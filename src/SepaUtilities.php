@@ -332,7 +332,7 @@ class SepaUtilities
             case 'cdtr':                                    // cannot be empty (and the following things also)
             case 'dbtr': if(empty($input)) return false;    // cannot be empty
             case 'orgnlcdtrschmeid_nm':
-            case 'ultmtcdrt':
+            case 'ultmtcdtr':
             case 'ultmtdebtr': return (self::checkLength($input, 70) && self::checkCharset($input)) ? $input : false;
             case 'rmtinf': return (self::checkLength($input, 140) && self::checkCharset($input)) ? $input : false;
             case 'orgnldbtracct_iban':
@@ -345,6 +345,7 @@ class SepaUtilities
             case 'seqtp': return self::checkSeqType($input);
             case 'lclinstrm': return self::checkLocalInstrument($input, $options);
             case 'elctrncsgntr': return (self::checkLength($input, 1025) && self::checkCharset($input)) ? $input : false;
+            case 'reqdcolltndt':
             case 'reqdexctndt': return self::checkDateFormat($input);
             default: return false;
         }
