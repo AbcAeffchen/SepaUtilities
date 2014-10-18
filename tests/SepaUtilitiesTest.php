@@ -128,8 +128,11 @@ class SepaUtilitiesTest extends PHPUnit_Framework_TestCase
 
     public function testGetDateWithOffset()
     {
-        // today
-        $this->assertSame(date('Y-m-d'),SepaUtilities::getDateWithOffset(0));
+        $expected = new DateTime();
+        if($expected->format('N') === '7')
+            $expected->modify('+1 day');
+
+        $this->assertSame($expected->format('Y-m-d'),SepaUtilities::getDateWithOffset(0));
 
         // fixed day
         $this->assertSame('2014-10-15',SepaUtilities::getDateWithOffset(0, '15.10.2014'));

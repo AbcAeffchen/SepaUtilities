@@ -213,7 +213,7 @@ class SepaUtilities
     private static function checkDateFormat($input)
     {
         if($input === \DateTime::createFromFormat('Y-m-d', $input)->format('Y-m-d'))
-            return true;
+            return $input;
         else
             return false;
     }
