@@ -1,6 +1,11 @@
 Sephpa - Change Log
 ===============
 
+##1.0.2 - Oct 18, '14##
+- added to `check()`:
+  - `purp`: Purpose
+  - `ctgypurp`: Category Purpose
+  
 ##1.0.1 - Oct 18, '14##
 - added `sanitizeShortText()` and `sanitizeLongText()`
 - added `checkAndSanitizeAll()`

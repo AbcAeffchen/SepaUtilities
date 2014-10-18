@@ -79,6 +79,7 @@
                     </li><li>public static string|false <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkBIC.html">checkBIC</a>()
                     </li><li>public static bool <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/isNationalTransaction.html">isNationalTransaction</a>()
                     </li><li>public static bool <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/crossCheckIbanBic.html">crossCheckIbanBic</a>()
+                    </li><li>private static void <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkDateFormat.html">checkDateFormat</a>()
                     </li><li>public static string|false <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/getDate.html">getDate</a>()
                     </li><li>public static string|false <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/getDateWithOffset.html">getDateWithOffset</a>()
                     </li><li>public static string <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/getDateWithMinOffsetFromToday.html">getDateWithMinOffsetFromToday</a>()
@@ -90,7 +91,7 @@
                     </li><li>public static void <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/sanitizeLongText.html">sanitizeLongText</a>()
                     </li><li>public static void <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkRequiredCollectionKeys.html">checkRequiredCollectionKeys</a>()
                     </li><li>public static void <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkRequiredPaymentKeys.html">checkRequiredPaymentKeys</a>()
-                    </li><li>public static bool <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/containsNotAllKeys.html">containsNotAllKeys</a>()
+                    </li><li>public static bool <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/containsAllKeys.html">containsAllKeys</a>()
                     </li><li>public static bool <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/containsNotAnyKey.html">containsNotAnyKey</a>()
                     </li><li>private static string|false <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkActiveOrHistoricCurrencyCode.html">checkActiveOrHistoricCurrencyCode</a>()
                     </li><li>private static string|false <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkBoolean.html">checkBoolean</a>()
@@ -104,6 +105,8 @@
                     </li><li>private static float|false <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkAmountFormat.html">checkAmountFormat</a>()
                     </li><li>private string|false <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkSeqType.html">checkSeqType</a>()
                     </li><li>private static bool|string <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkLocalInstrument.html">checkLocalInstrument</a>()
+                    </li><li>private static void <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkCategoryPurpose.html">checkCategoryPurpose</a>()
+                    </li><li>private static void <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkPurpose.html">checkPurpose</a>()
                     </li></ul>
 
             }<br/></div>
@@ -229,13 +232,22 @@
                 — Checks if the amount fits the format: A float with only two decimals, not lower than 0.01, not greater than 999,999,999.99.</li>
             <li id="checkBoolean"><a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkBoolean.html">checkBoolean()</a>
                 — Checks if $bbi is a valid batch booking indicator. Returns 'true' for "1", "true", "on" and "yes", returns 'false' for "0", "false", "off", "no", and ""</li>
+            <li id="checkCategoryPurpose">
+              <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkCategoryPurpose.html">checkCategoryPurpose()</a>
+            </li>
             <li id="checkCharset">
               <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkCharset.html">checkCharset()</a>
+            </li>
+            <li id="checkDateFormat">
+              <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkDateFormat.html">checkDateFormat()</a>
             </li>
             <li id="checkLength"><a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkLength.html">checkLength()</a>
                 — Checks if the length of the input string not longer than the entered length</li>
             <li id="checkLocalInstrument">
               <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkLocalInstrument.html">checkLocalInstrument()</a>
+            </li>
+            <li id="checkPurpose">
+              <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkPurpose.html">checkPurpose()</a>
             </li>
             <li id="checkRestrictedIdentificationSEPA1">
               <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkRestrictedIdentificationSEPA1.html">checkRestrictedIdentificationSEPA1()</a>
@@ -274,7 +286,7 @@
             <li id="checkRequiredPaymentKeys">
               <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkRequiredPaymentKeys.html">checkRequiredPaymentKeys()</a>
             </li>
-            <li id="containsNotAllKeys"><a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/containsNotAllKeys.html">containsNotAllKeys()</a>
+            <li id="containsAllKeys"><a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/containsAllKeys.html">containsAllKeys()</a>
                 — Checks if $arr misses one of the given $keys</li>
             <li id="containsNotAnyKey"><a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/containsNotAnyKey.html">containsNotAnyKey()</a>
                 — Checks if $arr not contains any key of $keys</li>

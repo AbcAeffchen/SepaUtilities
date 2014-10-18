@@ -311,7 +311,7 @@ class SepaUtilities
      *                        'orgnlmndtid','mndtid','initgpty','cdtr','dbtr','orgnlcdtrschmeid_nm',
      *                        'ultmtcdrt','ultmtdebtr','rmtinf','orgnldbtracct_iban','iban','bic',
      *                        'ccy','amendment', 'btchbookg','instdamt','seqtp','lclinstrm',
-     *                        'elctrncsgntr','reqdexctndt'
+     *                        'elctrncsgntr','reqdexctndt','purp','ctgypurp','orgnldbtragt'
      * @param mixed  $input
      * @param array  $options see `checkBic()` and `checkLocalInstrument()` for details
      * @return mixed|false The checked input or false, if it is not valid
@@ -348,6 +348,8 @@ class SepaUtilities
             case 'dtofsgntr':
             case 'reqdcolltndt':
             case 'reqdexctndt': return self::checkDateFormat($input);
+            case 'purp': return self::checkPurpose($input);
+            case 'ctgypurp': return self::checkCategoryPurpose($input);
             case 'orgnldbtragt': return $input;     // nothing to check here
             default: return false;
         }
@@ -644,7 +646,7 @@ class SepaUtilities
         // replace all kinds of whitespaces by a space
         $str = preg_replace('#\s+#u',' ',$str);
 
-        // special replacement for some characters
+        // special replacement for some characters (incl. greek and cyrillic)
         $search  = array(';','[','\\',']','^','_','`', '{','|','}','~','¿','À','Á','Â','Ã','Ä','Å','Æ','Ç','È','É','Ê','Ë','Ì','Í','Î','Ï','Ð','Ñ','Ò','Ó','Ô','Õ','Ö','Ø','Ù','Ú','Û','Ü','Ý','Þ','ß','à','á','â','ã','ä','å','æ','ç','è','é','ê','ë','ì','í','î','ï','ð','ñ','ò','ó','ô','õ','ö','ø','ù','ú','û','ü','ý','þ','ÿ','Ā','ā','Ă','ă','Ą','ą','Ć','ć','Ĉ','ĉ','Ċ','ċ','Č','č','Ď','ď','Đ','đ','Ē','ē','Ĕ','ĕ','Ė','ė','Ę','ę','Ě','ě','Ĝ','ĝ','Ğ','ğ','Ġ','ġ','Ģ','ģ','Ĥ','ĥ','Ħ','ħ','Ĩ','ĩ','Ī','ī','Ĭ','ĭ','Į','į','İ','ı','Ĳ','ĳ','Ĵ','ĵ','Ķ','ķ','ĸ','Ĺ','ĺ','Ļ','ļ','Ľ','ľ','Ŀ','ŀ','Ł','ł','Ń','ń','Ņ','ņ','Ň','ň','Ő','ő','Œ','œ','Ŕ','ŕ','Ŗ','ŗ','Ř','ř','Ś','ś','Ŝ','ŝ','Ş','ş','Š','š','Ţ','ţ','Ť','ť','Ŧ','ŧ','Ũ','ũ','Ū','ū','Ŭ','ŭ','Ů','ů','Ű','ű','Ų','ų','Ŵ','ŵ','Ŷ','ŷ','Ÿ','Ź','ź','Ż','ż','Ž','ž','Ș','ș','Ț','ț','Ά','Έ','Ή','Ί','Ό','Ύ','Ώ','ΐ','Α','Β','Γ','Δ','Ε','Ζ','Η','Θ' ,'Ι','Κ','Λ','Μ','Ν','Ξ','Ο','Π','Ρ','Σ','Τ','Υ','Φ','Χ', 'Ψ', 'Ω','Ϊ','Ϋ','ά','έ','ή','ί','ΰ','α','β','γ','δ','ε','ζ','η','θ', 'ι','κ','λ','μ','ν','ξ','ο','π','ρ','ς','σ','τ','υ','φ','χ', 'ψ', 'ω','ϊ','ϋ','ό','ύ','ώ','А','Б','В','Г','Д','Е','Ж', 'З','И','Й','К','Л','М','Н','О','П','Р','С','Т','У','Ф','Х','Ц', 'Ч', 'Ш', 'Щ',  'Ъ','Ь','Ю', 'Я', 'а','б','в','г','д','е','ж', 'з','и','й','к','л','м','н','о','п','р','с','т','у','ф','х','ц', 'ч', 'ш', 'щ',  'ъ','ь','ю', 'я', '€');
         $replace = array(',','(','/', ')','.','-','\'','(','/',')','-','?','A','A','A','A','A','A','A','C','E','E','E','E','I','I','I','I','D','N','O','O','O','O','O','O','U','U','U','U','Y','T','s','a','a','a','a','a','a','a','c','e','e','e','e','i','i','i','i','d','n','o','o','o','o','o','o','u','u','u','u','y','t','y','A','a','A','a','A','a','C','c','C','c','C','c','C','c','D','d','D','d','E','e','E','e','E','e','E','e','E','e','G','g','G','g','G','g','G','g','H','h','H','h','I','i','I','i','I','i','I','i','I','i','I','i','J','j','K','k','.','L','l','L','l','L','l','L','l','L','l','N','n','N','n','N','n','O','o','O','o','R','r','R','r','R','r','S','s','S','s','S','s','S','s','T','t','T','t','T','t','U','u','U','u','U','u','U','u','U','u','U','u','W','w','Y','y','Y','Z','z','Z','z','Z','z','S','s','T','t','A','E','I','I','O','Y','O','i','A','V','G','D','E','Z','I','TH','I','K','L','M','N','X','O','P','R','S','T','Y','F','CH','PS','O','I','Y','a','e','i','i','y','a','v','g','d','e','z','i','th','i','k','l','m','n','x','o','p','r','s','s','t','y','f','ch','ps','o','i','y','o','y','o','A','B','V','G','D','E','ZH','Z','I','Y','K','L','M','N','O','P','R','S','T','U','F','H','TS','CH','SH','SHT','A','Y','YU','YA','a','b','v','g','d','e','zh','z','i','y','k','l','m','n','o','p','r','s','t','u','f','h','ts','ch','sh','sht','a','y','yu','ya','E');
         $str = str_replace($search,$replace,$str);
@@ -734,5 +736,51 @@ class SepaUtilities
         return false;
     }
 
+    private static function checkCategoryPurpose($input)
+    {
+        $validValues = array('BONU', 'CASH', 'CBLK', 'CCRD', 'CORT', 'DCRD', 'DIVI', 'EPAY',
+                             'FCOL', 'GOVT', 'HEDG', 'ICCP', 'IDCP', 'INTC', 'INTE', 'LOAN',
+                             'OTHR', 'PENS', 'SALA', 'SECU', 'SSBE', 'SUPP', 'TAXS', 'TRAD',
+                             'TREA', 'VATX', 'WHLD');
+
+        $input = strtoupper($input);
+
+        if(in_array($input,$validValues))
+            return $input;
+
+        return false;
+    }
+
+    private static function checkPurpose($input)
+    {
+        $validValues = array('CBLK', 'CDCB', 'CDCD', 'CDCS', 'CDDP', 'CDOC', 'CDQC', 'ETUP',
+                             'FCOL', 'MTUP', 'ACCT', 'CASH', 'COLL', 'CSDB', 'DEPT', 'INTC',
+                             'LIMA', 'NETT', 'AGRT', 'AREN', 'BEXP', 'BOCE', 'COMC', 'CPYR',
+                             'GDDS', 'GDSV', 'GSCB', 'LICF', 'POPE', 'ROYA', 'SCVE', 'SUBS',
+                             'SUPP', 'TRAD', 'CHAR', 'COMT', 'CLPR', 'DBTC', 'GOVI', 'HLRP',
+                             'INPC', 'INSU', 'INTE', 'LBRI', 'LIFI', 'LOAN', 'LOAR', 'PENO',
+                             'PPTI', 'RINP', 'TRFD', 'ADMG', 'ADVA', 'BLDM', 'CBFF', 'CBFR',
+                             'CCRD', 'CDBL', 'CFEE', 'CGDD', 'COST', 'CPKC', 'DCRD', 'EDUC',
+                             'FAND', 'FCPM', 'GOVT', 'ICCP', 'IDCP', 'IHRP', 'INSM', 'IVPT',
+                             'MSVC', 'NOWS', 'OFEE', 'OTHR', 'PADD', 'PTSP', 'RCKE', 'RCPT',
+                             'REBT', 'REFU', 'RENT', 'RIMB', 'STDY', 'TBIL', 'TCSC', 'TELI',
+                             'WEBI', 'ANNI', 'CAFI', 'CFDI', 'CMDT', 'DERI', 'DIVD', 'FREX',
+                             'HEDG', 'INVS', 'PRME', 'SAVG', 'SECU', 'SEPI', 'TREA', 'ANTS',
+                             'CVCF', 'DMEQ', 'DNTS', 'HLTC', 'HLTI', 'HSPC', 'ICRF', 'LTCF',
+                             'MDCS', 'VIEW', 'ALLW', 'ALMY', 'BBSC', 'BECH', 'BENE', 'BONU',
+                             'COMM', 'CSLP', 'GVEA', 'GVEB', 'GVEC', 'GVED', 'PAYR', 'PENS',
+                             'PRCP', 'SALA', 'SSBE', 'AEMP', 'GFRP', 'GWLT', 'RHBS', 'ESTX',
+                             'FWLV', 'GSTX', 'HSTX', 'INTX', 'NITX', 'PTXP', 'RDTX', 'TAXS',
+                             'VATX', 'WHLD', 'TAXR', 'AIRB', 'BUSB', 'FERB', 'RLWY', 'TRPT',
+                             'CBTV', 'ELEC', 'ENRG', 'GASB', 'NWCH', 'NWCM', 'OTLC', 'PHON',
+                             'UBIL', 'WTER');
+
+        $input = strtoupper($input);
+
+        if( in_array($input, $validValues) )
+            return $input;
+
+        return false;
+    }
 
 }
