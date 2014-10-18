@@ -59,7 +59,7 @@
             <a href="#return">Return</a>
           </li>
           <li>
-            <a href="../../source/SepaUtilities.php.xhtml#line235">Source</a>
+            <a href="../../source/SepaUtilities.php.xhtml#line310">Source</a>
           </li>
         </ul>
       </nav>
@@ -72,8 +72,10 @@
         <div class="styled synopsis">
           <code>public function check(string
         $field,
-            mixed
-        $input )
+            [mixed
+        $input = null,
+            [array
+        $options = null]] )
             </code>
         </div>
         <h2 id="parameterlist">Parameters</h2>
@@ -81,11 +83,15 @@
           <dt><code>$field</code>
                 —
                 string</dt>
-          <dd>Valid fields are: 'pmtinfid', 'dbtr', 'iban', 'bic', 'ccy',<br/>'btchbookg', 'mndtid', 'orgnlmndtid', 'orgnlcdtrschmeid_nm',<br/>'orgnlcdtrschmeid_id', 'orgnldbtracct_iban', 'ultmtdebtr', 'pmtid',<br/>                     'instdamt', 'cdtr', 'ultmtcdrt', 'rmtinf', 'ci', 'initgpty'</dd>
+          <dd>Valid fields are: 'orgnlcdtrschmeid_id','ci','msgid','pmtid','pmtinfid',<br/>'orgnlmndtid','mndtid','initgpty','cdtr','dbtr','orgnlcdtrschmeid_nm',<br/>'ultmtcdrt','ultmtdebtr','rmtinf','orgnldbtracct_iban','iban','bic',<br/>                       'ccy','amendment', 'btchbookg','instdamt','seqtp','lclinstrm','elctrncsgntr'</dd>
           <dt><code>$input</code>
                 —
                 mixed</dt>
           <dd/>
+          <dt><code>$options</code>
+                —
+                array</dt>
+          <dd>see `checkBic()` and `checkLocalInstrument()` for details</dd>
         </dl>
         <h2 id="return">Returns</h2>
         <dl class="styled">

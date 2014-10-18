@@ -59,7 +59,7 @@
             <a href="#return">Return</a>
           </li>
           <li>
-            <a href="../../source/SepaUtilities.php.xhtml#line128">Source</a>
+            <a href="../../source/SepaUtilities.php.xhtml#line155">Source</a>
           </li>
         </ul>
       </nav>
@@ -71,7 +71,9 @@
         <h2 id="signature">Signature</h2>
         <div class="styled synopsis">
           <code>public function checkBIC(string
-        $bic )
+        $bic,
+            [array
+        $options = null] )
             </code>
         </div>
         <h2 id="parameterlist">Parameters</h2>
@@ -80,6 +82,10 @@
                 —
                 string</dt>
           <dd/>
+          <dt><code>$options</code>
+                —
+                array</dt>
+          <dd>Takes the following keys:<br/>- `allowEmptyBic`: (bool) The BIC can be empty.<br/>- `forceLongBic`: (bool) If the BIC has exact 8 characters, `forceLongBicStr`<br/>is added. (default false)<br/>                       - `forceLongBicStr`: string (default 'XXX')</dd>
         </dl>
         <h2 id="return">Returns</h2>
         <dl class="styled">
