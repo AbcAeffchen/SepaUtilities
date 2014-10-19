@@ -701,7 +701,7 @@ class SepaUtilities
      * @param string $seqTp
      * @return string|false
      */
-    private function checkSeqType($seqTp)
+    private static function checkSeqType($seqTp)
     {
         $seqTp = strtoupper($seqTp);
 
