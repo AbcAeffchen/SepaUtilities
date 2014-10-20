@@ -82,13 +82,13 @@ result will be direct effect the input array. The return value is true, if every
 else a string with problematic fields.
 
 ###Date functions###
-- `getDate($date, $inputFormat)`: Returns $date in a Sepa-valid format. You can specify the
+- `getDate($date, $inputFormat)`: Returns $date in a SEPA-valid format. You can specify the
 input format by using [the table on this site](http://de1.php.net/manual/en/function.date.php).
 By default the german date format (DD.MM.YYYY) is used.
-- `getDateWithOffset($workdayOffset, $today, $inputFormat)`: Computes the next workday (including today) 
-with respect to a workday offset. If today is a sunday, the next day is returned.
+- `getDateWithOffset($workdayOffset, $today, $inputFormat)`: Computes the next [TARGET2](http://en.wikipedia.org/wiki/TARGET2#TARGET2_holidays)
+ day (including today) with respect to an offset.
 - `getDateWithMinOffsetFromToday($target, $workdayMinOffset, $inputFormat, $today)`: Returns the 
-target date, if it has at least the given offset of workdays form today. Else the earliest date 
+target date, if it has at least the given offset of TARGET2 days form today. Else the earliest date 
 that respects the offset is returned.
 
 ###Patterns###

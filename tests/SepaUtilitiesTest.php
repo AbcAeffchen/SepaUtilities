@@ -128,32 +128,28 @@ class SepaUtilitiesTest extends PHPUnit_Framework_TestCase
 
     public function testGetDateWithOffset()
     {
-        $expected = new DateTime();
-        if($expected->format('N') === '7')
-            $expected->modify('+1 day');
-
-        $this->assertSame($expected->format('Y-m-d'),SepaUtilities::getDateWithOffset(0));
-
         // fixed day
         $this->assertSame('2014-10-15',SepaUtilities::getDateWithOffset(0, '15.10.2014'));
 
+        // fixed saturday
+        $this->assertSame('2014-10-20',SepaUtilities::getDateWithOffset(0, '18.10.2014'));
         // fixed sunday
         $this->assertSame('2014-10-20',SepaUtilities::getDateWithOffset(0, '19.10.2014'));
 
         // offset to small to skip a sunday
         $this->assertSame('2014-10-17',SepaUtilities::getDateWithOffset(2, '15.10.2014'));
 
-        // offset little to small to skip a sunday
-        $this->assertSame('2014-10-18',SepaUtilities::getDateWithOffset(3, '15.10.2014'));
+        // offset reaches weekend
+        $this->assertSame('2014-10-20',SepaUtilities::getDateWithOffset(3, '15.10.2014'));
 
-        // offset to skip one sunday
-        $this->assertSame('2014-10-20',SepaUtilities::getDateWithOffset(4, '15.10.2014'));
+        // offset to skip one weekend
+        $this->assertSame('2014-10-21',SepaUtilities::getDateWithOffset(4, '15.10.2014'));
 
         // offset big enough to skip a sunday + a day
-        $this->assertSame('2014-10-21',SepaUtilities::getDateWithOffset(5, '15.10.2014'));
+        $this->assertSame('2014-10-22',SepaUtilities::getDateWithOffset(5, '15.10.2014'));
 
-        // offset big enough to skip 4 sundays plus another sunday
-        $this->assertSame('2014-11-17',SepaUtilities::getDateWithOffset(28, '15.10.2014'));
+        // offset big enough to skip 4 weekends plus another sunday
+        $this->assertSame('2014-11-24',SepaUtilities::getDateWithOffset(28, '15.10.2014'));
     }
 
     public function testGetDateWithMinOffsetFromToday()
@@ -165,16 +161,16 @@ class SepaUtilitiesTest extends PHPUnit_Framework_TestCase
 
         // to target and earliest date are equal
         $this->assertSame('2014-10-23',SepaUtilities::getDateWithMinOffsetFromToday('23.10.2014',
-                                                                                    7, 'd.m.Y',
-                                                                                    '15.10.2014'));
-
-        // to target < earliest date
-        $this->assertSame('2014-10-24',SepaUtilities::getDateWithMinOffsetFromToday('23.10.2014',
-                                                                                    8, 'd.m.Y',
+                                                                                    6, 'd.m.Y',
                                                                                     '15.10.2014'));
 
         // to target < earliest date
         $this->assertSame('2014-10-27',SepaUtilities::getDateWithMinOffsetFromToday('23.10.2014',
+                                                                                    8, 'd.m.Y',
+                                                                                    '15.10.2014'));
+
+        // to target < earliest date
+        $this->assertSame('2014-10-29',SepaUtilities::getDateWithMinOffsetFromToday('23.10.2014',
                                                                                     10, 'd.m.Y',
                                                                                     '15.10.2014'));
     }

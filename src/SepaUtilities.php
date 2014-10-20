@@ -266,16 +266,16 @@ class SepaUtilities
         if($dateTimeObj === false)
             return false;
 
-        // if today is sunday
-        if($dateTimeObj->format('w') === '0')
-            $dateTimeObj->modify('+1 day');
+        $isTargetDay = self::dateIsTargetDay($dateTimeObj);
 
-        while($workdayOffset > 0)      // todo: this runs in O(offsetDays)... could be faster
+        while( !$isTargetDay || $workdayOffset > 0 )
         {
             $dateTimeObj->modify('+1 day');
 
-            if($dateTimeObj->format('w') !== '0')
+            if($isTargetDay)
                 $workdayOffset--;
+
+            $isTargetDay = self::dateIsTargetDay($dateTimeObj);
         }
 
         return $dateTimeObj->format('Y-m-d');
@@ -302,14 +302,52 @@ class SepaUtilities
 
         $earliestDateObj = new \DateTime($earliestDate);
 
-        if($targetDateObj->format('w') === '0')
+        $isTargetDay = self::dateIsTargetDay($targetDateObj);
+        while( !$isTargetDay )
+        {
             $targetDateObj->modify('+1 day');
+            $isTargetDay = self::dateIsTargetDay($targetDateObj);
+        }
 
         $diff = $targetDateObj->diff($earliestDateObj);
         if($diff->invert === 1)      // target > earliest
             return $targetDateObj->format('Y-m-d');
         else
             return $earliestDateObj->format('Y-m-d');
+    }
+
+    /**
+     * Checks if $date is a SEPA TARGET day. Every day is a TARGET day except for saturdays, sundays
+     * new year's day, good friday, easter monday, the may holiday, first and second christmas holiday.
+     * @param \DateTime $date
+     * @return bool
+     */
+    private static function dateIsTargetDay(\DateTime $date)
+    {
+        // $date is a saturday or sunday
+        if($date->format('N') === '6' || $date->format('N') === '7')
+            return false;
+
+        $day = $date->format('m-d');
+        if($day === '01-01'             // new year's day
+            || $day === '05-01'         // labour day
+            || $day === '12-25'         // first christmas day
+            || $day === '12-26')        // second christmas day
+            return false;
+
+        $year = $date->format('Y');
+        $daysToEasterSunday = easter_days((int) $year);
+        $goodFriday = \DateTime::createFromFormat('Y-m-d', $year . '-03-21')
+            ->modify('+' . ($daysToEasterSunday - 2) . ' days')
+            ->format('m-d');
+        $easterMonday = \DateTime::createFromFormat('Y-m-d', $year . '-03-21')
+            ->modify('+' . ($daysToEasterSunday + 1) . ' days')
+            ->format('m-d');
+
+        if($day === $goodFriday || $day === $easterMonday)
+            return false;
+
+        return true;
     }
 
     /**
