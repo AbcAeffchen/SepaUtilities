@@ -1,6 +1,12 @@
 Sephpa - Change Log
 ===============
 
+##1.0.5 - Oct 20, '14##
+- date methods now support [TARGET2](http://en.wikipedia.org/wiki/TARGET2#TARGET2_holidays) days
+
+##1.0.4 - Oct 19, '14##
+- bugfix
+
 ##1.0.3 - Oct 19, '14##
 - added `checkCreateDateTime()`
 
