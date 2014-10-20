@@ -19,11 +19,14 @@ SepaUtilities requires PHP >=5.3.
 ###Composer###
 You can get SepaUtilities via Composer. Just add
 
-    {
-        "require": {
-            "abcaeffchen/sepa-utilities": "1.0.*"
-        }
+```json
+{
+    "require": {
+        "abcaeffchen/sepa-utilities": "~1.0.5"
     }
+}
+```
+
 to your composer.json.
 
 ###Direct download###
@@ -31,7 +34,7 @@ If you don't use Composer, you also can download `SepaUtilities.php` and just in
 PHP files. Make sure you use the namespace `AbcAeffchen\SepaUtilities\`.
 
 ##The utilities##
-
+Have a look at the [documentation](http://htmlpreview.github.io/?https://raw.githubusercontent.com/AbcAeffchen/SepaUtilities/master/docs/html/index.html).
 ###Checks###
 - `checkIBAN($iban)`: Checks if the IBAN is valid by checking the format and by calculating the checksum and also removes whitespaces and changes all letters to upper case.
 - `checkBIC($bic)`: Checks if the BIC is valid by checking the format and also removes whitespaces
