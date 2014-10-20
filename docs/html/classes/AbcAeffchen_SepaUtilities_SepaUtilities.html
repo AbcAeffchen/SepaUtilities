@@ -80,9 +80,11 @@
                     </li><li>public static bool <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/isNationalTransaction.html">isNationalTransaction</a>()
                     </li><li>public static bool <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/crossCheckIbanBic.html">crossCheckIbanBic</a>()
                     </li><li>private static void <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkDateFormat.html">checkDateFormat</a>()
+                    </li><li>public static void <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkCreateDateTime.html">checkCreateDateTime</a>()
                     </li><li>public static string|false <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/getDate.html">getDate</a>()
                     </li><li>public static string|false <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/getDateWithOffset.html">getDateWithOffset</a>()
                     </li><li>public static string <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/getDateWithMinOffsetFromToday.html">getDateWithMinOffsetFromToday</a>()
+                    </li><li>private static bool <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/dateIsTargetDay.html">dateIsTargetDay</a>()
                     </li><li>public static mixed|false <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/check.html">check</a>()
                     </li><li>public static mixed|false <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/sanitize.html">sanitize</a>()
                     </li><li>public static mixed|false <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkAndSanitize.html">checkAndSanitize</a>()
@@ -103,7 +105,7 @@
                     </li><li>public static string <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/replaceSpecialChars.html">replaceSpecialChars</a>()
                     </li><li>private static void <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkCharset.html">checkCharset</a>()
                     </li><li>private static float|false <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkAmountFormat.html">checkAmountFormat</a>()
-                    </li><li>private string|false <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkSeqType.html">checkSeqType</a>()
+                    </li><li>private static string|false <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkSeqType.html">checkSeqType</a>()
                     </li><li>private static bool|string <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkLocalInstrument.html">checkLocalInstrument</a>()
                     </li><li>private static void <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkCategoryPurpose.html">checkCategoryPurpose</a>()
                     </li><li>private static void <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkPurpose.html">checkPurpose</a>()
@@ -260,6 +262,8 @@
             </li>
             <li id="checkSeqType"><a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkSeqType.html">checkSeqType()</a>
                 — Checks if the sequence type is valid.</li>
+            <li id="dateIsTargetDay"><a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/dateIsTargetDay.html">dateIsTargetDay()</a>
+                — Checks if $date is a SEPA TARGET day. Every day is a TARGET day except for saturdays, sundays new year's day, good friday, easter monday, the may holiday, first and second christmas holiday.</li>
             <li id="iso7064Mod97m10ChecksumCheck">
               <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/iso7064Mod97m10ChecksumCheck.html">iso7064Mod97m10ChecksumCheck()</a>
             </li>
@@ -275,6 +279,9 @@
             </li>
             <li id="checkBIC"><a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkBIC.html">checkBIC()</a>
                 — Checks if a bic is valid. Note that also if the bic is valid it does not have to exist</li>
+            <li id="checkCreateDateTime">
+              <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkCreateDateTime.html">checkCreateDateTime()</a>
+            </li>
             <li id="checkCreditorIdentifier">
               <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/checkCreditorIdentifier.html">checkCreditorIdentifier()</a>
             </li>
@@ -295,9 +302,9 @@
             <li id="getDate"><a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/getDate.html">getDate()</a>
                 — Reformat a date string from a given format to the ISODate format. Notice: 20.13.2014 is valid and becomes 2015-01-20.</li>
             <li id="getDateWithMinOffsetFromToday"><a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/getDateWithMinOffsetFromToday.html">getDateWithMinOffsetFromToday()</a>
-                — Returns the target date, if it has at least the given offset of workdays form today. Else the earliest date that respects the offset is returned.</li>
+                — Returns the target date, if it has at least the given offset of TARGET2 days form today. Else the earliest date that respects the offset is returned.</li>
             <li id="getDateWithOffset"><a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/getDateWithOffset.html">getDateWithOffset()</a>
-                — Computes the next workday (including today) with respect to a workday offset. If today is a sunday, the next day is returned.</li>
+                — Computes the next TARGET2 day (including today) with respect to a TARGET2 offset.</li>
             <li id="isNationalTransaction"><a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/isNationalTransaction.html">isNationalTransaction()</a>
                 — Checks if both IBANs are belong to the same country.</li>
             <li id="replaceSpecialChars"><a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../classes/AbcAeffchen_SepaUtilities_SepaUtilities/replaceSpecialChars.html">replaceSpecialChars()</a>

@@ -248,8 +248,7 @@ class SepaUtilities
     }
 
     /**
-     * Computes the next workday (including today) with respect to a workday offset. If today is
-     * a sunday, the next day is returned.
+     * Computes the next TARGET2 day (including today) with respect to a TARGET2 offset.
      *
      * @param int    $workdayOffset a positive number of workdays to skip.
      * @param string $today         if set, this date is used as today
@@ -282,7 +281,7 @@ class SepaUtilities
     }
 
     /**
-     * Returns the target date, if it has at least the given offset of workdays form today. Else
+     * Returns the target date, if it has at least the given offset of TARGET2 days form today. Else
      * the earliest date that respects the offset is returned.
      *
      * @param string $target
