@@ -4,6 +4,7 @@ SepaUtilities
 [![Build Status](https://travis-ci.org/AbcAeffchen/SepaUtilities.svg?branch=master)](https://travis-ci.org/AbcAeffchen/SepaUtilities)
 [![Latest Stable Version](https://poser.pugx.org/abcaeffchen/sepa-utilities/v/stable.svg)](https://packagist.org/packages/abcaeffchen/sepa-utilities) 
 [![Total Downloads](https://poser.pugx.org/abcaeffchen/sepa-utilities/downloads.svg)](https://packagist.org/packages/abcaeffchen/sepa-utilities) 
+[![Reference Status](https://www.versioneye.com/php/abcaeffchen:sepa-utilities/reference_badge.svg)](https://www.versioneye.com/php/abcaeffchen:sepa-utilities/references)
 [![License](https://poser.pugx.org/abcaeffchen/sepa-utilities/license.svg)](https://packagist.org/packages/abcaeffchen/sepa-utilities)
 
 ##General##
