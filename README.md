@@ -22,7 +22,7 @@ You can get SepaUtilities via Composer. Just add
 ```json
 {
     "require": {
-        "abcaeffchen/sepa-utilities": "~1.0.5"
+        "abcaeffchen/sepa-utilities": "~1.0.6"
     }
 }
 ```
