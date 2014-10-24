@@ -156,7 +156,7 @@ class SepaUtilities
     {
         $bic = preg_replace('/\s+/u', '' , $bic );   // remove whitespaces
 
-        if(!empty($options['forceLongBic']))
+        if(!empty($options['forceLongBic']) && strlen($bic) === 8)
             $bic .= empty($options['forceLongBicStr']) ? 'XXX' : $options['forceLongBicStr'];
 
         if(empty($bic) && !empty($options['allowEmptyBic']))

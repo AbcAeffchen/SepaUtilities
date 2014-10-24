@@ -57,6 +57,12 @@ class SepaUtilitiesTest extends PHPUnit_Framework_TestCase
 
         // Invalid (0 (zero) changed to O (oh)
         $this->assertFalse(SepaUtilities::checkBIC('ASDFGHJO'));
+
+        // options
+        $this->assertSame('ASDFGHJ0XXX', SepaUtilities::checkBIC('ASDFGHJ0',array('forceLongBic' => true)));
+        $this->assertSame('ASDFGHJ0ABC', SepaUtilities::checkBIC('ASDFGHJ0ABC',array('forceLongBic' => true)));
+        $this->assertSame('ASDFGHJ0ABC', SepaUtilities::checkBIC('ASDFGHJ0',array('forceLongBic' => true, 'forceLongBicStr' => 'ABC')));
+        $this->assertSame('ASDFGHJ0XXX', SepaUtilities::checkBIC('ASDFGHJ0XXX',array('forceLongBic' => true, 'forceLongBicStr' => 'ABC')));
     }
 
     public function testFormatDate()
