@@ -1,6 +1,10 @@
 Sephpa - Change Log
 ===============
 
+##1.0.6 - Oct 24, '14##
+- Bugfix: If 'forceLongBic' options is used in `checkBic()` the BIC was always extended by three
+characters without checking the length if the BIC is already long.
+
 ##1.0.5 - Oct 20, '14##
 - date methods now support [TARGET2](http://en.wikipedia.org/wiki/TARGET2#TARGET2_holidays) days
 
