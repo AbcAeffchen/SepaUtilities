@@ -149,7 +149,6 @@ class SepaUtilities
      *                        - `forceLongBic`: (bool) If the BIC has exact 8 characters, `forceLongBicStr`
      *                        is added. (default false)
      *                        - `forceLongBicStr`: string (default 'XXX')
-     * @internal param bool $forceLongBic If true all 8 character BIC's will extended with 'XXX'
      * @return string|false the valid bic or false if it is not valid
      */
     public static function checkBIC($bic, array $options = null)
@@ -827,5 +826,4 @@ class SepaUtilities
 
         return false;
     }
-
 }
