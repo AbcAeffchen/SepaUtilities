@@ -1,6 +1,11 @@
 Sephpa - Change Log
 ===============
 
+##1.0.7 - Dec 18, '14##
+- added `checkInput()`,`sanitizeInput()` and `checkAndSanitizeInput()` to validate user inputs.
+With this functions it is not required to check first, if an array index like `$_POST['key1']['key2']` 
+exists, before validating the values.
+
 ##1.0.6 - Oct 24, '14##
 - Bugfix: If 'forceLongBic' options is used in `checkBic()` the BIC was always extended by three
 characters without checking the length if the BIC is already long.

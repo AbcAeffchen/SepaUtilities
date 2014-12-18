@@ -349,6 +349,25 @@ class SepaUtilities
     }
 
     /**
+     * @param mixed[]             $input Reference to an array
+     * @param int|string|string[] $keys  The keys of the multidimensional array in order of
+     *                                   appearance. e.g. `['key1','key2']` checks
+     *                                   `$arr['key1']['key2']`
+     * @return mixed|false Returns the value of the field or null if the field does not exist.
+     */
+    private static function getValFromMultiDimInput(array &$input, $keys)
+    {
+        $key = is_array($keys) ? array_shift($keys) : $keys;
+        if( !isset( $input[$key] ) )
+            return false;
+
+        if( is_array($keys) && !empty( $keys ) ) // another dimension
+            return self::getValFromMultiDimInput($input[$key], $keys);
+        else
+            return $input[$key];
+    }
+
+        /**
      * Checks if the input holds for the field.
      *
      * @param string $field   Valid fields are: 'orgnlcdtrschmeid_id','ci','msgid','pmtid','pmtinfid',
@@ -400,6 +419,27 @@ class SepaUtilities
     }
 
     /**
+     * This function checks if the index of the inputArray exists and if the input is valid. The
+     * function can be called as `checkInput($fieldName,$_POST,['input',$fieldName],$options)`
+     * and equals `check($fieldName,$_POST['input'][$fieldName],$options)`, but checks first, if
+     * the index exists.
+     * @param string $field     see `check()` for valid values.
+     * @param array $inputArray
+     * @param string|int|mixed[] $inputKeys
+     * @param array $options    see `check()` for valid values.
+     * @return mixed|false
+     */
+    public static function checkInput($field, array &$inputArray, $inputKeys, array $options = null)
+    {
+        $value = self::getValFromMultiDimInput($inputArray,$inputKeys);
+
+        if($value === false)
+            return false;
+        else
+            return self::check($field,$value,$options);
+    }
+
+    /**
      * Tries to sanitize the the input so it fits in the field.
      *
      * @param string $field Valid fields are: 'ultmtcdrt', 'ultmtdebtr',
@@ -427,12 +467,33 @@ class SepaUtilities
     }
 
     /**
+     * This function checks if the index of the inputArray exists and if the input is valid. The
+     * function can be called as `sanitizeInput($fieldName,$_POST,['input',$fieldName],$flags)`
+     * and equals `sanitize($fieldName,$_POST['input'][$fieldName],$flags)`, but checks first, if
+     * the index exists.
+     * @param string $field     see `sanitize()` for valid values.
+     * @param array $inputArray
+     * @param string|int|mixed[] $inputKeys
+     * @param array $flags    see `sanitize()` for valid values.
+     * @return mixed|false
+     */
+    public static function sanitizeInput($field, array &$inputArray, $inputKeys, array $flags = 0)
+    {
+        $value = self::getValFromMultiDimInput($inputArray,$inputKeys);
+
+        if($value === false)
+            return false;
+        else
+            return self::sanitize($field,$value,$flags);
+    }
+
+    /**
      * Checks the input and if it is not valid it tries to sanitize it.
      *
      * @param string $field all fields check and/or sanitize supports
      * @param mixed  $input
-     * @param int    $flags
-     * @param array  $options see `checkBic` for details
+     * @param int    $flags   see `sanitize()` for details
+     * @param array  $options see `check()` for details
      * @return mixed|false
      */
     public static function checkAndSanitize($field, $input, $flags = 0, array $options = null)
@@ -442,6 +503,29 @@ class SepaUtilities
             return $checkedInput;
 
         return self::sanitize($field,$input,$flags);
+    }
+
+    /**
+     * This function checks if the index of the inputArray exists and if the input is valid. The
+     * function can be called as `checkAndSanitizeInput($fieldName,$_POST,['input',$fieldName],$flags,$options)`
+     * and equals `checkAndSanitize($fieldName,$_POST['input'][$fieldName],$flags,$options)`, but checks first, if
+     * the index exists.
+     *
+     * @param string             $field   see `checkAndSanitize()` for valid values.
+     * @param array              $inputArray
+     * @param string|int|mixed[] $inputKeys
+     * @param int                $flags   see `checkAndSanitize()` for valid values.
+     * @param array              $options see `checkAndSanitize()` for valid values.
+     * @return false|mixed
+     */
+    public static function checkAndSanitizeInput($field, array &$inputArray, $inputKeys, $flags = 0, array $options = null)
+    {
+        $value = self::getValFromMultiDimInput($inputArray,$inputKeys);
+
+        if($value === false)
+            return false;
+        else
+            return self::checkAndSanitize($field,$value,$flags,$options);
     }
 
     /**
