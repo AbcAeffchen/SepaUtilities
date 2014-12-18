@@ -474,10 +474,10 @@ class SepaUtilities
      * @param string $field     see `sanitize()` for valid values.
      * @param array $inputArray
      * @param string|int|mixed[] $inputKeys
-     * @param array $flags    see `sanitize()` for valid values.
+     * @param int   $flags    see `sanitize()` for valid values.
      * @return mixed|false
      */
-    public static function sanitizeInput($field, array &$inputArray, $inputKeys, array $flags = 0)
+    public static function sanitizeInput($field, array &$inputArray, $inputKeys, $flags = 0)
     {
         $value = self::getValFromMultiDimInput($inputArray,$inputKeys);
 
