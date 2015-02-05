@@ -12,7 +12,7 @@ SepaUtilities is a PHP class to check and sanitize inputs used in SEPA files
 such as IBAN numbers, creditor identifiers, names and other text.
 
 ##Requirements##
-SepaUtilities requires PHP >=5.3.
+SepaUtilities requires PHP >= 5.3.
 
 ##Installation##
 
@@ -22,7 +22,7 @@ You can get SepaUtilities via Composer. Just add
 ```json
 {
     "require": {
-        "abcaeffchen/sepa-utilities": "~1.0.6"
+        "abcaeffchen/sepa-utilities": "~1.1.0"
     }
 }
 ```
@@ -110,4 +110,4 @@ the corresponding `PATTERN` as they allows lowercase characters and whitespaces.
 by the `check` methods.
 
 ##Licence##
-SepaUtilities is licensed under the MIT Licence.
+SepaUtilities is licensed under the LGPL v3.0 License.
