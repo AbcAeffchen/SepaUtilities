@@ -1,6 +1,12 @@
 Sephpa - Change Log
 ===============
 
+##1.1.0 - Feb 5, '15##
+- made IBAN validation by checksum optional (defaults to true)
+- added optional IBAN validation by format (defaults to true)
+- added support for exceptional IBAN - BIC connections
+- Licence changed to LGPL
+
 ##1.0.7 - Dec 18, '14##
 - added `checkInput()`,`sanitizeInput()` and `checkAndSanitizeInput()` to validate user inputs.
 With this functions it is not required to check first, if an array index like `$_POST['key1']['key2']` 

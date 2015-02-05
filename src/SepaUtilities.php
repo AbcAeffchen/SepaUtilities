@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * SepaUtilities
+ *
+ * @license   GNU LGPL v3.0 - For details have a look at the LICENSE file
+ * @copyright ©2015 Alexander Schickedanz
+ * @link      https://github.com/AbcAeffchen/Sephpa
+ *
+ * @author  Alexander Schickedanz <abcaeffchen@gmail.com>
+ */
 namespace AbcAeffchen\SepaUtilities;
 
 /**
@@ -23,7 +31,13 @@ class SepaUtilities
      * equates to RestrictedPersonIdentifierSEPA
      */
     const PATTERN_CREDITOR_IDENTIFIER  = '[a-zA-Z]{2,2}[0-9]{2,2}([A-Za-z0-9]|[\+|\?|/|\-|:|\(|\)|\.|,|\']){3,3}([A-Za-z0-9]|[\+|\?|/|\-|:|\(|\)|\.|,|\']){1,28}';
+    /**
+     * used for Names, etc.
+     */
     const PATTERN_SHORT_TEXT  = '[a-zA-Z0-9/\-?:().,\'+\s]{0,70}';
+    /**
+     * used for remittance information
+     */
     const PATTERN_LONG_TEXT  = '[a-zA-Z0-9/\-?:().,\'+\s]{0,140}';
     /**
      * Used for Message-, Payment- and Transfer-IDs
@@ -50,6 +64,114 @@ class SepaUtilities
      *           payment transactions
      */
     const BIC_REQUIRED_THRESHOLD = 20160131;
+
+    private static $ibanPatterns = array('EG' => 'EG[0-9]{2}[0-9A-Z]{23}',
+                                         'AL' => 'AL[0-9]{10}[0-9A-Z]{16}',
+                                         'DZ' => 'DZ[0-9]{2}[0-9A-Z]{20}',
+                                         'AD' => 'AD[0-9]{10}[0-9A-Z]{12}',
+                                         'AO' => 'AL[0-9]{2}[0-9A-Z]{21}',
+                                         'AZ' => 'AZ[0-9]{2}[0-9A-Z]{24}',
+                                         'BH' => 'AL[0-9]{2}[0-9A-Z]{18}',
+                                         'BE' => 'BE[0-9]{14}',
+                                         'BJ' => 'BJ[0-9]{2}[0-9A-Z]{24}',
+                                         'BA' => 'BA[0-9]{18}',
+                                         'BR' => 'BR[0-9]{2}[0-9A-Z]{25}',
+                                         'VG' => 'VG[0-9]{2}[0-9A-Z]{20}',
+                                         'BG' => 'BG[0-9]{2}[A-Z]{4}[0-9]{6}[0-9A-Z]{8}',
+                                         'BF' => 'BF[0-9]{2}[0-9A-Z]{23}',
+                                         'BI' => 'BI[0-9]{2}[0-9A-Z]{12}',
+                                         'CR' => 'CR[0-9]{2}[0-9A-Z]{17}',
+                                         'CI' => 'CI[0-9]{2}[0-9A-Z]{24}',
+                                         'DK' => 'DK[0-9]{16}',
+                                         'DE' => 'DE[0-9]{20}',
+                                         'DO' => 'DO[0-9]{2}[0-9A-Z]{24}',
+                                         'EE' => 'EE[0-9]{18}',
+                                         'FO' => 'FO[0-9]{16}',
+                                         'FI' => 'FI[0-9]{16}',
+                                         'FR' => 'FR[0-9]{2}[0-9A-Z]{23}',
+                                         'GA' => 'GA[0-9]{2}[0-9A-Z]{23}',
+                                         'GE' => 'GE[0-9]{2}[A-Z]{2}[0-9A-Z]{16}',
+                                         'GI' => 'GI[0-9]{2}[A-Z]{4}[0-9]{15}',
+                                         'GR' => 'GR[0-9]{9}[0-9A-Z]{16}',
+                                         'GL' => 'GL[0-9]{16}',
+                                         'GT' => 'GT[0-9]{2}[0-9A-Z]{24}',
+                                         'IR' => 'IR[0-9]{2}[0-9A-Z]{22}',
+                                         'IE' => 'IE[0-9]{2}[A-Z]{4}[0-9]{14}',
+                                         'IS' => 'IS[0-9]{24}',
+                                         'IL' => 'IL[0-9]{21}',
+                                         'IT' => 'IT[0-9]{2}[A-Z]{1}[0-9]{10}[0-9A-Z]{12}',
+                                         'JO' => 'JO[0-9]{2}[0-9A-Z]{26}',
+                                         'CM' => 'CM[0-9]{2}[0-9A-Z]{23}',
+                                         'CV' => 'CV[0-9]{2}[0-9A-Z]{21}',
+                                         'KZ' => 'KZ[0-9]{5}[0-9A-Z]{13}',
+                                         'QA' => 'QA[0-9]{2}[0-9A-Z]{25}',
+                                         'CG' => 'CG[0-9]{2}[0-9A-Z]{23}',
+                                         'KS' => 'KS[0-9]{2}[0-9A-Z]{16}',  // todo: This should be Kosovo IBAN. Is this correct?
+                                         'HR' => 'HR[0-9]{19}',
+                                         'KW' => 'KW[0-9]{2}[A-Z]{4}[0-9A-Z]{22}',
+                                         'LV' => 'LV[0-9]{2}[A-Z]{4}[0-9A-Z]{13}',
+                                         'LB' => 'LB[0-9]{6}[0-9A-Z]{20}',
+                                         'LI' => 'LI[0-9]{7}[0-9A-Z]{12}',
+                                         'LT' => 'LT[0-9]{18}',
+                                         'LU' => 'LU[0-9]{5}[0-9A-Z]{13}',
+                                         'MG' => 'MG[0-9]{2}[0-9A-Z]{23}',
+                                         'ML' => 'ML[0-9]{2}[0-9A-Z]{24}',
+                                         'MT' => 'MT[0-9]{2}[A-Z]{4}[0-9]{5}[0-9A-Z]{18}',
+                                         'MR' => 'MR[0-9]{25}',
+                                         'MU' => 'MU[0-9]{2}[0-9A-Z]{23}[A-Z]{3}',
+                                         'MK' => 'MK[0-9]{5}[0-9A-Z]{10}[0-9]{2}',
+                                         'MD' => 'MD[0-9]{2}[0-9A-Z]{20}',
+                                         'MC' => 'MC[0-9]{12}[0-9A-Z]{11}[0-9]{2}',
+                                         'ME' => 'ME[0-9]{20}',
+                                         'MZ' => 'MZ[0-9]{2}[0-9A-Z]{21}',
+                                         'NL' => 'NL[0-9]{2}[A-Z]{4}[0-9]{10}',
+                                         'NO' => 'NO[0-9]{13}',
+                                         'AT' => 'AT[0-9]{18}',
+                                         'TL' => 'TL[0-9]{2}[0-9A-Z]{16}',
+                                         'PK' => 'PK[0-9]{2}[0-9A-Z]{20}',
+                                         'PS' => 'PS[0-9]{2}[0-9A-Z]{25}',
+                                         'PL' => 'PL[0-9]{26}',
+                                         'PT' => 'PT[0-9]{23}',
+                                         'RO' => 'RO[0-9]{2}[A-Z]{4}[0-9A-Z]{16}',
+                                         'SM' => 'SM[0-9]{2}[A-Z]{1}[0-9]{10}[0-9A-Z]{12}',
+                                         'ST' => 'ST[0-9]{2}[0-9A-Z]{21}',
+                                         'SA' => 'SA[0-9]{4}[0-9A-Z]{18}',
+                                         'SE' => 'SE[0-9]{22}',
+                                         'CH' => 'CH[0-9]{2}[0-9]{5}[0-9A-Z]{12}',
+                                         'SN' => 'SN[0-9]{2}[0-9A-Z]{24}',
+                                         'RS' => 'RS[0-9]{20}',
+                                         'SK' => 'SK[0-9]{22}',
+                                         'SI' => 'SI[0-9]{17}',
+                                         'ES' => 'ES[0-9]{22}',
+                                         'CZ' => 'CZ[0-9]{22}',
+                                         'TN' => 'TN[0-9]{22}',
+                                         'TR' => 'TR[0-9]{7}[0-9A-Z]{17}',
+                                         'HU' => 'HU[0-9]{26}',
+                                         'AE' => 'AE[0-9]{2}[0-9A-Z]{19}',
+                                         'GB' => 'GB[0-9]{2}[A-Z]{4}[0-9]{14}',
+                                         'CY' => 'CY[0-9]{10}[0-9A-Z]{16}',
+                                         'CF' => 'CF[0-9]{2}[0-9A-Z]{23}');
+
+    private static $alphabet = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+                                     'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+                                     'U', 'V', 'W', 'X', 'Y', 'Z');
+
+    private static $alphabetValues = array( 10,  11,  12,  13,  14,  15,  16,  17,  18,  19,
+                                            20,  21,  22,  23,  24,  25,  26,  27,  28,  29,
+                                            30,  31,  32,  33,  34,  35);
+
+    private static $mod97Values = array( 1, 10,  3, 30,  9, 90, 27, 76, 81, 34, 49,  5, 50, 15, 53, 45, 62, 38,
+                                        89, 17, 73, 51, 25, 56, 75, 71, 31, 19, 93, 57, 85, 74, 61, 28, 86,
+                                        84, 64, 58, 95, 77, 91, 37, 79, 14, 43, 42, 32, 29, 96, 87, 94, 67,
+                                        88,  7, 70, 21, 16, 63, 48, 92, 47, 82, 44, 52, 35, 59,  8, 80, 24);
+
+    /**
+     * @type array $bicIbanCountryCodeExceptions IBAN country code => array of valid BIC country codes
+     */
+    private static $bicIbanCountryCodeExceptions = array('FR' => array('GF', 'GP', 'MQ', 'RE',
+                                                                       'PF', 'TF', 'YT', 'NC',
+                                                                       'BL', 'MF', 'PM', 'WF'),
+                                                         'GB' => array('IM', 'GG', 'JE'));
     /*
      * Checks if an creditor identifier (ci) is valid. Note that also if the ci is valid it does
      * not have to exist
@@ -57,17 +179,10 @@ class SepaUtilities
      * @param string $ci
      * @return string|false The valid iban or false if it is not valid
      */
-    public static function checkCreditorIdentifier( $ci )
+    public static function checkCreditorIdentifier($ci)
     {
-        $alph =         array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-                              'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-                              'U', 'V', 'W', 'X', 'Y', 'Z');
-        $alphValues =  array( 10,  11,  12,  13,  14,  15,  16,  17,  18,  19,
-                              20,  21,  22,  23,  24,  25,  26,  27,  28,  29,
-                              30,  31,  32,  33,  34,  35);
-
         $ci = preg_replace('/\s+/u', '', $ci);   // remove whitespaces
-        $ci = strtoupper($ci);                  // todo does this breaks the ci?
+        $ci = strtoupper($ci);                   // todo does this breaks the ci?
 
         if(!self::checkRestrictedPersonIdentifierSEPA($ci))
             return false;
@@ -81,7 +196,7 @@ class SepaUtilities
 
         $concat = preg_replace('#[^a-zA-Z0-9]#u','',$concat);      // remove all non-alpha-numeric characters
 
-        $concat = $check = str_replace($alph, $alphValues, $concat);
+        $concat = $check = str_replace(self::$alphabet, self::$alphabetValues, $concat);
 
         if(self::iso7064Mod97m10ChecksumCheck($concat))
             return $ciCopy;
@@ -91,18 +206,17 @@ class SepaUtilities
 
     /**
      * Checks if an iban is valid. Note that also if the iban is valid it does not have to exist
-     * @param string $iban
+     *
+*@param string $iban
+     * @param array  $options valid keys:
+     *                        - checkByCheckSum (boolean): If true, the IBAN checksum is
+     *                        calculated (default:true)
+     *                        - checkByFormat (boolean): If true, the format is checked by
+     *                        regular expression (default: true)
      * @return string|false The valid iban or false if it is not valid
      */
-    public static function checkIBAN( $iban )
+    public static function checkIBAN($iban, $options = null)
     {
-        $alph =         array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-                              'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-                              'U', 'V', 'W', 'X', 'Y', 'Z');
-        $alphValues =  array( 10,  11,  12,  13,  14,  15,  16,  17,  18,  19,
-                              20,  21,  22,  23,  24,  25,  26,  27,  28,  29,
-                              30,  31,  32,  33,  34,  35);
-
         $iban = preg_replace('/\s+/u', '' , $iban );     // remove whitespaces
         $iban = strtoupper($iban);
 
@@ -110,31 +224,38 @@ class SepaUtilities
             return false;
 
         $ibanCopy = $iban;
-        $iban = $check = str_replace($alph, $alphValues, $iban);
 
-        $bban = substr($iban, 6);
-        $check = substr($iban, 0,6);
+        if(!isset($options['checkByFormat']) || $options['checkByFormat'])
+        {
+            $countryCode = substr($iban,0,2);
+            if(isset(self::$ibanPatterns[$countryCode])
+                && !preg_match('/^' . self::$ibanPatterns[$countryCode] . '$/',$iban))
+                return false;
+        }
 
-        $concat = $bban . $check;
+        if(!isset($options['checkByCheckSum']) || $options['checkByCheckSum'])
+        {
+            $iban = $check = str_replace(self::$alphabet, self::$alphabetValues, $iban);
 
-        if(self::iso7064Mod97m10ChecksumCheck($concat))
-            return $ibanCopy;
-        else
-            return false;
+            $bban  = substr($iban, 6);
+            $check = substr($iban, 0, 6);
+
+            $concat = $bban . $check;
+
+            if( !self::iso7064Mod97m10ChecksumCheck($concat) )
+                return false;
+        }
+
+        return $ibanCopy;
     }
 
     private static function iso7064Mod97m10ChecksumCheck($input)
     {
-        $mod97 = array(1, 10, 3, 30, 9, 90, 27, 76, 81, 34, 49, 5, 50, 15, 53, 45, 62, 38,
-                       89, 17, 73, 51, 25, 56, 75, 71, 31, 19, 93, 57, 85, 74, 61, 28, 86,
-                       84, 64, 58, 95, 77, 91, 37, 79, 14, 43, 42, 32, 29, 96, 87, 94, 67,
-                       88, 7, 70, 21, 16, 63, 48, 92, 47, 82, 44, 52, 35, 59, 8, 80, 24);
-
         $checksum = 0;
         $len = strlen($input);
         for($i = 1; $i  <= $len; $i++)
         {
-            $checksum = (($checksum + $mod97[$i-1]*$input[$len-$i]) % 97);
+            $checksum = (($checksum + self::$mod97Values[$i-1]*$input[$len-$i]) % 97);
         }
 
         return ($checksum == 1);
@@ -203,7 +324,12 @@ class SepaUtilities
         $bic  = preg_replace('#\s+#','',$bic);
 
         // check the country code
-        if(strtoupper(substr($iban,0,2)) === strtoupper(substr($bic,4,2)))
+        $ibanCountryCode = strtoupper(substr($iban,0,2));
+        $bicCountryCode = strtoupper(substr($bic,4,2));
+
+        if($ibanCountryCode === $bicCountryCode
+            || (isset(self::$bicIbanCountryCodeExceptions[$ibanCountryCode])
+                && in_array($bicCountryCode,self::$bicIbanCountryCodeExceptions[$ibanCountryCode])))
             return true;
         else
             return false;
@@ -376,7 +502,7 @@ class SepaUtilities
      *                        'ccy','amendment', 'btchbookg','instdamt','seqtp','lclinstrm',
      *                        'elctrncsgntr','reqdexctndt','purp','ctgypurp','orgnldbtragt'
      * @param mixed  $input
-     * @param array  $options see `checkBic()` and `checkLocalInstrument()` for details
+     * @param array  $options see `checkBIC()`, `checkIBAN()` and `checkLocalInstrument()` for details
      * @return mixed|false The checked input or false, if it is not valid
      */
     public static function check($field, $input, array $options = null)
@@ -399,7 +525,7 @@ class SepaUtilities
             case 'ultmtdbtr': return (self::checkLength($input, 70) && self::checkCharset($input)) ? $input : false;
             case 'rmtinf': return (self::checkLength($input, 140) && self::checkCharset($input)) ? $input : false;
             case 'orgnldbtracct_iban':
-            case 'iban': return self::checkIBAN($input);
+            case 'iban': return self::checkIBAN($input,$options);
             case 'bic': return self::checkBIC($input,$options);
             case 'ccy': return self::checkActiveOrHistoricCurrencyCode($input);
             case 'amdmntind':
