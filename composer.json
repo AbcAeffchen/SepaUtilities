@@ -4,7 +4,7 @@
     "description": "SepaUtilities provides useful methods for validating and sanitizing inputs used in sepa files.",
     "keywords": ["sepa","validate","sanitize","iban"],
     "homepage": "https://github.com/AbcAeffchen/SepaUtilities",
-    "license": "MIT",
+    "license": "LGPL-3.0",
     "authors": [
         {
             "name": "Alexander Schickedanz (AbcAeffchen)",
