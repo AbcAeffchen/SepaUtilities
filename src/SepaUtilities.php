@@ -49,7 +49,8 @@ class SepaUtilities
      */
     const PATTERN_MANDATE_ID = '([A-Za-z0-9]|[\+|\?|/|\-|:|\(|\)|\.|,|\']){1,35}';
 
-    const FLAG_ALT_REPLACEMENT_GERMAN = 1;
+    const FLAG_ALT_REPLACEMENT_GERMAN = 1;      // 1 << 0
+    const FLAG_NO_REPLACEMENT_GERMAN  = 32768;  // 1 << 15
 
     const SEQUENCE_TYPE_FIRST     = 'FRST';
     const SEQUENCE_TYPE_RECURRING = 'RCUR';
@@ -106,7 +107,7 @@ class SepaUtilities
                                          'KZ' => 'KZ[0-9]{5}[0-9A-Z]{13}',
                                          'QA' => 'QA[0-9]{2}[0-9A-Z]{25}',
                                          'CG' => 'CG[0-9]{2}[0-9A-Z]{23}',
-                                         'KS' => 'KS[0-9]{2}[0-9A-Z]{16}',  // todo: This should be Kosovo IBAN. Is this correct?
+                                         'KS' => 'KS[0-9]{2}[0-9A-Z]{16}',  // todo: This should be the IBAN format for Kosovo. Is this correct?
                                          'HR' => 'HR[0-9]{19}',
                                          'KW' => 'KW[0-9]{2}[A-Z]{4}[0-9A-Z]{22}',
                                          'LV' => 'LV[0-9]{2}[A-Z]{4}[0-9A-Z]{13}',
@@ -165,6 +166,9 @@ class SepaUtilities
                                         84, 64, 58, 95, 77, 91, 37, 79, 14, 43, 42, 32, 29, 96, 87, 94, 67,
                                         88,  7, 70, 21, 16, 63, 48, 92, 47, 82, 44, 52, 35, 59,  8, 80, 24);
 
+    private static $specialChars            = array(';','[','\\',']','^','_','`', '{','|','}','~','¿','À','Á','Â','Ã','Ä','Å','Æ','Ç','È','É','Ê','Ë','Ì','Í','Î','Ï','Ð','Ñ','Ò','Ó','Ô','Õ','Ö','Ø','Ù','Ú','Û','Ü','Ý','Þ','ß','à','á','â','ã','ä','å','æ','ç','è','é','ê','ë','ì','í','î','ï','ð','ñ','ò','ó','ô','õ','ö','ø','ù','ú','û','ü','ý','þ','ÿ','Ā','ā','Ă','ă','Ą','ą','Ć','ć','Ĉ','ĉ','Ċ','ċ','Č','č','Ď','ď','Đ','đ','Ē','ē','Ĕ','ĕ','Ė','ė','Ę','ę','Ě','ě','Ĝ','ĝ','Ğ','ğ','Ġ','ġ','Ģ','ģ','Ĥ','ĥ','Ħ','ħ','Ĩ','ĩ','Ī','ī','Ĭ','ĭ','Į','į','İ','ı','Ĳ','ĳ','Ĵ','ĵ','Ķ','ķ','ĸ','Ĺ','ĺ','Ļ','ļ','Ľ','ľ','Ŀ','ŀ','Ł','ł','Ń','ń','Ņ','ņ','Ň','ň','Ő','ő','Œ','œ','Ŕ','ŕ','Ŗ','ŗ','Ř','ř','Ś','ś','Ŝ','ŝ','Ş','ş','Š','š','Ţ','ţ','Ť','ť','Ŧ','ŧ','Ũ','ũ','Ū','ū','Ŭ','ŭ','Ů','ů','Ű','ű','Ų','ų','Ŵ','ŵ','Ŷ','ŷ','Ÿ','Ź','ź','Ż','ż','Ž','ž','Ș','ș','Ț','ț','Ά','Έ','Ή','Ί','Ό','Ύ','Ώ','ΐ','Α','Β','Γ','Δ','Ε','Ζ','Η','Θ' ,'Ι','Κ','Λ','Μ','Ν','Ξ','Ο','Π','Ρ','Σ','Τ','Υ','Φ','Χ', 'Ψ', 'Ω','Ϊ','Ϋ','ά','έ','ή','ί','ΰ','α','β','γ','δ','ε','ζ','η','θ', 'ι','κ','λ','μ','ν','ξ','ο','π','ρ','ς','σ','τ','υ','φ','χ', 'ψ', 'ω','ϊ','ϋ','ό','ύ','ώ','А','Б','В','Г','Д','Е','Ж', 'З','И','Й','К','Л','М','Н','О','П','Р','С','Т','У','Ф','Х','Ц', 'Ч', 'Ш', 'Щ',  'Ъ','Ь','Ю', 'Я', 'а','б','в','г','д','е','ж', 'з','и','й','к','л','м','н','о','п','р','с','т','у','ф','х','ц', 'ч', 'ш', 'щ',  'ъ','ь','ю', 'я', '€');
+    private static $specialCharsReplacement = array(';' => ',', '[' => '(', '\\' => '/', ']' => ')', '^' => '.', '_' => '-', '`' => '\'', '{' => '(', '|' => '/', '}' => ')', '~' => '-', '¿' => '?', 'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A', 'Å' => 'A', 'Æ' => 'A', 'Ç' => 'C', 'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I', 'Ï' => 'I', 'Ð' => 'D', 'Ñ' => 'N', 'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'O', 'Ø' => 'O', 'Ù' => 'U', 'Ú' => 'U', 'Û' => 'U', 'Ü' => 'U', 'Ý' => 'Y', 'Þ' => 'T', 'ß' => 's', 'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a', 'å' => 'a', 'æ' => 'a', 'ç' => 'c', 'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 'ð' => 'd', 'ñ' => 'n', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ü' => 'u', 'ý' => 'y', 'þ' => 't', 'ÿ' => 'y', 'Ā' => 'A', 'ā' => 'a', 'Ă' => 'A', 'ă' => 'a', 'Ą' => 'A', 'ą' => 'a', 'Ć' => 'C', 'ć' => 'c', 'Ĉ' => 'C', 'ĉ' => 'c', 'Ċ' => 'C', 'ċ' => 'c', 'Č' => 'C', 'č' => 'c', 'Ď' => 'D', 'ď' => 'd', 'Đ' => 'D', 'đ' => 'd', 'Ē' => 'E', 'ē' => 'e', 'Ĕ' => 'E', 'ĕ' => 'e', 'Ė' => 'E', 'ė' => 'e', 'Ę' => 'E', 'ę' => 'e', 'Ě' => 'E', 'ě' => 'e', 'Ĝ' => 'G', 'ĝ' => 'g', 'Ğ' => 'G', 'ğ' => 'g', 'Ġ' => 'G', 'ġ' => 'g', 'Ģ' => 'G', 'ģ' => 'g', 'Ĥ' => 'H', 'ĥ' => 'h', 'Ħ' => 'H', 'ħ' => 'h', 'Ĩ' => 'I', 'ĩ' => 'i', 'Ī' => 'I', 'ī' => 'i', 'Ĭ' => 'I', 'ĭ' => 'i', 'Į' => 'I', 'į' => 'i', 'İ' => 'I', 'ı' => 'i', 'Ĳ' => 'I', 'ĳ' => 'i', 'Ĵ' => 'J', 'ĵ' => 'j', 'Ķ' => 'K', 'ķ' => 'k', 'ĸ' => '.', 'Ĺ' => 'L', 'ĺ' => 'l', 'Ļ' => 'L', 'ļ' => 'l', 'Ľ' => 'L', 'ľ' => 'l', 'Ŀ' => 'L', 'ŀ' => 'l', 'Ł' => 'L', 'ł' => 'l', 'Ń' => 'N', 'ń' => 'n', 'Ņ' => 'N', 'ņ' => 'n', 'Ň' => 'N', 'ň' => 'n', 'Ő' => 'O', 'ő' => 'o', 'Œ' => 'O', 'œ' => 'o', 'Ŕ' => 'R', 'ŕ' => 'r', 'Ŗ' => 'R', 'ŗ' => 'r', 'Ř' => 'R', 'ř' => 'r', 'Ś' => 'S', 'ś' => 's', 'Ŝ' => 'S', 'ŝ' => 's', 'Ş' => 'S', 'ş' => 's', 'Š' => 'S', 'š' => 's', 'Ţ' => 'T', 'ţ' => 't', 'Ť' => 'T', 'ť' => 't', 'Ŧ' => 'T', 'ŧ' => 't', 'Ũ' => 'U', 'ũ' => 'u', 'Ū' => 'U', 'ū' => 'u', 'Ŭ' => 'U', 'ŭ' => 'u', 'Ů' => 'U', 'ů' => 'u', 'Ű' => 'U', 'ű' => 'u', 'Ų' => 'U', 'ų' => 'u', 'Ŵ' => 'W', 'ŵ' => 'w', 'Ŷ' => 'Y', 'ŷ' => 'y', 'Ÿ' => 'Y', 'Ź' => 'Z', 'ź' => 'z', 'Ż' => 'Z', 'ż' => 'z', 'Ž' => 'Z', 'ž' => 'z', 'Ș' => 'S', 'ș' => 's', 'Ț' => 'T', 'ț' => 't', 'Ά' => 'A', 'Έ' => 'E', 'Ή' => 'I', 'Ί' => 'I', 'Ό' => 'O', 'Ύ' => 'Y', 'Ώ' => 'O', 'ΐ' => 'i', 'Α' => 'A', 'Β' => 'V', 'Γ' => 'G', 'Δ' => 'D', 'Ε' => 'E', 'Ζ' => 'Z', 'Η' => 'I', 'Θ' => 'TH', 'Ι' => 'I', 'Κ' => 'K', 'Λ' => 'L', 'Μ' => 'M', 'Ν' => 'N', 'Ξ' => 'X', 'Ο' => 'O', 'Π' => 'P', 'Ρ' => 'R', 'Σ' => 'S', 'Τ' => 'T', 'Υ' => 'Y', 'Φ' => 'F', 'Χ' => 'CH', 'Ψ' => 'PS', 'Ω' => 'O', 'Ϊ' => 'I', 'Ϋ' => 'Y', 'ά' => 'a', 'έ' => 'e', 'ή' => 'i', 'ί' => 'i', 'ΰ' => 'y', 'α' => 'a', 'β' => 'v', 'γ' => 'g', 'δ' => 'd', 'ε' => 'e', 'ζ' => 'z', 'η' => 'i', 'θ' => 'th', 'ι' => 'i', 'κ' => 'k', 'λ' => 'l', 'μ' => 'm', 'ν' => 'n', 'ξ' => 'x', 'ο' => 'o', 'π' => 'p', 'ρ' => 'r', 'ς' => 's', 'σ' => 's', 'τ' => 't', 'υ' => 'y', 'φ' => 'f', 'χ' => 'ch', 'ψ' => 'ps', 'ω' => 'o', 'ϊ' => 'i', 'ϋ' => 'y', 'ό' => 'o', 'ύ' => 'y', 'ώ' => 'o', 'А' => 'A', 'Б' => 'B', 'В' => 'V', 'Г' => 'G', 'Д' => 'D', 'Е' => 'E', 'Ж' => 'ZH', 'З' => 'Z', 'И' => 'I', 'Й' => 'Y', 'К' => 'K', 'Л' => 'L', 'М' => 'M', 'Н' => 'N', 'О' => 'O', 'П' => 'P', 'Р' => 'R', 'С' => 'S', 'Т' => 'T', 'У' => 'U', 'Ф' => 'F', 'Х' => 'H', 'Ц' => 'TS', 'Ч' => 'CH', 'Ш' => 'SH', 'Щ' => 'SHT', 'Ъ' => 'A', 'Ь' => 'Y', 'Ю' => 'YU', 'Я' => 'YA', 'а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e', 'ж' => 'zh', 'з' => 'z', 'и' => 'i', 'й' => 'y', 'к' => 'k', 'л' => 'l', 'м' => 'm', 'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's', 'т' => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'ts', 'ч' => 'ch', 'ш' => 'sh', 'щ' => 'sht', 'ъ' => 'a', 'ь' => 'y', 'ю' => 'yu', 'я' => 'ya', '€' => 'E');
+
     /**
      * @type array $bicIbanCountryCodeExceptions IBAN country code => array of valid BIC country codes
      */
@@ -182,7 +186,7 @@ class SepaUtilities
     public static function checkCreditorIdentifier($ci)
     {
         $ci = preg_replace('/\s+/u', '', $ci);   // remove whitespaces
-        $ci = strtoupper($ci);                   // todo does this breaks the ci?
+        $ci = strtoupper($ci);                   // todo does this break the ci?
 
         if(!self::checkRestrictedPersonIdentifierSEPA($ci))
             return false;
@@ -876,23 +880,39 @@ class SepaUtilities
     }
 
     /**
-     * Replaces all special chars like á, ä, â, à, å, ã, æ, Ç, Ø, Š, ", ’ and & with a latin char.
-     * All special characters that can not be replaced with a latin char (such like quotes) will
-     * be removed as long as they can not converted. See http://www.europeanpaymentscouncil.eu/index.cfm/knowledge-bank/epc-documents/sepa-requirements-for-an-extended-character-set-unicode-subset-best-practices/
+     * Replaces all special chars like á, ä, â, à, å, ã, æ, Ç, Ø, Š, ", ’ and & by a latin character.
+     * All special characters that cannot be replaced by a latin char (such like quotes) will
+     * be removed as long as they cannot be converted. See http://www.europeanpaymentscouncil.eu/index.cfm/knowledge-bank/epc-documents/sepa-requirements-for-an-extended-character-set-unicode-subset-best-practices/
      * for more information about converting characters.
      *
      * @param string $str
-     * @param int    $flags Use the SepaUtilities::FLAG_ALT_REPLACEMENT_* constants. This will
-     *                      ignore the best practice replacement and use a more common one.
-     *                      You can use more than one flag by using the | (bitwise or) operator.
+     * @param int    $flags Use the SepaUtilities::FLAG_ALT_REPLACEMENT_* and SepaUtilities::FLAG_NO_REPLACEMENT_*
+     *                      constants. FLAG_ALT_REPLACEMENT_* will ignore the best practice replacement
+     *                      and use a more common one. You can use more than one flag by using
+     *                      the | (bitwise or) operator. FLAG_NO_REPLACEMENT_* tells the function
+     *                      not to replace the character group.
      * @return string
      */
     public static function replaceSpecialChars($str, $flags = 0)
     {
-        if($flags & self::FLAG_ALT_REPLACEMENT_GERMAN)
-            $str = str_replace(array('Ä','ä','Ö','ö','Ü','ü','ß'),
-                               array('Ae','ae','Oe','oe','Ue','ue','ss'),
-                               $str);
+        if($flags === 0)
+        {
+            $specialCharsReplacement =& self::$specialCharsReplacement; // reference
+            $charExceptions = '';
+        }
+        else
+        {
+            $specialCharsReplacement = self::$specialCharsReplacement;  // copy
+            $charExceptions = '';
+
+            if( $flags & self::FLAG_ALT_REPLACEMENT_GERMAN)
+                self::changeArrayValuesByAssocArray($specialCharsReplacement,array('Ä' => 'Ae', 'ä' => 'ae', 'Ö' => 'Oe', 'ö' => 'oe', 'Ü' => 'Ue', 'ü' => 'ue', 'ß' => 'ss'));
+            if($flags & self::FLAG_NO_REPLACEMENT_GERMAN)
+            {
+                self::changeArrayValuesToKeys($specialCharsReplacement, array('Ä', 'ä', 'Ö', 'ö', 'Ü', 'ü', 'ß'));
+                $charExceptions .= 'ÄäÖöÜüß';
+            }
+        }
 
         // remove characters
         $str = str_replace(array('"','&','<','>'),'',$str);
@@ -901,12 +921,10 @@ class SepaUtilities
         $str = preg_replace('#\s+#u',' ',$str);
 
         // special replacement for some characters (incl. greek and cyrillic)
-        $search  = array(';','[','\\',']','^','_','`', '{','|','}','~','¿','À','Á','Â','Ã','Ä','Å','Æ','Ç','È','É','Ê','Ë','Ì','Í','Î','Ï','Ð','Ñ','Ò','Ó','Ô','Õ','Ö','Ø','Ù','Ú','Û','Ü','Ý','Þ','ß','à','á','â','ã','ä','å','æ','ç','è','é','ê','ë','ì','í','î','ï','ð','ñ','ò','ó','ô','õ','ö','ø','ù','ú','û','ü','ý','þ','ÿ','Ā','ā','Ă','ă','Ą','ą','Ć','ć','Ĉ','ĉ','Ċ','ċ','Č','č','Ď','ď','Đ','đ','Ē','ē','Ĕ','ĕ','Ė','ė','Ę','ę','Ě','ě','Ĝ','ĝ','Ğ','ğ','Ġ','ġ','Ģ','ģ','Ĥ','ĥ','Ħ','ħ','Ĩ','ĩ','Ī','ī','Ĭ','ĭ','Į','į','İ','ı','Ĳ','ĳ','Ĵ','ĵ','Ķ','ķ','ĸ','Ĺ','ĺ','Ļ','ļ','Ľ','ľ','Ŀ','ŀ','Ł','ł','Ń','ń','Ņ','ņ','Ň','ň','Ő','ő','Œ','œ','Ŕ','ŕ','Ŗ','ŗ','Ř','ř','Ś','ś','Ŝ','ŝ','Ş','ş','Š','š','Ţ','ţ','Ť','ť','Ŧ','ŧ','Ũ','ũ','Ū','ū','Ŭ','ŭ','Ů','ů','Ű','ű','Ų','ų','Ŵ','ŵ','Ŷ','ŷ','Ÿ','Ź','ź','Ż','ż','Ž','ž','Ș','ș','Ț','ț','Ά','Έ','Ή','Ί','Ό','Ύ','Ώ','ΐ','Α','Β','Γ','Δ','Ε','Ζ','Η','Θ' ,'Ι','Κ','Λ','Μ','Ν','Ξ','Ο','Π','Ρ','Σ','Τ','Υ','Φ','Χ', 'Ψ', 'Ω','Ϊ','Ϋ','ά','έ','ή','ί','ΰ','α','β','γ','δ','ε','ζ','η','θ', 'ι','κ','λ','μ','ν','ξ','ο','π','ρ','ς','σ','τ','υ','φ','χ', 'ψ', 'ω','ϊ','ϋ','ό','ύ','ώ','А','Б','В','Г','Д','Е','Ж', 'З','И','Й','К','Л','М','Н','О','П','Р','С','Т','У','Ф','Х','Ц', 'Ч', 'Ш', 'Щ',  'Ъ','Ь','Ю', 'Я', 'а','б','в','г','д','е','ж', 'з','и','й','к','л','м','н','о','п','р','с','т','у','ф','х','ц', 'ч', 'ш', 'щ',  'ъ','ь','ю', 'я', '€');
-        $replace = array(',','(','/', ')','.','-','\'','(','/',')','-','?','A','A','A','A','A','A','A','C','E','E','E','E','I','I','I','I','D','N','O','O','O','O','O','O','U','U','U','U','Y','T','s','a','a','a','a','a','a','a','c','e','e','e','e','i','i','i','i','d','n','o','o','o','o','o','o','u','u','u','u','y','t','y','A','a','A','a','A','a','C','c','C','c','C','c','C','c','D','d','D','d','E','e','E','e','E','e','E','e','E','e','G','g','G','g','G','g','G','g','H','h','H','h','I','i','I','i','I','i','I','i','I','i','I','i','J','j','K','k','.','L','l','L','l','L','l','L','l','L','l','N','n','N','n','N','n','O','o','O','o','R','r','R','r','R','r','S','s','S','s','S','s','S','s','T','t','T','t','T','t','U','u','U','u','U','u','U','u','U','u','U','u','W','w','Y','y','Y','Z','z','Z','z','Z','z','S','s','T','t','A','E','I','I','O','Y','O','i','A','V','G','D','E','Z','I','TH','I','K','L','M','N','X','O','P','R','S','T','Y','F','CH','PS','O','I','Y','a','e','i','i','y','a','v','g','d','e','z','i','th','i','k','l','m','n','x','o','p','r','s','s','t','y','f','ch','ps','o','i','y','o','y','o','A','B','V','G','D','E','ZH','Z','I','Y','K','L','M','N','O','P','R','S','T','U','F','H','TS','CH','SH','SHT','A','Y','YU','YA','a','b','v','g','d','e','zh','z','i','y','k','l','m','n','o','p','r','s','t','u','f','h','ts','ch','sh','sht','a','y','yu','ya','E');
-        $str = str_replace($search,$replace,$str);
+        $str = strtr($str,$specialCharsReplacement);
 
         // replace everything not allowed in sepa files by . (a dot)
-        $str = preg_replace('#[^a-zA-Z0-9/\-?:().,\'+ ]#u','.',$str);
+        $str = preg_replace('#[^a-zA-Z0-9/\-?:().,\'+ ' . $charExceptions . ']#u','.',$str);
 
         // remove leading and closing whitespaces
         return trim($str);
@@ -1035,5 +1053,27 @@ class SepaUtilities
             return $input;
 
         return false;
+    }
+
+    /**
+     * Performs $array[$key] = $value for all $key => $value pairs in $newValues.
+     * @param string[] $array
+     * @param string[] $newValues An assoc array with keys that exists in $array
+     */
+    private static function changeArrayValuesByAssocArray(&$array, $newValues)
+    {
+        foreach($newValues as $key => $val)
+            $array[$key] = $val;
+    }
+
+    /**
+     * Performs $array[$key] = $key for all values in $keys.
+     * @param $array
+     * @param $keys
+     */
+    private static function changeArrayValuesToKeys(&$array, $keys)
+    {
+        foreach($keys as $key)
+            $array[$key] = $key;
     }
 }

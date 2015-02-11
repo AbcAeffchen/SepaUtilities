@@ -1,6 +1,9 @@
 Sephpa - Change Log
 ===============
 
+##1.1.1 - Feb 11, '15##
+- added flag for replaceSpecialChars(), to prevent replacing german umlauts
+
 ##1.1.0 - Feb 5, '15##
 - made IBAN validation by checksum optional (defaults to true)
 - added optional IBAN validation by format (defaults to true)

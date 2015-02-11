@@ -185,6 +185,7 @@ class SepaUtilitiesTest extends PHPUnit_Framework_TestCase
         // Test german characters flag
         $this->assertSame('AaOoUus',SepaUtilities::replaceSpecialChars('ÄäÖöÜüß'));
         $this->assertSame('AeaeOeoeUeuess',SepaUtilities::replaceSpecialChars('ÄäÖöÜüß',SepaUtilities::FLAG_ALT_REPLACEMENT_GERMAN));
+        $this->assertSame('ÄäÖöÜüß',SepaUtilities::replaceSpecialChars('ÄäÖöÜüß',SepaUtilities::FLAG_NO_REPLACEMENT_GERMAN));
 
     }
 
