@@ -6,7 +6,7 @@ SepaUtilities
 [![Total Downloads](https://poser.pugx.org/abcaeffchen/sepa-utilities/downloads.svg)](https://packagist.org/packages/abcaeffchen/sepa-utilities) 
 [![Reference Status](https://www.versioneye.com/php/abcaeffchen:sepa-utilities/reference_badge.svg)](https://www.versioneye.com/php/abcaeffchen:sepa-utilities/references)
 [![License](https://poser.pugx.org/abcaeffchen/sepa-utilities/license.svg)](https://packagist.org/packages/abcaeffchen/sepa-utilities)
-
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/AbcAeffchen/SepaUtilities?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 ##General##
 SepaUtilities is a PHP class to check and sanitize inputs used in SEPA files
 such as IBAN numbers, creditor identifiers, names and other text.
