@@ -52,13 +52,33 @@ class SepaUtilities
     const FLAG_ALT_REPLACEMENT_GERMAN = 1;      // 1 << 0
     const FLAG_NO_REPLACEMENT_GERMAN  = 32768;  // 1 << 15
 
+    /**
+     * first direct debit
+     */
     const SEQUENCE_TYPE_FIRST     = 'FRST';
+    /**
+     * recurring direct debit
+     */
     const SEQUENCE_TYPE_RECURRING = 'RCUR';
+    /**
+     * one time direct debit
+     */
     const SEQUENCE_TYPE_ONCE      = 'OOFF';
+    /**
+     * final direct debit
+     */
     const SEQUENCE_TYPE_FINAL     = 'FNAL';
-
+    /**
+     * normal direct debit
+     */
     const LOCAL_INSTRUMENT_CORE_DIRECT_DEBIT     = 'CORE';
+    /**
+     * urgent direct debit
+     */
     const LOCAL_INSTRUMENT_CORE_DIRECT_DEBIT_D_1 = 'COR1';
+    /**
+     * business direct debit
+     */
     const LOCAL_INSTRUMENT_BUSINESS_2_BUSINESS   = 'B2B';
     /**
      * @type int BIC_REQUIRED_THRESHOLD Until 2016-01-31 (incl.) the BIC is required for international
