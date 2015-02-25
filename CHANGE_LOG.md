@@ -1,6 +1,9 @@
 Sephpa - Change Log
 ===============
 
+##1.1.2 - Not released yet##
+- added some doc comments
+
 ##1.1.1 - Feb 11, '15##
 - added flag for replaceSpecialChars(), to prevent replacing german umlauts
 
