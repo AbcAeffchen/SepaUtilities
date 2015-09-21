@@ -968,15 +968,15 @@ class SepaUtilities
     private static function checkAmountFormat( $amount )
     {
         // $amount is a string -> check for '1,234.56'
-        $amount = filter_var($amount, FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
+        $result = filter_var($amount, FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
 
-        if($amount === false)
-            $amount = filter_var(strtr($amount,array(',' => '.', '.' => ',')), FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
+        if($result === false)
+            $result = filter_var(strtr($amount,array(',' => '.', '.' => ',')), FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
 
-        if($amount === false || $amount < 0.01 || $amount > 999999999.99 || round($amount,2) != $amount)
+        if($result === false || $result < 0.01 || $result > 999999999.99 || round($result,2) != $result)
             return false;
 
-        return $amount;
+        return $result;
     }
 
     /**

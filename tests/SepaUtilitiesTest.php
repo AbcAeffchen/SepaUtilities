@@ -357,5 +357,16 @@ class SepaUtilitiesTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(SepaUtilities::crossCheckIbanBic('DE','1234ED12XXX'));
         $this->assertFalse(SepaUtilities::crossCheckIbanBic('FR','1234AD12XXX'));
     }
+
+    public function testCheckAmountFormat()
+    {
+        $this->assertSame(1234.56,SepaUtilities::check('instdamt','1,234.56'));
+        $this->assertSame(1234.56,SepaUtilities::check('instdamt','1234.56'));
+        $this->assertSame(1234.56,SepaUtilities::check('instdamt','1234,56'));
+        $this->assertSame(1234.56,SepaUtilities::check('instdamt','1.234,56'));
+        $this->assertFalse(SepaUtilities::check('instdamt','0.005'));
+        $this->assertFalse(SepaUtilities::check('instdamt','9999999999999.99'));
+        $this->assertFalse(SepaUtilities::check('instdamt',0.009));
+    }
 }
  
