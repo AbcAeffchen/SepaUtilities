@@ -3,6 +3,7 @@ Sephpa - Change Log
 
 ##1.2.0 - Not yet released##
 - dropped PHP 5.5 support
+- added support for HHVM
 - added support for SEPA file formats pain.001.001.03 and pain.008.001.02.<br>
  There are two variants of this file format, one from 2009 witch is used e.g. in the netherlands
  and one from 2016 specified in the Appendix 3 V3.0 used in germany where it is valid from 
@@ -14,6 +15,7 @@ Sephpa - Change Log
 - renamed `PATTERN_FILE_IDS` to `PATTERN_RESTRICTED_IDENTIFICATION_SEPA1`
 - added more tests to increase the code coverage
 - added new `sanitizeDate()` function
+
 
 ##1.1.2 - Sep 21, '15##
 - added some doc comments
