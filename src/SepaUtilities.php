@@ -16,11 +16,15 @@ namespace AbcAeffchen\SepaUtilities;
 class SepaUtilities
 {
     // credit transfers version
-    const SEPA_PAIN_001_002_03 = 100203;
-    const SEPA_PAIN_001_003_03 = 100303;
+    const SEPA_PAIN_001_002_03      = 100203;
+    const SEPA_PAIN_001_003_03      = 100303;
+    const SEPA_PAIN_001_001_03      = 100103;
+    const SEPA_PAIN_001_001_03_GBIC = 1001031;
     // direct debit versions
-    const SEPA_PAIN_008_002_02 = 800202;
-    const SEPA_PAIN_008_003_02 = 800302;
+    const SEPA_PAIN_008_002_02      = 800202;
+    const SEPA_PAIN_008_003_02      = 800302;
+    const SEPA_PAIN_008_001_02      = 800102;
+    const SEPA_PAIN_008_001_02_GBIC = 8001021;
 
     const HTML_PATTERN_IBAN = '([a-zA-Z]\s*){2}([0-9]\s?){2}\s*([a-zA-Z0-9]\s*){1,30}';
     const HTML_PATTERN_BIC = '([a-zA-Z]\s*){6}[a-zA-Z2-9]\s*[a-nA-Np-zP-Z0-9]\s*(([A-Z0-9]\s*){3}){0,1}';
@@ -40,14 +44,17 @@ class SepaUtilities
      */
     const PATTERN_LONG_TEXT  = '[a-zA-Z0-9/\-?:().,\'+\s]{0,140}';
     /**
-     * Used for Message-, Payment- and Transfer-IDs
-     * equates to checkRestrictedIdentificationSEPA1
+     * Used for Message-, Payment- and Transfer-IDs (since 2016 also for Mandate-ID)
      */
-    const PATTERN_FILE_IDS = '([A-Za-z0-9]|[\+|\?|/|\-|:|\(|\)|\.|,|\'|\s]){1,35}';
+    const PATTERN_RESTRICTED_IDENTIFICATION_SEPA1 = '([A-Za-z0-9]|[\+|\?|/|\-|:|\(|\)|\.|,|\'|\s]){1,35}';
     /**
-     * equates to checkRestrictedIdentificationSEPA2
+     * Used for Mandate-ID
      */
-    const PATTERN_MANDATE_ID = '([A-Za-z0-9]|[\+|\?|/|\-|:|\(|\)|\.|,|\']){1,35}';
+    const PATTERN_RESTRICTED_IDENTIFICATION_SEPA2 = '([A-Za-z0-9]|[\+|\?|/|\-|:|\(|\)|\.|,|\']){1,35}';
+    /**
+     * This is just for compatibility to v1.1.*
+     */
+    const PATTERN_MANDATE_ID = self::PATTERN_RESTRICTED_IDENTIFICATION_SEPA2;
 
     const FLAG_ALT_REPLACEMENT_GERMAN = 1;      // 1 << 0
     const FLAG_NO_REPLACEMENT_GERMAN  = 32768;  // 1 << 15
@@ -315,7 +322,9 @@ class SepaUtilities
     }
 
     /**
-     * Checks if both IBANs are belong to the same country.
+     * Checks if both IBANs do belong to the same country.
+     * This function does not check if the IBANs are valid.
+     *
      * @param string $iban1
      * @param string $iban2
      * @return bool
@@ -327,14 +336,14 @@ class SepaUtilities
         $iban2 = preg_replace('#\s+#','',$iban2);
 
         // check the country code
-        if(strtoupper(substr($iban1,0,2)) === strtoupper(substr($iban2,0,2)))
+        if(stripos($iban1,substr($iban2,0,2)) === 0)
             return true;
         else
             return false;
     }
 
     /**
-     * Checks if IBAN and BIC belong to the same country. If not, the also can not belong to
+     * Checks if IBAN and BIC belong to the same country. If not, they also can not belong to
      * each other.
      *
      * @param string $iban
@@ -361,15 +370,62 @@ class SepaUtilities
 
     private static function checkDateFormat($input)
     {
-        if($input === \DateTime::createFromFormat('Y-m-d', $input)->format('Y-m-d'))
+        $dateObj = \DateTime::createFromFormat('Y-m-d', $input);
+        if($dateObj !== false && $input === $dateObj->format('Y-m-d'))
             return $input;
         else
             return false;
     }
 
+    /**
+     * Tries to convert the given date into the format YYYY-MM-DD (Y-m-d). Therefor it tries the
+     * following input formats in the order of appearance: d.m.Y, d.m.y, j.n.Y, j.n.y, m.d.Y,
+     * m.d.y, n.j.Y, n.j.y, Y/m/d, y/m/d, Y/n/j, y/n/j, Y.m.d, y.m.d, Y.n.j, y.n.j.
+     * Notice that this method tries to interpret the first number as day-of-month. This can
+     * lead to wrong dates if you have something like the 1st of April 2016 written as 04.01.2016.
+     * This will be interpreted as the 4th of January 2016. This is why you have to call this
+     * method on your owen risk and it is not included in the sanitize() method.
+     *
+     * @param string $input The date that should be reformatted
+     * @param array  $preferredFormats An array of formats that will be checked first.
+     * @return string|false The sanitized date or false, if it is not sanitizable.
+     */
+    public static function sanitizeDateFormat($input, array $preferredFormats = array())
+    {
+        $dateFormats = array('d.m.Y', 'd.m.y', 'j.n.Y', 'j.n.y', 'm.d.Y', 'm.d.y', 'n.j.Y', 'n.j.y',
+                             'Y/m/d', 'y/m/d', 'Y/n/j', 'y/n/j', 'Y.m.d', 'y.m.d', 'Y.n.j', 'y.n.j');
+
+        // input is already in the correct format?
+        $dateObj = \DateTime::createFromFormat('Y-m-d',$input);
+        if($dateObj !== false)
+            return $input;
+
+        foreach($preferredFormats as $format)
+        {
+            $dateObj = \DateTime::createFromFormat($format,$input);
+            if($dateObj !== false)
+                return $dateObj->format('Y-m-d');
+        }
+
+        foreach($dateFormats as $format)
+        {
+            $dateObj = \DateTime::createFromFormat($format,$input);
+            if($dateObj !== false)
+                return $dateObj->format('Y-m-d');
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if the input has the format 'Y-m-d\TH:i:s'
+     * @param string $input
+     * @return string|false Returns $input if it is valid and false else.
+     */
     public static function checkCreateDateTime($input)
     {
-        if($input === \DateTime::createFromFormat('Y-m-d\TH:i:s', $input)->format('Y-m-d\TH:i:s'))
+        $dateObj = \DateTime::createFromFormat('Y-m-d\TH:i:s', $input);
+        if($dateObj !== false && $input === $dateObj->format('Y-m-d\TH:i:s'))
             return $input;
         else
             return false;
@@ -472,7 +528,7 @@ class SepaUtilities
      */
     private static function dateIsTargetDay(\DateTime $date)
     {
-        // $date is a saturday or sunday
+        // $date is a saturday or sunday?
         if($date->format('N') === '6' || $date->format('N') === '7')
             return false;
 
@@ -517,7 +573,7 @@ class SepaUtilities
             return $input[$key];
     }
 
-        /**
+    /**
      * Checks if the input holds for the field.
      *
      * @param string $field   Valid fields are: 'orgnlcdtrschmeid_id','ci','msgid','pmtid','pmtinfid',
@@ -526,10 +582,11 @@ class SepaUtilities
      *                        'ccy','amendment', 'btchbookg','instdamt','seqtp','lclinstrm',
      *                        'elctrncsgntr','reqdexctndt','purp','ctgypurp','orgnldbtragt'
      * @param mixed  $input
-     * @param array  $options see `checkBIC()`, `checkIBAN()` and `checkLocalInstrument()` for details
-     * @return mixed|false The checked input or false, if it is not valid
+     * @param array  $options See `checkBIC()`, `checkIBAN()` and `checkLocalInstrument()` for details.
+     * @param int    $version Can be used to specify one of the `SEPA_PAIN_*` constants.
+     * @return false|mixed The checked input or false, if it is not valid
      */
-    public static function check($field, $input, array $options = null)
+    public static function check($field, $input, array $options = null, $version = null)
     {
         $field = strtolower($field);
         switch($field)      // fall-through's are on purpose
@@ -540,7 +597,10 @@ class SepaUtilities
             case 'pmtid':   // next line
             case 'pmtinfid': return self::checkRestrictedIdentificationSEPA1($input);
             case 'orgnlmndtid':
-            case 'mndtid': return self::checkRestrictedIdentificationSEPA2($input);
+            case 'mndtid': return $version === self::SEPA_PAIN_001_001_03_GBIC
+                                    || $version === self::SEPA_PAIN_008_001_02_GBIC
+                            ? self::checkRestrictedIdentificationSEPA1($input)
+                            : self::checkRestrictedIdentificationSEPA2($input);
             case 'initgpty':                                // cannot be empty (and the following things also)
             case 'cdtr':                                    // cannot be empty (and the following things also)
             case 'dbtr': if(empty($input)) return false;    // cannot be empty
@@ -587,33 +647,6 @@ class SepaUtilities
             return false;
         else
             return self::check($field,$value,$options);
-    }
-
-    /**
-     * Tries to sanitize the the input so it fits in the field.
-     *
-     * @param string $field Valid fields are: 'ultmtcdrt', 'ultmtdebtr',
-     *                      'orgnlcdtrschmeid_nm', 'initgpty', 'cdtr', 'dbtr', 'rmtinf'
-     * @param mixed  $input
-     * @param int    $flags Flags used in replaceSpecialChars()
-     * @return mixed|false The sanitized input or false if the input is not sanitizeable or
-     *                      invalid also after sanitizing.
-     */
-    public static function sanitize($field, $input, $flags = 0)
-    {
-        $field = strtolower($field);
-        switch($field)          // fall-through's are on purpose
-        {
-            case 'ultmtcdrt':
-            case 'ultmtdebtr': return self::sanitizeShortText($input,true,$flags);
-            case 'orgnlcdtrschmeid_nm':
-            case 'initgpty':
-            case 'cdtr':
-            case 'dbtr':
-                return self::sanitizeShortText($input,false,$flags);
-            case 'rmtinf': return self::sanitizeLongText($input,true,$flags);
-            default: return false;
-        }
     }
 
     /**
@@ -721,20 +754,50 @@ class SepaUtilities
         return false;
     }
 
+    /**
+     * Tries to sanitize the the input so it fits in the field.
+     *
+     * @param string $field Valid fields are: 'ultmtcdrt', 'ultmtdebtr',
+     *                      'orgnlcdtrschmeid_nm', 'initgpty', 'cdtr', 'dbtr', 'rmtinf'
+     * @param mixed  $input
+     * @param int    $flags Flags used in replaceSpecialChars()
+     * @return mixed|false The sanitized input or false if the input is not sanitizeable or
+     *                      invalid also after sanitizing.
+     */
+    public static function sanitize($field, $input, $flags = 0)
+    {
+        $field = strtolower($field);
+        switch($field)          // fall-through's are on purpose
+        {
+            case 'ultmtcdrt':
+            case 'ultmtdebtr': return self::sanitizeShortText($input,true,$flags);
+            case 'orgnlcdtrschmeid_nm':
+            case 'initgpty':
+            case 'cdtr':
+            case 'dbtr':
+                return self::sanitizeShortText($input,false,$flags);
+            case 'rmtinf': return self::sanitizeLongText($input,true,$flags);
+            default: return false;
+        }
+    }
+
     public static function checkRequiredCollectionKeys(array $inputs, $version)
     {
-        switch($version)
+        switch($version)    // fall-through's are on purpose
         {
             case self::SEPA_PAIN_001_002_03:
                 $requiredKeys = array('pmtInfId', 'dbtr', 'iban', 'bic');
                 break;
+            case self::SEPA_PAIN_001_001_03:
+            case self::SEPA_PAIN_001_001_03_GBIC:
             case self::SEPA_PAIN_001_003_03:
                 $requiredKeys = array('pmtInfId', 'dbtr', 'iban');
                 break;
             case self::SEPA_PAIN_008_002_02:
-                $requiredKeys = array('pmtInfId', 'lclInstrm', 'seqTp', 'cdtr', 'iban', 'bic',
-                                      'ci');
+                $requiredKeys = array('pmtInfId', 'lclInstrm', 'seqTp', 'cdtr', 'iban', 'bic', 'ci');
                 break;
+            case self::SEPA_PAIN_008_001_02:
+            case self::SEPA_PAIN_008_001_02_GBIC:
             case self::SEPA_PAIN_008_003_02:
                 $requiredKeys = array('pmtInfId', 'lclInstrm', 'seqTp', 'cdtr', 'iban', 'ci');
                 break;
@@ -752,12 +815,16 @@ class SepaUtilities
             case self::SEPA_PAIN_001_002_03:
                 $requiredKeys = array('pmtId', 'instdAmt', 'iban', 'bic', 'cdtr');
                 break;
+            case self::SEPA_PAIN_001_001_03:
+            case self::SEPA_PAIN_001_001_03_GBIC:
             case self::SEPA_PAIN_001_003_03:
                 $requiredKeys = array('pmtId', 'instdAmt', 'iban', 'cdtr');
                 break;
             case self::SEPA_PAIN_008_002_02:
                 $requiredKeys = array('pmtId', 'instdAmt', 'mndtId', 'dtOfSgntr', 'dbtr', 'iban','bic');
                 break;
+            case self::SEPA_PAIN_008_001_02:
+            case self::SEPA_PAIN_008_001_02_GBIC:
             case self::SEPA_PAIN_008_003_02:
                 $requiredKeys = array('pmtId', 'instdAmt', 'mndtId', 'dtOfSgntr', 'dbtr', 'iban');
                 break;
@@ -843,7 +910,7 @@ class SepaUtilities
      */
     private static function checkRestrictedIdentificationSEPA1($input)
     {
-        if(preg_match('#^' . self::PATTERN_FILE_IDS . '$#',$input))
+        if(preg_match('#^' . self::PATTERN_RESTRICTED_IDENTIFICATION_SEPA1 . '$#', $input))
             return $input;
         else
             return false;
@@ -855,7 +922,7 @@ class SepaUtilities
      */
     private static function checkRestrictedIdentificationSEPA2($input)
     {
-        if(preg_match('#^' . self::PATTERN_MANDATE_ID . '$#',$input))
+        if(preg_match('#^' . self::PATTERN_RESTRICTED_IDENTIFICATION_SEPA2 . '$#', $input))
             return $input;
         else
             return false;
@@ -998,7 +1065,7 @@ class SepaUtilities
 
     /**
      * @param string $input
-     * @param array $options
+     * @param array $options Can contain the key `version` with values `SepaUtilities::SEPA_PAIN_008_*`
      * @return bool|string
      */
     private static function checkLocalInstrument($input, array $options = null)
@@ -1007,8 +1074,10 @@ class SepaUtilities
 
         $input = strtoupper($input);
 
-        switch($version)
+        switch($version)    // fall-through's are on purpose
         {
+            case self::SEPA_PAIN_008_001_02:
+            case self::SEPA_PAIN_008_001_02_GBIC:
             case self::SEPA_PAIN_008_002_02:
                 $validCases = array(self::LOCAL_INSTRUMENT_CORE_DIRECT_DEBIT,
                                     self::LOCAL_INSTRUMENT_BUSINESS_2_BUSINESS);
