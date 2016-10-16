@@ -1,6 +1,20 @@
 Sephpa - Change Log
 ===============
 
+##1.2.0 - Not yet released##
+- dropped PHP 5.5 support
+- added support for SEPA file formats pain.001.001.03 and pain.008.001.02.<br>
+ There are two variants of this file format, one from 2009 witch is used e.g. in the netherlands
+ and one from 2016 specified in the Appendix 3 V3.0 used in germany where it is valid from 
+ November 2016. The two versions can be distinguished from each other via the new constants
+ `SEPA_PAIN_001_001_03` and `SEPA_PAIN_001_001_03_GBIC` respectively `SEPA_PAIN_008_001_02` 
+ and `SEPA_PAIN_008_001_02_GBIC`, where the constants with e `GBIC` suffix correspond to the new
+ german file version.
+- improved some functions robustness
+- renamed `PATTERN_FILE_IDS` to `PATTERN_RESTRICTED_IDENTIFICATION_SEPA1`
+- added more tests to increase the code coverage
+- added new `sanitizeDate()` function
+
 ##1.1.2 - Sep 21, '15##
 - added some doc comments
 - fixed amount format check
