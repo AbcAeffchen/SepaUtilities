@@ -532,8 +532,7 @@ class SepaUtilities
             $isTargetDay = self::dateIsTargetDay($targetDateObj);
         }
 
-        $diff = $targetDateObj->diff($earliestDateObj);
-        if($diff->invert === 1)      // target > earliest
+        if(strcmp($targetDateObj->format('Y-m-d'),$earliestDateObj->format('Y-m-d')) > 0)      // target > earliest?
             return $targetDateObj->format('Y-m-d');
         else
             return $earliestDateObj->format('Y-m-d');
