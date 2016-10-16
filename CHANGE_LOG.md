@@ -1,7 +1,7 @@
 Sephpa - Change Log
 ===============
 
-##1.2.0 - Not yet released##
+##1.2.0 - Oct 16, '16##
 - dropped PHP 5.5 support
 - added support for HHVM
 - added support for SEPA file formats pain.001.001.03 and pain.008.001.02.<br>
