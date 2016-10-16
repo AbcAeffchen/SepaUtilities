@@ -11,6 +11,25 @@
 namespace AbcAeffchen\SepaUtilities;
 
 /**
+ * Returns a DateTime object of easter sunday in the given year.
+ * This is calculated with the Gaussian Algorithm.
+ * @param int $year The year written with four digits.
+ * @return \DateTime
+ */
+function easterDate($year) {
+    $G = $year % 19;
+    $C = (int)($year / 100);
+    $H = (int)($C - (int)($C / 4) - (int)((8*$C+13) / 25) + 19*$G + 15) % 30;
+    $I = (int)$H - (int)($H / 28)*(1 - (int)($H / 28)*(int)(29 / ($H + 1))*(int)((21 - $G) / 11));
+    $J = ($year + (int)($year/4) + $I + 2 - $C + (int)($C/4)) % 7;
+    $L = $I - $J;
+    $m = 3 + (int)(($L + 40) / 44);
+    $d = $L + 28 - 31 * ((int)($m / 4));
+
+    return \DateTime::createFromFormat('Y-n-j', $year . '-' . $m .'-' . $d);
+}
+
+/**
  * Useful methods to validate an sanitize input used in SEPA files
  */
 class SepaUtilities
@@ -540,13 +559,9 @@ class SepaUtilities
             return false;
 
         $year = $date->format('Y');
-        $daysToEasterSunday = easter_days((int) $year);
-        $goodFriday = \DateTime::createFromFormat('Y-m-d', $year . '-03-21')
-            ->modify('+' . ($daysToEasterSunday - 2) . ' days')
-            ->format('m-d');
-        $easterMonday = \DateTime::createFromFormat('Y-m-d', $year . '-03-21')
-            ->modify('+' . ($daysToEasterSunday + 1) . ' days')
-            ->format('m-d');
+        $easter = easterDate((int) $year);      // contains easter sunday
+        $goodFriday =   $easter->modify('-2 days')->format('m-d');      // $easter contains now good friday
+        $easterMonday = $easter->modify('+3 days')->format('m-d');      // $easter contains now easter monday
 
         if($day === $goodFriday || $day === $easterMonday)
             return false;

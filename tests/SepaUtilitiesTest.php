@@ -424,5 +424,23 @@ class SepaUtilitiesTest extends PHPUnit_Framework_TestCase
 
         static::assertFalse(SepaUtilities::check('seqtp', 'TEST'));
     }
+
+    public function testEsterDate()
+    {
+        // this tests cannot be done if easter_date is not defined like in hhvm.
+        if (!function_exists('easter_date'))
+            return;
+
+        for($year = 1970; $year <= 2037; $year++)
+        {
+            static::assertSame(DateTime::createFromFormat('U', easter_date($year))->modify('+12 hours')->format('Y-m-d'),
+                               \AbcAeffchen\SepaUtilities\easterDate($year)->format('Y-m-d'));
+        }
+
+        // test out of bound easter sundays
+        static::assertSame('1870-04-17',\AbcAeffchen\SepaUtilities\easterDate(1870)->format('Y-m-d'));
+        static::assertSame('2070-03-30',\AbcAeffchen\SepaUtilities\easterDate(2070)->format('Y-m-d'));
+    }
+
 }
  
