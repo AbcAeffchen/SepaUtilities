@@ -1,8 +1,8 @@
 {
     "name": "abcaeffchen/sepa-utilities",
     "type": "library",
-    "description": "SepaUtilities provides useful methods for validating and sanitizing inputs used in sepa files.",
-    "keywords": ["sepa","validate","sanitize","iban"],
+    "description": "SepaUtilities provides useful methods for validating and sanitizing inputs used in SEPA files supporting PHP >= 5.6 and HHVM.",
+    "keywords": ["sepa","validate","sanitize","iban","hhvm","php7"],
     "homepage": "https://github.com/AbcAeffchen/SepaUtilities",
     "license": "LGPL-3.0",
     "authors": [
