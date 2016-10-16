@@ -2,7 +2,7 @@
 <!DOCTYPE html SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
   <head>
-    <title>phpDox - AbcAeffchen\SepaUtilities\SepaUtilities::iso7064Mod97m10ChecksumCheck</title>
+    <title>phpDox - AbcAeffchen\SepaUtilities\SepaUtilities::checkInput</title>
     <link rel="stylesheet" type="text/css" href="../../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
@@ -41,7 +41,7 @@
           <li class="separator">
             <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../../classes/AbcAeffchen_SepaUtilities_SepaUtilities.html">SepaUtilities</a>
           </li>
-          <li class="separator">iso7064Mod97m10ChecksumCheck</li>
+          <li class="separator">checkInput</li>
         </ul>
       </div>
       <nav class="box">
@@ -56,26 +56,54 @@
             <a href="#parameter">Parameter</a>
           </li>
           <li>
-            <a href="../../source/SepaUtilities.php.html#line283">Source</a>
+            <a href="#return">Return</a>
+          </li>
+          <li>
+            <a href="../../source/SepaUtilities.php.html#line642">Source</a>
           </li>
         </ul>
       </nav>
       <section>
-        <h1><small>AbcAeffchen\SepaUtilities\SepaUtilities::</small>iso7064Mod97m10ChecksumCheck</h1>
-        <h4/>
+        <h1><small>AbcAeffchen\SepaUtilities\SepaUtilities::</small>checkInput</h1>
+        <h4>This function checks if the index of the inputArray exists and if the input is valid. The function can be called as `checkInput($fieldName,$_POST,['input',$fieldName],$options)` and equals `check($fieldName,$_POST['input'][$fieldName],$options)`, but checks first, if the index exists.</h4>
         <p/>
+        <ul/>
         <h2 id="signature">Signature</h2>
         <div class="styled synopsis">
-          <code>private function iso7064Mod97m10ChecksumCheck(
-        $input )
+          <code>public function checkInput(string
+        $field,
+            array&amp;
+        $inputArray,
+            array
+        $inputKeys,
+            [array
+        $options = null] )
             </code>
         </div>
         <h2 id="parameterlist">Parameters</h2>
         <dl class="styled">
-          <dt><code>$input</code>
+          <dt><code>$field</code>
                 —
-                </dt>
+                string</dt>
+          <dd>see `check()` for valid values.</dd>
+          <dt><code>$inputArray</code>
+                —
+                array</dt>
           <dd/>
+          <dt><code>$inputKeys</code>
+                —
+                array</dt>
+          <dd><br/><br/><br/>      </dd>
+          <dt><code>$options</code>
+                —
+                array</dt>
+          <dd>see `check()` for valid values.</dd>
+        </dl>
+        <h2 id="return">Returns</h2>
+        <dl class="styled">
+          <dt>mixed|false</dt>
+          <dd><br/>
+        </dd>
         </dl>
       </section>
     </div>

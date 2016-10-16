@@ -2,7 +2,7 @@
 <!DOCTYPE html SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
   <head>
-    <title>phpDox - Test Method</title>
+    <title>phpDox - AbcAeffchen\SepaUtilities\SepaUtilities::check</title>
     <link rel="stylesheet" type="text/css" href="../../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
@@ -59,7 +59,7 @@
             <a href="#return">Return</a>
           </li>
           <li>
-            <a href="../../source/SepaUtilities.php.xhtml#line512">Source</a>
+            <a href="../../source/SepaUtilities.php.html#line589">Source</a>
           </li>
         </ul>
       </nav>
@@ -72,10 +72,12 @@
         <div class="styled synopsis">
           <code>public function check(string
         $field,
-            [mixed
-        $input = null,
+            mixed
+        $input,
             [array
-        $options = null]] )
+        $options = null,
+            [int
+        $version = null]] )
             </code>
         </div>
         <h2 id="parameterlist">Parameters</h2>
@@ -91,18 +93,22 @@
           <dt><code>$options</code>
                 —
                 array</dt>
-          <dd>see `checkBIC()`, `checkIBAN()` and `checkLocalInstrument()` for details</dd>
+          <dd>See `checkBIC()`, `checkIBAN()` and `checkLocalInstrument()` for details.</dd>
+          <dt><code>$version</code>
+                —
+                int</dt>
+          <dd>Can be used to specify one of the `SEPA_PAIN_*` constants.</dd>
         </dl>
         <h2 id="return">Returns</h2>
         <dl class="styled">
-          <dt>mixed|false</dt>
+          <dt>false|mixed</dt>
           <dd>The checked input or false, if it is not valid<br/>
         </dd>
         </dl>
       </section>
     </div>
     <footer>
-      <span>Generated using phpDox 0.7.0 - Copyright (C) 2010 - 2015 by Arne Blankerts</span>
+      <span>Generated using phpDox 0.9.0 - Copyright (C) 2010 - 2016 by Arne Blankerts</span>
     </footer>
   </body>
 </html>

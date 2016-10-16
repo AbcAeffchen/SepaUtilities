@@ -12,9 +12,9 @@ SepaUtilities is a PHP class to check and sanitize inputs used in SEPA files
 such as IBAN numbers, creditor identifiers, names and other text.
 
 ##Requirements##
-SepaUtilities requires PHP >= 5.6 including 7.0. It should also work with PHP 5.3 and 5.4, but since
+SepaUtilities requires PHP >= 5.6 including 7.0. It should also work with PHP >=5.3, but since
 this versions are very old and not supported any more you should not use them. It is also possible,
-that some future work on SepaUtilities will break the support of PHP < 5.5 and I will not check if
+that some future work on SepaUtilities will break the support of PHP < 5.6 and I will not check if
 this is the case.
 
 ##Installation##
@@ -25,7 +25,7 @@ You can get SepaUtilities via Composer. Just add
 ```json
 {
     "require": {
-        "abcaeffchen/sepa-utilities": "~1.1.0"
+        "abcaeffchen/sepa-utilities": "~1.2.0"
     }
 }
 ```
@@ -36,7 +36,7 @@ to your composer.json.
 If you don't use Composer, you can download `SepaUtilities.php` and just include it into your
 PHP files. Make sure you use the namespace `AbcAeffchen\SepaUtilities\`.
 
-##The utilities##
+##The Utilities##
 Have a look at the [documentation](http://htmlpreview.github.io/?https://raw.githubusercontent.com/AbcAeffchen/SepaUtilities/master/docs/html/index.html).
 ###Checks###
 - `checkIBAN($iban)`: Checks if the IBAN is valid by checking the format and by calculating the checksum and also removes whitespaces and changes all letters to upper case.
@@ -45,7 +45,7 @@ and changes all letters to upper case.
 - `crossCheckIbanBic($iban, $bic)`: Checks if IBAN and BIC belong to the same country.
 - `isNationalTransaction($iban1,$iban2)`: Checks if both IBANs are belong to the same country.
 - `checkCharset($str)`: Checks if the string contains only allowed characters.
-- `check($field, $input, $options)`: Checks if the input fits the field. This function also does little
+- `check($field, $input, $options, $version)`: Checks if the input fits the field. This function also does little
 formatting changes, e.g. correcting letter case. Possible field values are:
   - `initgpty`: Initiating Party
   - `msgid`: Message ID
@@ -64,7 +64,8 @@ formatting changes, e.g. correcting letter case. Possible field values are:
   - `ci`: Creditor Identifier
   - `seqtp`: Sequence Type
   - `lclinstrm`: Local Instrument
-  
+
+The `$options` take an array 
 ###Sanitizing###
 - `sanitizeLength($input, $maxLen)`: Shortens the string if it is to long.
 - `sanitizeShortText($input,$allowEmpty, $flags)`: Sanitizes the the charset and shortens the text if necessary.
@@ -105,11 +106,11 @@ that respects the offset is returned.
 - `PATTERN_CREDITOR_IDENTIFIER`
 - `PATTERN_SHORT_TEXT`
 - `PATTERN_LONG_TEXT`
-- `PATTERN_FILE_IDS`
+- `PATTERN_RESTRICTED_IDENTIFICATION_SEPA1`
 - `PATTERN_MANDATE_ID`
 
-The `HTML_PATTERN` constants can be used as HTML5 pattern attribute. It is user friendlier than 
-the corresponding `PATTERN` as they allows lowercase characters and whitespaces. This is corrected 
+The `HTML_PATTERN_*` constants can be used as HTML5 pattern attribute. It is user friendlier than 
+the corresponding `PATTERN_*` as they allow lowercase characters and whitespaces. This is corrected 
 by the `check` methods.
 
 ##Licence##

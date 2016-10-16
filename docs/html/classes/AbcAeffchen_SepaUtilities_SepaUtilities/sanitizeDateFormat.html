@@ -2,7 +2,7 @@
 <!DOCTYPE html SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
   <head>
-    <title>phpDox - AbcAeffchen\SepaUtilities\SepaUtilities::iso7064Mod97m10ChecksumCheck</title>
+    <title>phpDox - AbcAeffchen\SepaUtilities\SepaUtilities::sanitizeDateFormat</title>
     <link rel="stylesheet" type="text/css" href="../../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
@@ -41,7 +41,7 @@
           <li class="separator">
             <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../../classes/AbcAeffchen_SepaUtilities_SepaUtilities.html">SepaUtilities</a>
           </li>
-          <li class="separator">iso7064Mod97m10ChecksumCheck</li>
+          <li class="separator">sanitizeDateFormat</li>
         </ul>
       </div>
       <nav class="box">
@@ -56,26 +56,45 @@
             <a href="#parameter">Parameter</a>
           </li>
           <li>
-            <a href="../../source/SepaUtilities.php.html#line283">Source</a>
+            <a href="#return">Return</a>
+          </li>
+          <li>
+            <a href="../../source/SepaUtilities.php.html#line393">Source</a>
           </li>
         </ul>
       </nav>
       <section>
-        <h1><small>AbcAeffchen\SepaUtilities\SepaUtilities::</small>iso7064Mod97m10ChecksumCheck</h1>
-        <h4/>
-        <p/>
+        <h1><small>AbcAeffchen\SepaUtilities\SepaUtilities::</small>sanitizeDateFormat</h1>
+        <h4>Tries to convert the given date into the format YYYY-MM-DD (Y-m-d). Therefor it tries the following input formats in the order of appearance: d.m.Y, d.m.y, j.n.Y, j.n.y, m.d.Y, m.d.y, n.j.Y, n.j.y, Y/m/d, y/m/d, Y/n/j, y/n/j, Y.m.d, y.m.d, Y.n.j, y.n.j.</h4>
+        <p>Notice that this method tries to interpret the first number as day-of-month. This can
+lead to wrong dates if you have something like the 1st of April 2016 written as 04.01.2016.
+This will be interpreted as the 4th of January 2016. This is why you have to call this
+method on your owen risk and it is not included in the sanitize() method.</p>
+        <ul/>
         <h2 id="signature">Signature</h2>
         <div class="styled synopsis">
-          <code>private function iso7064Mod97m10ChecksumCheck(
-        $input )
+          <code>public function sanitizeDateFormat(string
+        $input,
+            [array
+        $preferredFormats = ] )
             </code>
         </div>
         <h2 id="parameterlist">Parameters</h2>
         <dl class="styled">
           <dt><code>$input</code>
                 —
-                </dt>
-          <dd/>
+                string</dt>
+          <dd>The date that should be reformatted</dd>
+          <dt><code>$preferredFormats</code>
+                —
+                array</dt>
+          <dd>An array of formats that will be checked first.</dd>
+        </dl>
+        <h2 id="return">Returns</h2>
+        <dl class="styled">
+          <dt>string|false</dt>
+          <dd>The sanitized date or false, if it is not sanitizable.<br/>
+        </dd>
         </dl>
       </section>
     </div>

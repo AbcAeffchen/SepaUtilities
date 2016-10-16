@@ -2,7 +2,7 @@
 <!DOCTYPE html SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
   <head>
-    <title>phpDox - AbcAeffchen\SepaUtilities\SepaUtilities::iso7064Mod97m10ChecksumCheck</title>
+    <title>phpDox - AbcAeffchen\SepaUtilities\SepaUtilities::checkBoolean</title>
     <link rel="stylesheet" type="text/css" href="../../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
@@ -41,7 +41,7 @@
           <li class="separator">
             <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../../classes/AbcAeffchen_SepaUtilities_SepaUtilities.html">SepaUtilities</a>
           </li>
-          <li class="separator">iso7064Mod97m10ChecksumCheck</li>
+          <li class="separator">checkBoolean</li>
         </ul>
       </div>
       <nav class="box">
@@ -56,17 +56,21 @@
             <a href="#parameter">Parameter</a>
           </li>
           <li>
-            <a href="../../source/SepaUtilities.php.html#line283">Source</a>
+            <a href="#return">Return</a>
+          </li>
+          <li>
+            <a href="../../source/SepaUtilities.php.html#line894">Source</a>
           </li>
         </ul>
       </nav>
       <section>
-        <h1><small>AbcAeffchen\SepaUtilities\SepaUtilities::</small>iso7064Mod97m10ChecksumCheck</h1>
-        <h4/>
+        <h1><small>AbcAeffchen\SepaUtilities\SepaUtilities::</small>checkBoolean</h1>
+        <h4>Checks if $bbi is a valid batch booking indicator. Returns 'true' for "1", "true", "on" and "yes", returns 'false' for "0", "false", "off", "no", and ""</h4>
         <p/>
+        <ul/>
         <h2 id="signature">Signature</h2>
         <div class="styled synopsis">
-          <code>private function iso7064Mod97m10ChecksumCheck(
+          <code>private function checkBoolean(mixed
         $input )
             </code>
         </div>
@@ -74,8 +78,13 @@
         <dl class="styled">
           <dt><code>$input</code>
                 —
-                </dt>
+                mixed</dt>
           <dd/>
+        </dl>
+        <h2 id="return">Returns</h2>
+        <dl class="styled">
+          <dt>string|false</dt>
+          <dd>The batch booking indicator (in lower case only) or false if not<br/>valid</dd>
         </dl>
       </section>
     </div>

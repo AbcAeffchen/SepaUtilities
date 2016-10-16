@@ -2,7 +2,7 @@
 <!DOCTYPE html SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
   <head>
-    <title>phpDox - AbcAeffchen\SepaUtilities\SepaUtilities::iso7064Mod97m10ChecksumCheck</title>
+    <title>phpDox - AbcAeffchen\SepaUtilities\SepaUtilities::getValFromMultiDimInput</title>
     <link rel="stylesheet" type="text/css" href="../../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
@@ -41,7 +41,7 @@
           <li class="separator">
             <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../../classes/AbcAeffchen_SepaUtilities_SepaUtilities.html">SepaUtilities</a>
           </li>
-          <li class="separator">iso7064Mod97m10ChecksumCheck</li>
+          <li class="separator">getValFromMultiDimInput</li>
         </ul>
       </div>
       <nav class="box">
@@ -56,26 +56,42 @@
             <a href="#parameter">Parameter</a>
           </li>
           <li>
-            <a href="../../source/SepaUtilities.php.html#line283">Source</a>
+            <a href="#return">Return</a>
+          </li>
+          <li>
+            <a href="../../source/SepaUtilities.php.html#line564">Source</a>
           </li>
         </ul>
       </nav>
       <section>
-        <h1><small>AbcAeffchen\SepaUtilities\SepaUtilities::</small>iso7064Mod97m10ChecksumCheck</h1>
+        <h1><small>AbcAeffchen\SepaUtilities\SepaUtilities::</small>getValFromMultiDimInput</h1>
         <h4/>
         <p/>
+        <ul/>
         <h2 id="signature">Signature</h2>
         <div class="styled synopsis">
-          <code>private function iso7064Mod97m10ChecksumCheck(
-        $input )
+          <code>private function getValFromMultiDimInput(array&amp;
+        $input,
+            array
+        $keys )
             </code>
         </div>
         <h2 id="parameterlist">Parameters</h2>
         <dl class="styled">
           <dt><code>$input</code>
                 —
-                </dt>
-          <dd/>
+                array</dt>
+          <dd>Reference to an array<br/><br/><br/>      </dd>
+          <dt><code>$keys</code>
+                —
+                array</dt>
+          <dd>The keys of the multidimensional array in order of<br/>appearance. e.g. `['key1','key2']` checks<br/>                                  `$arr['key1']['key2']`</dd>
+        </dl>
+        <h2 id="return">Returns</h2>
+        <dl class="styled">
+          <dt>mixed|false</dt>
+          <dd>Returns the value of the field or null if the field does not exist.<br/>
+        </dd>
         </dl>
       </section>
     </div>

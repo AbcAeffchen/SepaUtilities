@@ -2,7 +2,7 @@
 <!DOCTYPE html SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
   <head>
-    <title>phpDox - AbcAeffchen\SepaUtilities\SepaUtilities::iso7064Mod97m10ChecksumCheck</title>
+    <title>phpDox - AbcAeffchen\SepaUtilities\SepaUtilities::isNationalTransaction</title>
     <link rel="stylesheet" type="text/css" href="../../css/style.css" media="screen"/>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   </head>
@@ -41,7 +41,7 @@
           <li class="separator">
             <a title="AbcAeffchen\SepaUtilities\SepaUtilities" href="../../classes/AbcAeffchen_SepaUtilities_SepaUtilities.html">SepaUtilities</a>
           </li>
-          <li class="separator">iso7064Mod97m10ChecksumCheck</li>
+          <li class="separator">isNationalTransaction</li>
         </ul>
       </div>
       <nav class="box">
@@ -56,26 +56,42 @@
             <a href="#parameter">Parameter</a>
           </li>
           <li>
-            <a href="../../source/SepaUtilities.php.html#line283">Source</a>
+            <a href="#return">Return</a>
+          </li>
+          <li>
+            <a href="../../source/SepaUtilities.php.html#line332">Source</a>
           </li>
         </ul>
       </nav>
       <section>
-        <h1><small>AbcAeffchen\SepaUtilities\SepaUtilities::</small>iso7064Mod97m10ChecksumCheck</h1>
-        <h4/>
-        <p/>
+        <h1><small>AbcAeffchen\SepaUtilities\SepaUtilities::</small>isNationalTransaction</h1>
+        <h4>Checks if both IBANs do belong to the same country.</h4>
+        <p>This function does not check if the IBANs are valid.</p>
+        <ul/>
         <h2 id="signature">Signature</h2>
         <div class="styled synopsis">
-          <code>private function iso7064Mod97m10ChecksumCheck(
-        $input )
+          <code>public function isNationalTransaction(string
+        $iban1,
+            string
+        $iban2 )
             </code>
         </div>
         <h2 id="parameterlist">Parameters</h2>
         <dl class="styled">
-          <dt><code>$input</code>
+          <dt><code>$iban1</code>
                 —
-                </dt>
+                string</dt>
           <dd/>
+          <dt><code>$iban2</code>
+                —
+                string</dt>
+          <dd/>
+        </dl>
+        <h2 id="return">Returns</h2>
+        <dl class="styled">
+          <dt>bool</dt>
+          <dd><br/>
+        </dd>
         </dl>
       </section>
     </div>
