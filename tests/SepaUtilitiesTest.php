@@ -405,6 +405,14 @@ class SepaUtilitiesTest extends PHPUnit_Framework_TestCase
         static::assertFalse(SepaUtilities::isNationalTransaction('DE87200500001234567890', 'FR87200500001234567890'));
     }
 
+    public function testIsEEATransaction()
+    {
+        static::assertTrue(SepaUtilities::isEEATransaction('DE87200500001234567890', 'DE87200500001234567890'));
+        static::assertTrue(SepaUtilities::isEEATransaction('DE87200500001234567890', 'FR87200500001234567890'));
+        static::assertFalse(SepaUtilities::isEEATransaction('DE87200500001234567890', 'DZ87200500001234567890'));
+        static::assertFalse(SepaUtilities::isEEATransaction('DZ87200500001234567890', 'DZ87200500001234567890'));
+    }
+
     public function testSanitizeLength()
     {
         static::assertSame('1234567', SepaUtilities::sanitizeLength('1234567', 8));

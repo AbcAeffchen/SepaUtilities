@@ -362,6 +362,33 @@ class SepaUtilities
     }
 
     /**
+     * Checks if both IBANs belong to the EEA (European Economic Area)
+     * This function does not check if the IBANs are valid.
+     *
+     * @param string $iban1
+     * @param string $iban2
+     * @return bool
+     */
+    public static function isEEATransaction($iban1, $iban2)
+    {
+        // remove whitespaces
+        $iban1 = preg_replace('#\s+#','',$iban1);
+        $iban2 = preg_replace('#\s+#','',$iban2);
+
+        // check if both county codes belong to the EEA
+        $EEA = array('IS' => 1,'LI' => 1,'NO' => 1,'BE' => 1,'BG' => 1,'DK' => 1,'DE' => 1,
+                     'EE' => 1,'FI' => 1,'FR' => 1,'GR' => 1,'IE' => 1,'IT' => 1,'HR' => 1,
+                     'LV' => 1,'LT' => 1,'LU' => 1,'MT' => 1,'NL' => 1,'AT' => 1,'PL' => 1,
+                     'PT' => 1,'RO' => 1,'SE' => 1,'SK' => 1,'SI' => 1,'ES' => 1,'CZ' => 1,
+                     'HU' => 1,'GB' => 1,'CY' => 1);
+
+        if(isset($EEA[strtoupper(substr($iban1,0,2))],$EEA[strtoupper(substr($iban2,0,2))]))
+            return true;
+
+        return false;
+    }
+
+    /**
      * Checks if IBAN and BIC belong to the same country. If not, they also can not belong to
      * each other.
      *
