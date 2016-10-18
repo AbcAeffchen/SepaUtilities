@@ -638,7 +638,7 @@ class SepaUtilities
             case 'pmtid':   // next line
             case 'pmtinfid': return self::checkRestrictedIdentificationSEPA1($input);
             case 'orgnlmndtid':
-            case 'mndtid': return $version === self::SEPA_PAIN_001_001_03_GBIC
+            case 'mndtid': return $version === self::SEPA_PAIN_008_001_02
                                     || $version === self::SEPA_PAIN_008_001_02_GBIC
                             ? self::checkRestrictedIdentificationSEPA1($input)
                             : self::checkRestrictedIdentificationSEPA2($input);
