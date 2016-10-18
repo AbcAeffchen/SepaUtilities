@@ -651,6 +651,7 @@ class SepaUtilities
             case 'rmtinf': return (self::checkLength($input, 140) && self::checkCharset($input)) ? $input : false;
             case 'orgnldbtracct_iban':
             case 'iban': return self::checkIBAN($input,$options);
+            case 'orgnldbtragt_bic':
             case 'bic': return self::checkBIC($input,$options);
             case 'ccy': return self::checkActiveOrHistoricCurrencyCode($input);
             case 'amdmntind':
