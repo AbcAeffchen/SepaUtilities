@@ -1,6 +1,9 @@
 Sephpa - Change Log
 ===============
 
+##1.2.2 - Oct 18, '16##
+- little bug fixes
+
 ##1.2.1 - Oct 18, '16##
 - added function to validate if two IBANs belong to the EEA (European Economic Area).
 
