@@ -1,6 +1,9 @@
 Sephpa - Change Log
 ===============
 
+##1.2.3 - Nov 21, '16##
+- added support for pain.008.001.02.austria.003
+
 ##1.2.2 - Oct 18, '16##
 - little bug fixes
 

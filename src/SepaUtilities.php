@@ -4,10 +4,11 @@
  *
  * @license   GNU LGPL v3.0 - For details have a look at the LICENSE file
  * @copyright ©2015 Alexander Schickedanz
- * @link      https://github.com/AbcAeffchen/Sephpa
+ * @link      https://github.com/AbcAeffchen/SepaUtilities
  *
- * @author  Alexander Schickedanz <abcaeffchen@gmail.com>
+ * @author    Alexander Schickedanz <abcaeffchen@gmail.com>
  */
+
 namespace AbcAeffchen\SepaUtilities;
 
 /**
@@ -40,10 +41,11 @@ class SepaUtilities
     const SEPA_PAIN_001_001_03      = 100103;
     const SEPA_PAIN_001_001_03_GBIC = 1001031;
     // direct debit versions
-    const SEPA_PAIN_008_002_02      = 800202;
-    const SEPA_PAIN_008_003_02      = 800302;
-    const SEPA_PAIN_008_001_02      = 800102;
-    const SEPA_PAIN_008_001_02_GBIC = 8001021;
+    const SEPA_PAIN_008_002_02              = 800202;
+    const SEPA_PAIN_008_003_02              = 800302;
+    const SEPA_PAIN_008_001_02              = 800102;
+    const SEPA_PAIN_008_001_02_GBIC         = 8001021;
+    const SEPA_PAIN_008_001_02_AUSTRIAN_003 = 8001022;
 
     const HTML_PATTERN_IBAN = '([a-zA-Z]\s*){2}([0-9]\s?){2}\s*([a-zA-Z0-9]\s*){1,30}';
     const HTML_PATTERN_BIC = '([a-zA-Z]\s*){6}[a-zA-Z2-9]\s*[a-nA-Np-zP-Z0-9]\s*(([A-Z0-9]\s*){3}){0,1}';
@@ -222,6 +224,11 @@ class SepaUtilities
                                                                        'PF', 'TF', 'YT', 'NC',
                                                                        'BL', 'MF', 'PM', 'WF'),
                                                          'GB' => array('IM', 'GG', 'JE'));
+
+    private static $exceptionalBics = array(
+                                        'NOTAVAIL'  // used in Austria to mark that no BIC is provided
+                                        );
+
     /*
      * Checks if an creditor identifier (ci) is valid. Note that also if the ci is valid it does
      * not have to exist
@@ -398,6 +405,10 @@ class SepaUtilities
      */
     public static function crossCheckIbanBic($iban, $bic)
     {
+        // check for special cases
+        if(in_array(strtoupper($bic), self::$exceptionalBics))
+            return true;
+
         // remove whitespaces
         $iban = preg_replace('#\s+#','',$iban);
         $bic  = preg_replace('#\s+#','',$bic);

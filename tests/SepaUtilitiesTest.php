@@ -4,13 +4,6 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use AbcAeffchen\SepaUtilities\SepaUtilities;
 
-
-/**
- * Project: SepaUtilities
- * User:    AbcAeffchen
- * Date:    14.10.2014
- */
-
 class SepaUtilitiesTest extends PHPUnit_Framework_TestCase
 {
 
@@ -382,6 +375,9 @@ class SepaUtilitiesTest extends PHPUnit_Framework_TestCase
         static::assertTrue(SepaUtilities::crossCheckIbanBic('FR', '1234FR12XXX'));
         static::assertTrue(SepaUtilities::crossCheckIbanBic('FR', '1234TF12XXX'));
         static::assertTrue(SepaUtilities::crossCheckIbanBic('GB', '1234GG12XXX'));
+
+        // valid due to special case
+        static::assertTrue(SepaUtilities::crossCheckIbanBic('AT', 'NOTAVAIL'));
 
         // invalid
         static::assertFalse(SepaUtilities::crossCheckIbanBic('DE', '1234ED12XXX'));
