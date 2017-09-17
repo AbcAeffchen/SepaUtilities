@@ -3,7 +3,7 @@
  * SepaUtilities
  *
  * @license   GNU LGPL v3.0 - For details have a look at the LICENSE file
- * @copyright ©2015 Alexander Schickedanz
+ * @copyright ©2017 Alexander Schickedanz
  * @link      https://github.com/AbcAeffchen/SepaUtilities
  *
  * @author    Alexander Schickedanz <abcaeffchen@gmail.com>
@@ -15,7 +15,7 @@ namespace AbcAeffchen\SepaUtilities;
  * Returns a DateTime object of easter sunday in the given year.
  * This is calculated with the Gaussian Algorithm.
  * @param int $year The year written with four digits.
- * @return \DateTime
+ * @return \DateTime DateTime object pointing to easter sunday of the $year.
  */
 function easterDate($year) {
     $G = $year % 19;
@@ -114,120 +114,120 @@ class SepaUtilities
      */
     const BIC_REQUIRED_THRESHOLD = 20160131;
 
-    private static $ibanPatterns = array('EG' => 'EG[0-9]{2}[0-9A-Z]{23}',
-                                         'AL' => 'AL[0-9]{10}[0-9A-Z]{16}',
-                                         'DZ' => 'DZ[0-9]{2}[0-9A-Z]{20}',
-                                         'AD' => 'AD[0-9]{10}[0-9A-Z]{12}',
-                                         'AO' => 'AL[0-9]{2}[0-9A-Z]{21}',
-                                         'AZ' => 'AZ[0-9]{2}[0-9A-Z]{24}',
-                                         'BH' => 'AL[0-9]{2}[0-9A-Z]{18}',
-                                         'BE' => 'BE[0-9]{14}',
-                                         'BJ' => 'BJ[0-9]{2}[0-9A-Z]{24}',
-                                         'BA' => 'BA[0-9]{18}',
-                                         'BR' => 'BR[0-9]{2}[0-9A-Z]{25}',
-                                         'VG' => 'VG[0-9]{2}[0-9A-Z]{20}',
-                                         'BG' => 'BG[0-9]{2}[A-Z]{4}[0-9]{6}[0-9A-Z]{8}',
-                                         'BF' => 'BF[0-9]{2}[0-9A-Z]{23}',
-                                         'BI' => 'BI[0-9]{2}[0-9A-Z]{12}',
-                                         'CR' => 'CR[0-9]{2}[0-9A-Z]{17}',
-                                         'CI' => 'CI[0-9]{2}[0-9A-Z]{24}',
-                                         'DK' => 'DK[0-9]{16}',
-                                         'DE' => 'DE[0-9]{20}',
-                                         'DO' => 'DO[0-9]{2}[0-9A-Z]{24}',
-                                         'EE' => 'EE[0-9]{18}',
-                                         'FO' => 'FO[0-9]{16}',
-                                         'FI' => 'FI[0-9]{16}',
-                                         'FR' => 'FR[0-9]{2}[0-9A-Z]{23}',
-                                         'GA' => 'GA[0-9]{2}[0-9A-Z]{23}',
-                                         'GE' => 'GE[0-9]{2}[A-Z]{2}[0-9A-Z]{16}',
-                                         'GI' => 'GI[0-9]{2}[A-Z]{4}[0-9]{15}',
-                                         'GR' => 'GR[0-9]{9}[0-9A-Z]{16}',
-                                         'GL' => 'GL[0-9]{16}',
-                                         'GT' => 'GT[0-9]{2}[0-9A-Z]{24}',
-                                         'IR' => 'IR[0-9]{2}[0-9A-Z]{22}',
-                                         'IE' => 'IE[0-9]{2}[A-Z]{4}[0-9]{14}',
-                                         'IS' => 'IS[0-9]{24}',
-                                         'IL' => 'IL[0-9]{21}',
-                                         'IT' => 'IT[0-9]{2}[A-Z]{1}[0-9]{10}[0-9A-Z]{12}',
-                                         'JO' => 'JO[0-9]{2}[0-9A-Z]{26}',
-                                         'CM' => 'CM[0-9]{2}[0-9A-Z]{23}',
-                                         'CV' => 'CV[0-9]{2}[0-9A-Z]{21}',
-                                         'KZ' => 'KZ[0-9]{5}[0-9A-Z]{13}',
-                                         'QA' => 'QA[0-9]{2}[0-9A-Z]{25}',
-                                         'CG' => 'CG[0-9]{2}[0-9A-Z]{23}',
-                                         'KS' => 'KS[0-9]{2}[0-9A-Z]{16}',  // todo: This should be the IBAN format for Kosovo. Is this correct?
-                                         'HR' => 'HR[0-9]{19}',
-                                         'KW' => 'KW[0-9]{2}[A-Z]{4}[0-9A-Z]{22}',
-                                         'LV' => 'LV[0-9]{2}[A-Z]{4}[0-9A-Z]{13}',
-                                         'LB' => 'LB[0-9]{6}[0-9A-Z]{20}',
-                                         'LI' => 'LI[0-9]{7}[0-9A-Z]{12}',
-                                         'LT' => 'LT[0-9]{18}',
-                                         'LU' => 'LU[0-9]{5}[0-9A-Z]{13}',
-                                         'MG' => 'MG[0-9]{2}[0-9A-Z]{23}',
-                                         'ML' => 'ML[0-9]{2}[0-9A-Z]{24}',
-                                         'MT' => 'MT[0-9]{2}[A-Z]{4}[0-9]{5}[0-9A-Z]{18}',
-                                         'MR' => 'MR[0-9]{25}',
-                                         'MU' => 'MU[0-9]{2}[0-9A-Z]{23}[A-Z]{3}',
-                                         'MK' => 'MK[0-9]{5}[0-9A-Z]{10}[0-9]{2}',
-                                         'MD' => 'MD[0-9]{2}[0-9A-Z]{20}',
-                                         'MC' => 'MC[0-9]{12}[0-9A-Z]{11}[0-9]{2}',
-                                         'ME' => 'ME[0-9]{20}',
-                                         'MZ' => 'MZ[0-9]{2}[0-9A-Z]{21}',
-                                         'NL' => 'NL[0-9]{2}[A-Z]{4}[0-9]{10}',
-                                         'NO' => 'NO[0-9]{13}',
-                                         'AT' => 'AT[0-9]{18}',
-                                         'TL' => 'TL[0-9]{2}[0-9A-Z]{16}',
-                                         'PK' => 'PK[0-9]{2}[0-9A-Z]{20}',
-                                         'PS' => 'PS[0-9]{2}[0-9A-Z]{25}',
-                                         'PL' => 'PL[0-9]{26}',
-                                         'PT' => 'PT[0-9]{23}',
-                                         'RO' => 'RO[0-9]{2}[A-Z]{4}[0-9A-Z]{16}',
-                                         'SM' => 'SM[0-9]{2}[A-Z]{1}[0-9]{10}[0-9A-Z]{12}',
-                                         'ST' => 'ST[0-9]{2}[0-9A-Z]{21}',
-                                         'SA' => 'SA[0-9]{4}[0-9A-Z]{18}',
-                                         'SE' => 'SE[0-9]{22}',
-                                         'CH' => 'CH[0-9]{2}[0-9]{5}[0-9A-Z]{12}',
-                                         'SN' => 'SN[0-9]{2}[0-9A-Z]{24}',
-                                         'RS' => 'RS[0-9]{20}',
-                                         'SK' => 'SK[0-9]{22}',
-                                         'SI' => 'SI[0-9]{17}',
-                                         'ES' => 'ES[0-9]{22}',
-                                         'CZ' => 'CZ[0-9]{22}',
-                                         'TN' => 'TN[0-9]{22}',
-                                         'TR' => 'TR[0-9]{7}[0-9A-Z]{17}',
-                                         'HU' => 'HU[0-9]{26}',
-                                         'AE' => 'AE[0-9]{2}[0-9A-Z]{19}',
-                                         'GB' => 'GB[0-9]{2}[A-Z]{4}[0-9]{14}',
-                                         'CY' => 'CY[0-9]{10}[0-9A-Z]{16}',
-                                         'CF' => 'CF[0-9]{2}[0-9A-Z]{23}');
+    private static $ibanPatterns = ['EG' => 'EG[0-9]{2}[0-9A-Z]{23}',
+                                    'AL' => 'AL[0-9]{10}[0-9A-Z]{16}',
+                                    'DZ' => 'DZ[0-9]{2}[0-9A-Z]{20}',
+                                    'AD' => 'AD[0-9]{10}[0-9A-Z]{12}',
+                                    'AO' => 'AL[0-9]{2}[0-9A-Z]{21}',
+                                    'AZ' => 'AZ[0-9]{2}[0-9A-Z]{24}',
+                                    'BH' => 'AL[0-9]{2}[0-9A-Z]{18}',
+                                    'BE' => 'BE[0-9]{14}',
+                                    'BJ' => 'BJ[0-9]{2}[0-9A-Z]{24}',
+                                    'BA' => 'BA[0-9]{18}',
+                                    'BR' => 'BR[0-9]{2}[0-9A-Z]{25}',
+                                    'VG' => 'VG[0-9]{2}[0-9A-Z]{20}',
+                                    'BG' => 'BG[0-9]{2}[A-Z]{4}[0-9]{6}[0-9A-Z]{8}',
+                                    'BF' => 'BF[0-9]{2}[0-9A-Z]{23}',
+                                    'BI' => 'BI[0-9]{2}[0-9A-Z]{12}',
+                                    'CR' => 'CR[0-9]{2}[0-9A-Z]{17}',
+                                    'CI' => 'CI[0-9]{2}[0-9A-Z]{24}',
+                                    'DK' => 'DK[0-9]{16}',
+                                    'DE' => 'DE[0-9]{20}',
+                                    'DO' => 'DO[0-9]{2}[0-9A-Z]{24}',
+                                    'EE' => 'EE[0-9]{18}',
+                                    'FO' => 'FO[0-9]{16}',
+                                    'FI' => 'FI[0-9]{16}',
+                                    'FR' => 'FR[0-9]{2}[0-9A-Z]{23}',
+                                    'GA' => 'GA[0-9]{2}[0-9A-Z]{23}',
+                                    'GE' => 'GE[0-9]{2}[A-Z]{2}[0-9A-Z]{16}',
+                                    'GI' => 'GI[0-9]{2}[A-Z]{4}[0-9]{15}',
+                                    'GR' => 'GR[0-9]{9}[0-9A-Z]{16}',
+                                    'GL' => 'GL[0-9]{16}',
+                                    'GT' => 'GT[0-9]{2}[0-9A-Z]{24}',
+                                    'IR' => 'IR[0-9]{2}[0-9A-Z]{22}',
+                                    'IE' => 'IE[0-9]{2}[A-Z]{4}[0-9]{14}',
+                                    'IS' => 'IS[0-9]{24}',
+                                    'IL' => 'IL[0-9]{21}',
+                                    'IT' => 'IT[0-9]{2}[A-Z]{1}[0-9]{10}[0-9A-Z]{12}',
+                                    'JO' => 'JO[0-9]{2}[0-9A-Z]{26}',
+                                    'CM' => 'CM[0-9]{2}[0-9A-Z]{23}',
+                                    'CV' => 'CV[0-9]{2}[0-9A-Z]{21}',
+                                    'KZ' => 'KZ[0-9]{5}[0-9A-Z]{13}',
+                                    'QA' => 'QA[0-9]{2}[0-9A-Z]{25}',
+                                    'CG' => 'CG[0-9]{2}[0-9A-Z]{23}',
+                                    'KS' => 'KS[0-9]{2}[0-9A-Z]{16}',// todo: This should be the IBAN format for Kosovo. Is this correct?
+                                    'HR' => 'HR[0-9]{19}',
+                                    'KW' => 'KW[0-9]{2}[A-Z]{4}[0-9A-Z]{22}',
+                                    'LV' => 'LV[0-9]{2}[A-Z]{4}[0-9A-Z]{13}',
+                                    'LB' => 'LB[0-9]{6}[0-9A-Z]{20}',
+                                    'LI' => 'LI[0-9]{7}[0-9A-Z]{12}',
+                                    'LT' => 'LT[0-9]{18}',
+                                    'LU' => 'LU[0-9]{5}[0-9A-Z]{13}',
+                                    'MG' => 'MG[0-9]{2}[0-9A-Z]{23}',
+                                    'ML' => 'ML[0-9]{2}[0-9A-Z]{24}',
+                                    'MT' => 'MT[0-9]{2}[A-Z]{4}[0-9]{5}[0-9A-Z]{18}',
+                                    'MR' => 'MR[0-9]{25}',
+                                    'MU' => 'MU[0-9]{2}[0-9A-Z]{23}[A-Z]{3}',
+                                    'MK' => 'MK[0-9]{5}[0-9A-Z]{10}[0-9]{2}',
+                                    'MD' => 'MD[0-9]{2}[0-9A-Z]{20}',
+                                    'MC' => 'MC[0-9]{12}[0-9A-Z]{11}[0-9]{2}',
+                                    'ME' => 'ME[0-9]{20}',
+                                    'MZ' => 'MZ[0-9]{2}[0-9A-Z]{21}',
+                                    'NL' => 'NL[0-9]{2}[A-Z]{4}[0-9]{10}',
+                                    'NO' => 'NO[0-9]{13}',
+                                    'AT' => 'AT[0-9]{18}',
+                                    'TL' => 'TL[0-9]{2}[0-9A-Z]{16}',
+                                    'PK' => 'PK[0-9]{2}[0-9A-Z]{20}',
+                                    'PS' => 'PS[0-9]{2}[0-9A-Z]{25}',
+                                    'PL' => 'PL[0-9]{26}',
+                                    'PT' => 'PT[0-9]{23}',
+                                    'RO' => 'RO[0-9]{2}[A-Z]{4}[0-9A-Z]{16}',
+                                    'SM' => 'SM[0-9]{2}[A-Z]{1}[0-9]{10}[0-9A-Z]{12}',
+                                    'ST' => 'ST[0-9]{2}[0-9A-Z]{21}',
+                                    'SA' => 'SA[0-9]{4}[0-9A-Z]{18}',
+                                    'SE' => 'SE[0-9]{22}',
+                                    'CH' => 'CH[0-9]{2}[0-9]{5}[0-9A-Z]{12}',
+                                    'SN' => 'SN[0-9]{2}[0-9A-Z]{24}',
+                                    'RS' => 'RS[0-9]{20}',
+                                    'SK' => 'SK[0-9]{22}',
+                                    'SI' => 'SI[0-9]{17}',
+                                    'ES' => 'ES[0-9]{22}',
+                                    'CZ' => 'CZ[0-9]{22}',
+                                    'TN' => 'TN[0-9]{22}',
+                                    'TR' => 'TR[0-9]{7}[0-9A-Z]{17}',
+                                    'HU' => 'HU[0-9]{26}',
+                                    'AE' => 'AE[0-9]{2}[0-9A-Z]{19}',
+                                    'GB' => 'GB[0-9]{2}[A-Z]{4}[0-9]{14}',
+                                    'CY' => 'CY[0-9]{10}[0-9A-Z]{16}',
+                                    'CF' => 'CF[0-9]{2}[0-9A-Z]{23}'];
 
-    private static $alphabet = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-                                     'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-                                     'U', 'V', 'W', 'X', 'Y', 'Z');
+    private static $alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+                                'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+                                'U', 'V', 'W', 'X', 'Y', 'Z'];
 
-    private static $alphabetValues = array( 10,  11,  12,  13,  14,  15,  16,  17,  18,  19,
-                                            20,  21,  22,  23,  24,  25,  26,  27,  28,  29,
-                                            30,  31,  32,  33,  34,  35);
+    private static $alphabetValues = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+                                      20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+                                      30, 31, 32, 33, 34, 35];
 
-    private static $mod97Values = array( 1, 10,  3, 30,  9, 90, 27, 76, 81, 34, 49,  5, 50, 15, 53, 45, 62, 38,
-                                        89, 17, 73, 51, 25, 56, 75, 71, 31, 19, 93, 57, 85, 74, 61, 28, 86,
-                                        84, 64, 58, 95, 77, 91, 37, 79, 14, 43, 42, 32, 29, 96, 87, 94, 67,
-                                        88,  7, 70, 21, 16, 63, 48, 92, 47, 82, 44, 52, 35, 59,  8, 80, 24);
+    private static $mod97Values = [1, 10, 3, 30, 9, 90, 27, 76, 81, 34, 49, 5, 50, 15, 53, 45, 62, 38,
+                                   89, 17, 73, 51, 25, 56, 75, 71, 31, 19, 93, 57, 85, 74, 61, 28, 86,
+                                   84, 64, 58, 95, 77, 91, 37, 79, 14, 43, 42, 32, 29, 96, 87, 94, 67,
+                                   88, 7, 70, 21, 16, 63, 48, 92, 47, 82, 44, 52, 35, 59, 8, 80, 24];
 
-    private static $specialChars            = array(';','[','\\',']','^','_','`', '{','|','}','~','¿','À','Á','Â','Ã','Ä','Å','Æ','Ç','È','É','Ê','Ë','Ì','Í','Î','Ï','Ð','Ñ','Ò','Ó','Ô','Õ','Ö','Ø','Ù','Ú','Û','Ü','Ý','Þ','ß','à','á','â','ã','ä','å','æ','ç','è','é','ê','ë','ì','í','î','ï','ð','ñ','ò','ó','ô','õ','ö','ø','ù','ú','û','ü','ý','þ','ÿ','Ā','ā','Ă','ă','Ą','ą','Ć','ć','Ĉ','ĉ','Ċ','ċ','Č','č','Ď','ď','Đ','đ','Ē','ē','Ĕ','ĕ','Ė','ė','Ę','ę','Ě','ě','Ĝ','ĝ','Ğ','ğ','Ġ','ġ','Ģ','ģ','Ĥ','ĥ','Ħ','ħ','Ĩ','ĩ','Ī','ī','Ĭ','ĭ','Į','į','İ','ı','Ĳ','ĳ','Ĵ','ĵ','Ķ','ķ','ĸ','Ĺ','ĺ','Ļ','ļ','Ľ','ľ','Ŀ','ŀ','Ł','ł','Ń','ń','Ņ','ņ','Ň','ň','Ő','ő','Œ','œ','Ŕ','ŕ','Ŗ','ŗ','Ř','ř','Ś','ś','Ŝ','ŝ','Ş','ş','Š','š','Ţ','ţ','Ť','ť','Ŧ','ŧ','Ũ','ũ','Ū','ū','Ŭ','ŭ','Ů','ů','Ű','ű','Ų','ų','Ŵ','ŵ','Ŷ','ŷ','Ÿ','Ź','ź','Ż','ż','Ž','ž','Ș','ș','Ț','ț','Ά','Έ','Ή','Ί','Ό','Ύ','Ώ','ΐ','Α','Β','Γ','Δ','Ε','Ζ','Η','Θ' ,'Ι','Κ','Λ','Μ','Ν','Ξ','Ο','Π','Ρ','Σ','Τ','Υ','Φ','Χ', 'Ψ', 'Ω','Ϊ','Ϋ','ά','έ','ή','ί','ΰ','α','β','γ','δ','ε','ζ','η','θ', 'ι','κ','λ','μ','ν','ξ','ο','π','ρ','ς','σ','τ','υ','φ','χ', 'ψ', 'ω','ϊ','ϋ','ό','ύ','ώ','А','Б','В','Г','Д','Е','Ж', 'З','И','Й','К','Л','М','Н','О','П','Р','С','Т','У','Ф','Х','Ц', 'Ч', 'Ш', 'Щ',  'Ъ','Ь','Ю', 'Я', 'а','б','в','г','д','е','ж', 'з','и','й','к','л','м','н','о','п','р','с','т','у','ф','х','ц', 'ч', 'ш', 'щ',  'ъ','ь','ю', 'я', '€');
-    private static $specialCharsReplacement = array(';' => ',', '[' => '(', '\\' => '/', ']' => ')', '^' => '.', '_' => '-', '`' => '\'', '{' => '(', '|' => '/', '}' => ')', '~' => '-', '¿' => '?', 'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A', 'Å' => 'A', 'Æ' => 'A', 'Ç' => 'C', 'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I', 'Ï' => 'I', 'Ð' => 'D', 'Ñ' => 'N', 'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'O', 'Ø' => 'O', 'Ù' => 'U', 'Ú' => 'U', 'Û' => 'U', 'Ü' => 'U', 'Ý' => 'Y', 'Þ' => 'T', 'ß' => 's', 'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a', 'å' => 'a', 'æ' => 'a', 'ç' => 'c', 'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 'ð' => 'd', 'ñ' => 'n', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ü' => 'u', 'ý' => 'y', 'þ' => 't', 'ÿ' => 'y', 'Ā' => 'A', 'ā' => 'a', 'Ă' => 'A', 'ă' => 'a', 'Ą' => 'A', 'ą' => 'a', 'Ć' => 'C', 'ć' => 'c', 'Ĉ' => 'C', 'ĉ' => 'c', 'Ċ' => 'C', 'ċ' => 'c', 'Č' => 'C', 'č' => 'c', 'Ď' => 'D', 'ď' => 'd', 'Đ' => 'D', 'đ' => 'd', 'Ē' => 'E', 'ē' => 'e', 'Ĕ' => 'E', 'ĕ' => 'e', 'Ė' => 'E', 'ė' => 'e', 'Ę' => 'E', 'ę' => 'e', 'Ě' => 'E', 'ě' => 'e', 'Ĝ' => 'G', 'ĝ' => 'g', 'Ğ' => 'G', 'ğ' => 'g', 'Ġ' => 'G', 'ġ' => 'g', 'Ģ' => 'G', 'ģ' => 'g', 'Ĥ' => 'H', 'ĥ' => 'h', 'Ħ' => 'H', 'ħ' => 'h', 'Ĩ' => 'I', 'ĩ' => 'i', 'Ī' => 'I', 'ī' => 'i', 'Ĭ' => 'I', 'ĭ' => 'i', 'Į' => 'I', 'į' => 'i', 'İ' => 'I', 'ı' => 'i', 'Ĳ' => 'I', 'ĳ' => 'i', 'Ĵ' => 'J', 'ĵ' => 'j', 'Ķ' => 'K', 'ķ' => 'k', 'ĸ' => '.', 'Ĺ' => 'L', 'ĺ' => 'l', 'Ļ' => 'L', 'ļ' => 'l', 'Ľ' => 'L', 'ľ' => 'l', 'Ŀ' => 'L', 'ŀ' => 'l', 'Ł' => 'L', 'ł' => 'l', 'Ń' => 'N', 'ń' => 'n', 'Ņ' => 'N', 'ņ' => 'n', 'Ň' => 'N', 'ň' => 'n', 'Ő' => 'O', 'ő' => 'o', 'Œ' => 'O', 'œ' => 'o', 'Ŕ' => 'R', 'ŕ' => 'r', 'Ŗ' => 'R', 'ŗ' => 'r', 'Ř' => 'R', 'ř' => 'r', 'Ś' => 'S', 'ś' => 's', 'Ŝ' => 'S', 'ŝ' => 's', 'Ş' => 'S', 'ş' => 's', 'Š' => 'S', 'š' => 's', 'Ţ' => 'T', 'ţ' => 't', 'Ť' => 'T', 'ť' => 't', 'Ŧ' => 'T', 'ŧ' => 't', 'Ũ' => 'U', 'ũ' => 'u', 'Ū' => 'U', 'ū' => 'u', 'Ŭ' => 'U', 'ŭ' => 'u', 'Ů' => 'U', 'ů' => 'u', 'Ű' => 'U', 'ű' => 'u', 'Ų' => 'U', 'ų' => 'u', 'Ŵ' => 'W', 'ŵ' => 'w', 'Ŷ' => 'Y', 'ŷ' => 'y', 'Ÿ' => 'Y', 'Ź' => 'Z', 'ź' => 'z', 'Ż' => 'Z', 'ż' => 'z', 'Ž' => 'Z', 'ž' => 'z', 'Ș' => 'S', 'ș' => 's', 'Ț' => 'T', 'ț' => 't', 'Ά' => 'A', 'Έ' => 'E', 'Ή' => 'I', 'Ί' => 'I', 'Ό' => 'O', 'Ύ' => 'Y', 'Ώ' => 'O', 'ΐ' => 'i', 'Α' => 'A', 'Β' => 'V', 'Γ' => 'G', 'Δ' => 'D', 'Ε' => 'E', 'Ζ' => 'Z', 'Η' => 'I', 'Θ' => 'TH', 'Ι' => 'I', 'Κ' => 'K', 'Λ' => 'L', 'Μ' => 'M', 'Ν' => 'N', 'Ξ' => 'X', 'Ο' => 'O', 'Π' => 'P', 'Ρ' => 'R', 'Σ' => 'S', 'Τ' => 'T', 'Υ' => 'Y', 'Φ' => 'F', 'Χ' => 'CH', 'Ψ' => 'PS', 'Ω' => 'O', 'Ϊ' => 'I', 'Ϋ' => 'Y', 'ά' => 'a', 'έ' => 'e', 'ή' => 'i', 'ί' => 'i', 'ΰ' => 'y', 'α' => 'a', 'β' => 'v', 'γ' => 'g', 'δ' => 'd', 'ε' => 'e', 'ζ' => 'z', 'η' => 'i', 'θ' => 'th', 'ι' => 'i', 'κ' => 'k', 'λ' => 'l', 'μ' => 'm', 'ν' => 'n', 'ξ' => 'x', 'ο' => 'o', 'π' => 'p', 'ρ' => 'r', 'ς' => 's', 'σ' => 's', 'τ' => 't', 'υ' => 'y', 'φ' => 'f', 'χ' => 'ch', 'ψ' => 'ps', 'ω' => 'o', 'ϊ' => 'i', 'ϋ' => 'y', 'ό' => 'o', 'ύ' => 'y', 'ώ' => 'o', 'А' => 'A', 'Б' => 'B', 'В' => 'V', 'Г' => 'G', 'Д' => 'D', 'Е' => 'E', 'Ж' => 'ZH', 'З' => 'Z', 'И' => 'I', 'Й' => 'Y', 'К' => 'K', 'Л' => 'L', 'М' => 'M', 'Н' => 'N', 'О' => 'O', 'П' => 'P', 'Р' => 'R', 'С' => 'S', 'Т' => 'T', 'У' => 'U', 'Ф' => 'F', 'Х' => 'H', 'Ц' => 'TS', 'Ч' => 'CH', 'Ш' => 'SH', 'Щ' => 'SHT', 'Ъ' => 'A', 'Ь' => 'Y', 'Ю' => 'YU', 'Я' => 'YA', 'а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e', 'ж' => 'zh', 'з' => 'z', 'и' => 'i', 'й' => 'y', 'к' => 'k', 'л' => 'l', 'м' => 'm', 'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's', 'т' => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'ts', 'ч' => 'ch', 'ш' => 'sh', 'щ' => 'sht', 'ъ' => 'a', 'ь' => 'y', 'ю' => 'yu', 'я' => 'ya', '€' => 'E');
+    private static $specialChars            = [';', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~', '¿', 'À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ð', 'Ñ', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ø', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'Þ', 'ß', 'à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', 'ø', 'ù', 'ú', 'û', 'ü', 'ý', 'þ', 'ÿ', 'Ā', 'ā', 'Ă', 'ă', 'Ą', 'ą', 'Ć', 'ć', 'Ĉ', 'ĉ', 'Ċ', 'ċ', 'Č', 'č', 'Ď', 'ď', 'Đ', 'đ', 'Ē', 'ē', 'Ĕ', 'ĕ', 'Ė', 'ė', 'Ę', 'ę', 'Ě', 'ě', 'Ĝ', 'ĝ', 'Ğ', 'ğ', 'Ġ', 'ġ', 'Ģ', 'ģ', 'Ĥ', 'ĥ', 'Ħ', 'ħ', 'Ĩ', 'ĩ', 'Ī', 'ī', 'Ĭ', 'ĭ', 'Į', 'į', 'İ', 'ı', 'Ĳ', 'ĳ', 'Ĵ', 'ĵ', 'Ķ', 'ķ', 'ĸ', 'Ĺ', 'ĺ', 'Ļ', 'ļ', 'Ľ', 'ľ', 'Ŀ', 'ŀ', 'Ł', 'ł', 'Ń', 'ń', 'Ņ', 'ņ', 'Ň', 'ň', 'Ő', 'ő', 'Œ', 'œ', 'Ŕ', 'ŕ', 'Ŗ', 'ŗ', 'Ř', 'ř', 'Ś', 'ś', 'Ŝ', 'ŝ', 'Ş', 'ş', 'Š', 'š', 'Ţ', 'ţ', 'Ť', 'ť', 'Ŧ', 'ŧ', 'Ũ', 'ũ', 'Ū', 'ū', 'Ŭ', 'ŭ', 'Ů', 'ů', 'Ű', 'ű', 'Ų', 'ų', 'Ŵ', 'ŵ', 'Ŷ', 'ŷ', 'Ÿ', 'Ź', 'ź', 'Ż', 'ż', 'Ž', 'ž', 'Ș', 'ș', 'Ț', 'ț', 'Ά', 'Έ', 'Ή', 'Ί', 'Ό', 'Ύ', 'Ώ', 'ΐ', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω', 'Ϊ', 'Ϋ', 'ά', 'έ', 'ή', 'ί', 'ΰ', 'α', 'β', 'γ', 'δ', 'ε', 'ζ', 'η', 'θ', 'ι', 'κ', 'λ', 'μ', 'ν', 'ξ', 'ο', 'π', 'ρ', 'ς', 'σ', 'τ', 'υ', 'φ', 'χ', 'ψ', 'ω', 'ϊ', 'ϋ', 'ό', 'ύ', 'ώ', 'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ь', 'Ю', 'Я', 'а', 'б', 'в', 'г', 'д', 'е', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ь', 'ю', 'я', '€'];
+    private static $specialCharsReplacement = [';' => ',', '[' => '(', '\\' => '/', ']' => ')', '^' => '.', '_' => '-', '`' => '\'', '{' => '(', '|' => '/', '}' => ')', '~' => '-', '¿' => '?', 'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A', 'Å' => 'A', 'Æ' => 'A', 'Ç' => 'C', 'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I', 'Ï' => 'I', 'Ð' => 'D', 'Ñ' => 'N', 'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'O', 'Ø' => 'O', 'Ù' => 'U', 'Ú' => 'U', 'Û' => 'U', 'Ü' => 'U', 'Ý' => 'Y', 'Þ' => 'T', 'ß' => 's', 'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a', 'å' => 'a', 'æ' => 'a', 'ç' => 'c', 'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 'ð' => 'd', 'ñ' => 'n', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ü' => 'u', 'ý' => 'y', 'þ' => 't', 'ÿ' => 'y', 'Ā' => 'A', 'ā' => 'a', 'Ă' => 'A', 'ă' => 'a', 'Ą' => 'A', 'ą' => 'a', 'Ć' => 'C', 'ć' => 'c', 'Ĉ' => 'C', 'ĉ' => 'c', 'Ċ' => 'C', 'ċ' => 'c', 'Č' => 'C', 'č' => 'c', 'Ď' => 'D', 'ď' => 'd', 'Đ' => 'D', 'đ' => 'd', 'Ē' => 'E', 'ē' => 'e', 'Ĕ' => 'E', 'ĕ' => 'e', 'Ė' => 'E', 'ė' => 'e', 'Ę' => 'E', 'ę' => 'e', 'Ě' => 'E', 'ě' => 'e', 'Ĝ' => 'G', 'ĝ' => 'g', 'Ğ' => 'G', 'ğ' => 'g', 'Ġ' => 'G', 'ġ' => 'g', 'Ģ' => 'G', 'ģ' => 'g', 'Ĥ' => 'H', 'ĥ' => 'h', 'Ħ' => 'H', 'ħ' => 'h', 'Ĩ' => 'I', 'ĩ' => 'i', 'Ī' => 'I', 'ī' => 'i', 'Ĭ' => 'I', 'ĭ' => 'i', 'Į' => 'I', 'į' => 'i', 'İ' => 'I', 'ı' => 'i', 'Ĳ' => 'I', 'ĳ' => 'i', 'Ĵ' => 'J', 'ĵ' => 'j', 'Ķ' => 'K', 'ķ' => 'k', 'ĸ' => '.', 'Ĺ' => 'L', 'ĺ' => 'l', 'Ļ' => 'L', 'ļ' => 'l', 'Ľ' => 'L', 'ľ' => 'l', 'Ŀ' => 'L', 'ŀ' => 'l', 'Ł' => 'L', 'ł' => 'l', 'Ń' => 'N', 'ń' => 'n', 'Ņ' => 'N', 'ņ' => 'n', 'Ň' => 'N', 'ň' => 'n', 'Ő' => 'O', 'ő' => 'o', 'Œ' => 'O', 'œ' => 'o', 'Ŕ' => 'R', 'ŕ' => 'r', 'Ŗ' => 'R', 'ŗ' => 'r', 'Ř' => 'R', 'ř' => 'r', 'Ś' => 'S', 'ś' => 's', 'Ŝ' => 'S', 'ŝ' => 's', 'Ş' => 'S', 'ş' => 's', 'Š' => 'S', 'š' => 's', 'Ţ' => 'T', 'ţ' => 't', 'Ť' => 'T', 'ť' => 't', 'Ŧ' => 'T', 'ŧ' => 't', 'Ũ' => 'U', 'ũ' => 'u', 'Ū' => 'U', 'ū' => 'u', 'Ŭ' => 'U', 'ŭ' => 'u', 'Ů' => 'U', 'ů' => 'u', 'Ű' => 'U', 'ű' => 'u', 'Ų' => 'U', 'ų' => 'u', 'Ŵ' => 'W', 'ŵ' => 'w', 'Ŷ' => 'Y', 'ŷ' => 'y', 'Ÿ' => 'Y', 'Ź' => 'Z', 'ź' => 'z', 'Ż' => 'Z', 'ż' => 'z', 'Ž' => 'Z', 'ž' => 'z', 'Ș' => 'S', 'ș' => 's', 'Ț' => 'T', 'ț' => 't', 'Ά' => 'A', 'Έ' => 'E', 'Ή' => 'I', 'Ί' => 'I', 'Ό' => 'O', 'Ύ' => 'Y', 'Ώ' => 'O', 'ΐ' => 'i', 'Α' => 'A', 'Β' => 'V', 'Γ' => 'G', 'Δ' => 'D', 'Ε' => 'E', 'Ζ' => 'Z', 'Η' => 'I', 'Θ' => 'TH', 'Ι' => 'I', 'Κ' => 'K', 'Λ' => 'L', 'Μ' => 'M', 'Ν' => 'N', 'Ξ' => 'X', 'Ο' => 'O', 'Π' => 'P', 'Ρ' => 'R', 'Σ' => 'S', 'Τ' => 'T', 'Υ' => 'Y', 'Φ' => 'F', 'Χ' => 'CH', 'Ψ' => 'PS', 'Ω' => 'O', 'Ϊ' => 'I', 'Ϋ' => 'Y', 'ά' => 'a', 'έ' => 'e', 'ή' => 'i', 'ί' => 'i', 'ΰ' => 'y', 'α' => 'a', 'β' => 'v', 'γ' => 'g', 'δ' => 'd', 'ε' => 'e', 'ζ' => 'z', 'η' => 'i', 'θ' => 'th', 'ι' => 'i', 'κ' => 'k', 'λ' => 'l', 'μ' => 'm', 'ν' => 'n', 'ξ' => 'x', 'ο' => 'o', 'π' => 'p', 'ρ' => 'r', 'ς' => 's', 'σ' => 's', 'τ' => 't', 'υ' => 'y', 'φ' => 'f', 'χ' => 'ch', 'ψ' => 'ps', 'ω' => 'o', 'ϊ' => 'i', 'ϋ' => 'y', 'ό' => 'o', 'ύ' => 'y', 'ώ' => 'o', 'А' => 'A', 'Б' => 'B', 'В' => 'V', 'Г' => 'G', 'Д' => 'D', 'Е' => 'E', 'Ж' => 'ZH', 'З' => 'Z', 'И' => 'I', 'Й' => 'Y', 'К' => 'K', 'Л' => 'L', 'М' => 'M', 'Н' => 'N', 'О' => 'O', 'П' => 'P', 'Р' => 'R', 'С' => 'S', 'Т' => 'T', 'У' => 'U', 'Ф' => 'F', 'Х' => 'H', 'Ц' => 'TS', 'Ч' => 'CH', 'Ш' => 'SH', 'Щ' => 'SHT', 'Ъ' => 'A', 'Ь' => 'Y', 'Ю' => 'YU', 'Я' => 'YA', 'а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e', 'ж' => 'zh', 'з' => 'z', 'и' => 'i', 'й' => 'y', 'к' => 'k', 'л' => 'l', 'м' => 'm', 'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's', 'т' => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'ts', 'ч' => 'ch', 'ш' => 'sh', 'щ' => 'sht', 'ъ' => 'a', 'ь' => 'y', 'ю' => 'yu', 'я' => 'ya', '€' => 'E'];
 
     /**
      * @type array $bicIbanCountryCodeExceptions IBAN country code => array of valid BIC country codes
      */
-    private static $bicIbanCountryCodeExceptions = array('FR' => array('GF', 'GP', 'MQ', 'RE',
-                                                                       'PF', 'TF', 'YT', 'NC',
-                                                                       'BL', 'MF', 'PM', 'WF'),
-                                                         'GB' => array('IM', 'GG', 'JE'));
+    private static $bicIbanCountryCodeExceptions = ['FR' => ['GF', 'GP', 'MQ', 'RE',
+                                                             'PF', 'TF', 'YT', 'NC',
+                                                             'BL', 'MF', 'PM', 'WF'],
+                                                    'GB' => ['IM', 'GG', 'JE']];
 
-    private static $exceptionalBics = array(
+    private static $exceptionalBics = [
                                         'NOTAVAIL'  // used in Austria to mark that no BIC is provided
-                                        );
+    ];
 
     /*
      * Checks if an creditor identifier (ci) is valid. Note that also if the ci is valid it does
@@ -383,11 +383,11 @@ class SepaUtilities
         $iban2 = preg_replace('#\s+#','',$iban2);
 
         // check if both county codes belong to the EEA
-        $EEA = array('IS' => 1,'LI' => 1,'NO' => 1,'BE' => 1,'BG' => 1,'DK' => 1,'DE' => 1,
-                     'EE' => 1,'FI' => 1,'FR' => 1,'GR' => 1,'IE' => 1,'IT' => 1,'HR' => 1,
-                     'LV' => 1,'LT' => 1,'LU' => 1,'MT' => 1,'NL' => 1,'AT' => 1,'PL' => 1,
-                     'PT' => 1,'RO' => 1,'SE' => 1,'SK' => 1,'SI' => 1,'ES' => 1,'CZ' => 1,
-                     'HU' => 1,'GB' => 1,'CY' => 1);
+        $EEA = ['IS' => 1, 'LI' => 1, 'NO' => 1, 'BE' => 1, 'BG' => 1, 'DK' => 1, 'DE' => 1,
+                'EE' => 1, 'FI' => 1, 'FR' => 1, 'GR' => 1, 'IE' => 1, 'IT' => 1, 'HR' => 1,
+                'LV' => 1, 'LT' => 1, 'LU' => 1, 'MT' => 1, 'NL' => 1, 'AT' => 1, 'PL' => 1,
+                'PT' => 1, 'RO' => 1, 'SE' => 1, 'SK' => 1, 'SI' => 1, 'ES' => 1, 'CZ' => 1,
+                'HU' => 1, 'GB' => 1, 'CY' => 1];
 
         if(isset($EEA[strtoupper(substr($iban1,0,2))],$EEA[strtoupper(substr($iban2,0,2))]))
             return true;
@@ -447,10 +447,10 @@ class SepaUtilities
      * @param array  $preferredFormats An array of formats that will be checked first.
      * @return string|false The sanitized date or false, if it is not sanitizable.
      */
-    public static function sanitizeDateFormat($input, array $preferredFormats = array())
+    public static function sanitizeDateFormat($input, array $preferredFormats = [])
     {
-        $dateFormats = array('d.m.Y', 'd.m.y', 'j.n.Y', 'j.n.y', 'm.d.Y', 'm.d.y', 'n.j.Y', 'n.j.y',
-                             'Y/m/d', 'y/m/d', 'Y/n/j', 'y/n/j', 'Y.m.d', 'y.m.d', 'Y.n.j', 'y.n.j');
+        $dateFormats = ['d.m.Y', 'd.m.y', 'j.n.Y', 'j.n.y', 'm.d.Y', 'm.d.y', 'n.j.Y', 'n.j.y',
+                        'Y/m/d', 'y/m/d', 'Y/n/j', 'y/n/j', 'Y.m.d', 'y.m.d', 'Y.n.j', 'y.n.j'];
 
         // input is already in the correct format?
         $dateObj = \DateTime::createFromFormat('Y-m-d',$input);
@@ -773,7 +773,7 @@ class SepaUtilities
      */
     public static function checkAndSanitizeAll(array &$inputs, $flags = 0, array $options = null)
     {
-        $fieldsWithErrors = array();
+        $fieldsWithErrors = [];
         foreach($inputs as $field => &$input)
         {
             $input = self::checkAndSanitize($field, $input, $flags, $options);
@@ -839,20 +839,20 @@ class SepaUtilities
         switch($version)    // fall-through's are on purpose
         {
             case self::SEPA_PAIN_001_002_03:
-                $requiredKeys = array('pmtInfId', 'dbtr', 'iban', 'bic');
+                $requiredKeys = ['pmtInfId', 'dbtr', 'iban', 'bic'];
                 break;
             case self::SEPA_PAIN_001_001_03:
             case self::SEPA_PAIN_001_001_03_GBIC:
             case self::SEPA_PAIN_001_003_03:
-                $requiredKeys = array('pmtInfId', 'dbtr', 'iban');
+                $requiredKeys = ['pmtInfId', 'dbtr', 'iban'];
                 break;
             case self::SEPA_PAIN_008_002_02:
-                $requiredKeys = array('pmtInfId', 'lclInstrm', 'seqTp', 'cdtr', 'iban', 'bic', 'ci');
+                $requiredKeys = ['pmtInfId', 'lclInstrm', 'seqTp', 'cdtr', 'iban', 'bic', 'ci'];
                 break;
             case self::SEPA_PAIN_008_001_02:
             case self::SEPA_PAIN_008_001_02_GBIC:
             case self::SEPA_PAIN_008_003_02:
-                $requiredKeys = array('pmtInfId', 'lclInstrm', 'seqTp', 'cdtr', 'iban', 'ci');
+                $requiredKeys = ['pmtInfId', 'lclInstrm', 'seqTp', 'cdtr', 'iban', 'ci'];
                 break;
             default:
                 return false;
@@ -866,20 +866,20 @@ class SepaUtilities
         switch($version)
         {
             case self::SEPA_PAIN_001_002_03:
-                $requiredKeys = array('pmtId', 'instdAmt', 'iban', 'bic', 'cdtr');
+                $requiredKeys = ['pmtId', 'instdAmt', 'iban', 'bic', 'cdtr'];
                 break;
             case self::SEPA_PAIN_001_001_03:
             case self::SEPA_PAIN_001_001_03_GBIC:
             case self::SEPA_PAIN_001_003_03:
-                $requiredKeys = array('pmtId', 'instdAmt', 'iban', 'cdtr');
+                $requiredKeys = ['pmtId', 'instdAmt', 'iban', 'cdtr'];
                 break;
             case self::SEPA_PAIN_008_002_02:
-                $requiredKeys = array('pmtId', 'instdAmt', 'mndtId', 'dtOfSgntr', 'dbtr', 'iban','bic');
+                $requiredKeys = ['pmtId', 'instdAmt', 'mndtId', 'dtOfSgntr', 'dbtr', 'iban', 'bic'];
                 break;
             case self::SEPA_PAIN_008_001_02:
             case self::SEPA_PAIN_008_001_02_GBIC:
             case self::SEPA_PAIN_008_003_02:
-                $requiredKeys = array('pmtId', 'instdAmt', 'mndtId', 'dtOfSgntr', 'dbtr', 'iban');
+                $requiredKeys = ['pmtId', 'instdAmt', 'mndtId', 'dtOfSgntr', 'dbtr', 'iban'];
                 break;
             default: return false;
         }
@@ -1046,16 +1046,16 @@ class SepaUtilities
             $charExceptions = '';
 
             if( $flags & self::FLAG_ALT_REPLACEMENT_GERMAN)
-                self::changeArrayValuesByAssocArray($specialCharsReplacement,array('Ä' => 'Ae', 'ä' => 'ae', 'Ö' => 'Oe', 'ö' => 'oe', 'Ü' => 'Ue', 'ü' => 'ue', 'ß' => 'ss'));
+                self::changeArrayValuesByAssocArray($specialCharsReplacement, ['Ä' => 'Ae', 'ä' => 'ae', 'Ö' => 'Oe', 'ö' => 'oe', 'Ü' => 'Ue', 'ü' => 'ue', 'ß' => 'ss']);
             if($flags & self::FLAG_NO_REPLACEMENT_GERMAN)
             {
-                self::changeArrayValuesToKeys($specialCharsReplacement, array('Ä', 'ä', 'Ö', 'ö', 'Ü', 'ü', 'ß'));
+                self::changeArrayValuesToKeys($specialCharsReplacement, ['Ä', 'ä', 'Ö', 'ö', 'Ü', 'ü', 'ß']);
                 $charExceptions .= 'ÄäÖöÜüß';
             }
         }
 
         // remove characters
-        $str = str_replace(array('"','&','<','>'),'',$str);
+        $str = str_replace(['"', '&', '<', '>'], '', $str);
 
         // replace all kinds of whitespaces by a space
         $str = preg_replace('#\s+#u',' ',$str);
@@ -1091,7 +1091,7 @@ class SepaUtilities
         $result = filter_var($amount, FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
 
         if($result === false)
-            $result = filter_var(strtr($amount,array(',' => '.', '.' => ',')), FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
+            $result = filter_var(strtr($amount, [',' => '.', '.' => ',']), FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
 
         if($result === false || $result < 0.01 || $result > 999999999.99 || round($result,2) != $result)
             return false;
@@ -1109,8 +1109,8 @@ class SepaUtilities
     {
         $seqTp = strtoupper($seqTp);
 
-        if( in_array($seqTp, array(self::SEQUENCE_TYPE_FIRST, self::SEQUENCE_TYPE_RECURRING,
-                                   self::SEQUENCE_TYPE_ONCE, self::SEQUENCE_TYPE_FINAL)) )
+        if( in_array($seqTp, [self::SEQUENCE_TYPE_FIRST, self::SEQUENCE_TYPE_RECURRING,
+                              self::SEQUENCE_TYPE_ONCE, self::SEQUENCE_TYPE_FINAL]) )
             return $seqTp;
 
         return false;
@@ -1132,13 +1132,13 @@ class SepaUtilities
             case self::SEPA_PAIN_008_001_02:
             case self::SEPA_PAIN_008_001_02_GBIC:
             case self::SEPA_PAIN_008_002_02:
-                $validCases = array(self::LOCAL_INSTRUMENT_CORE_DIRECT_DEBIT,
-                                    self::LOCAL_INSTRUMENT_BUSINESS_2_BUSINESS);
+                $validCases = [self::LOCAL_INSTRUMENT_CORE_DIRECT_DEBIT,
+                               self::LOCAL_INSTRUMENT_BUSINESS_2_BUSINESS];
                 break;
             case self::SEPA_PAIN_008_003_02:
-                $validCases = array(self::LOCAL_INSTRUMENT_CORE_DIRECT_DEBIT,
-                                    self::LOCAL_INSTRUMENT_CORE_DIRECT_DEBIT_D_1,
-                                    self::LOCAL_INSTRUMENT_BUSINESS_2_BUSINESS);
+                $validCases = [self::LOCAL_INSTRUMENT_CORE_DIRECT_DEBIT,
+                               self::LOCAL_INSTRUMENT_CORE_DIRECT_DEBIT_D_1,
+                               self::LOCAL_INSTRUMENT_BUSINESS_2_BUSINESS];
                 break;
             default:
                 return false;
@@ -1152,10 +1152,10 @@ class SepaUtilities
 
     private static function checkCategoryPurpose($input)
     {
-        $validValues = array('BONU', 'CASH', 'CBLK', 'CCRD', 'CORT', 'DCRD', 'DIVI', 'EPAY',
-                             'FCOL', 'GOVT', 'HEDG', 'ICCP', 'IDCP', 'INTC', 'INTE', 'LOAN',
-                             'OTHR', 'PENS', 'SALA', 'SECU', 'SSBE', 'SUPP', 'TAXS', 'TRAD',
-                             'TREA', 'VATX', 'WHLD');
+        $validValues = ['BONU', 'CASH', 'CBLK', 'CCRD', 'CORT', 'DCRD', 'DIVI', 'EPAY',
+                        'FCOL', 'GOVT', 'HEDG', 'ICCP', 'IDCP', 'INTC', 'INTE', 'LOAN',
+                        'OTHR', 'PENS', 'SALA', 'SECU', 'SSBE', 'SUPP', 'TAXS', 'TRAD',
+                        'TREA', 'VATX', 'WHLD'];
 
         $input = strtoupper($input);
 
@@ -1167,27 +1167,27 @@ class SepaUtilities
 
     private static function checkPurpose($input)
     {
-        $validValues = array('CBLK', 'CDCB', 'CDCD', 'CDCS', 'CDDP', 'CDOC', 'CDQC', 'ETUP',
-                             'FCOL', 'MTUP', 'ACCT', 'CASH', 'COLL', 'CSDB', 'DEPT', 'INTC',
-                             'LIMA', 'NETT', 'AGRT', 'AREN', 'BEXP', 'BOCE', 'COMC', 'CPYR',
-                             'GDDS', 'GDSV', 'GSCB', 'LICF', 'POPE', 'ROYA', 'SCVE', 'SUBS',
-                             'SUPP', 'TRAD', 'CHAR', 'COMT', 'CLPR', 'DBTC', 'GOVI', 'HLRP',
-                             'INPC', 'INSU', 'INTE', 'LBRI', 'LIFI', 'LOAN', 'LOAR', 'PENO',
-                             'PPTI', 'RINP', 'TRFD', 'ADMG', 'ADVA', 'BLDM', 'CBFF', 'CBFR',
-                             'CCRD', 'CDBL', 'CFEE', 'CGDD', 'COST', 'CPKC', 'DCRD', 'EDUC',
-                             'FAND', 'FCPM', 'GOVT', 'ICCP', 'IDCP', 'IHRP', 'INSM', 'IVPT',
-                             'MSVC', 'NOWS', 'OFEE', 'OTHR', 'PADD', 'PTSP', 'RCKE', 'RCPT',
-                             'REBT', 'REFU', 'RENT', 'RIMB', 'STDY', 'TBIL', 'TCSC', 'TELI',
-                             'WEBI', 'ANNI', 'CAFI', 'CFDI', 'CMDT', 'DERI', 'DIVD', 'FREX',
-                             'HEDG', 'INVS', 'PRME', 'SAVG', 'SECU', 'SEPI', 'TREA', 'ANTS',
-                             'CVCF', 'DMEQ', 'DNTS', 'HLTC', 'HLTI', 'HSPC', 'ICRF', 'LTCF',
-                             'MDCS', 'VIEW', 'ALLW', 'ALMY', 'BBSC', 'BECH', 'BENE', 'BONU',
-                             'COMM', 'CSLP', 'GVEA', 'GVEB', 'GVEC', 'GVED', 'PAYR', 'PENS',
-                             'PRCP', 'SALA', 'SSBE', 'AEMP', 'GFRP', 'GWLT', 'RHBS', 'ESTX',
-                             'FWLV', 'GSTX', 'HSTX', 'INTX', 'NITX', 'PTXP', 'RDTX', 'TAXS',
-                             'VATX', 'WHLD', 'TAXR', 'AIRB', 'BUSB', 'FERB', 'RLWY', 'TRPT',
-                             'CBTV', 'ELEC', 'ENRG', 'GASB', 'NWCH', 'NWCM', 'OTLC', 'PHON',
-                             'UBIL', 'WTER');
+        $validValues = ['CBLK', 'CDCB', 'CDCD', 'CDCS', 'CDDP', 'CDOC', 'CDQC', 'ETUP',
+                        'FCOL', 'MTUP', 'ACCT', 'CASH', 'COLL', 'CSDB', 'DEPT', 'INTC',
+                        'LIMA', 'NETT', 'AGRT', 'AREN', 'BEXP', 'BOCE', 'COMC', 'CPYR',
+                        'GDDS', 'GDSV', 'GSCB', 'LICF', 'POPE', 'ROYA', 'SCVE', 'SUBS',
+                        'SUPP', 'TRAD', 'CHAR', 'COMT', 'CLPR', 'DBTC', 'GOVI', 'HLRP',
+                        'INPC', 'INSU', 'INTE', 'LBRI', 'LIFI', 'LOAN', 'LOAR', 'PENO',
+                        'PPTI', 'RINP', 'TRFD', 'ADMG', 'ADVA', 'BLDM', 'CBFF', 'CBFR',
+                        'CCRD', 'CDBL', 'CFEE', 'CGDD', 'COST', 'CPKC', 'DCRD', 'EDUC',
+                        'FAND', 'FCPM', 'GOVT', 'ICCP', 'IDCP', 'IHRP', 'INSM', 'IVPT',
+                        'MSVC', 'NOWS', 'OFEE', 'OTHR', 'PADD', 'PTSP', 'RCKE', 'RCPT',
+                        'REBT', 'REFU', 'RENT', 'RIMB', 'STDY', 'TBIL', 'TCSC', 'TELI',
+                        'WEBI', 'ANNI', 'CAFI', 'CFDI', 'CMDT', 'DERI', 'DIVD', 'FREX',
+                        'HEDG', 'INVS', 'PRME', 'SAVG', 'SECU', 'SEPI', 'TREA', 'ANTS',
+                        'CVCF', 'DMEQ', 'DNTS', 'HLTC', 'HLTI', 'HSPC', 'ICRF', 'LTCF',
+                        'MDCS', 'VIEW', 'ALLW', 'ALMY', 'BBSC', 'BECH', 'BENE', 'BONU',
+                        'COMM', 'CSLP', 'GVEA', 'GVEB', 'GVEC', 'GVED', 'PAYR', 'PENS',
+                        'PRCP', 'SALA', 'SSBE', 'AEMP', 'GFRP', 'GWLT', 'RHBS', 'ESTX',
+                        'FWLV', 'GSTX', 'HSTX', 'INTX', 'NITX', 'PTXP', 'RDTX', 'TAXS',
+                        'VATX', 'WHLD', 'TAXR', 'AIRB', 'BUSB', 'FERB', 'RLWY', 'TRPT',
+                        'CBTV', 'ELEC', 'ENRG', 'GASB', 'NWCH', 'NWCM', 'OTLC', 'PHON',
+                        'UBIL', 'WTER'];
 
         $input = strtoupper($input);
 
