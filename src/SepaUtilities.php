@@ -1218,4 +1218,26 @@ class SepaUtilities
         foreach($keys as $key)
             $array[$key] = $key;
     }
+
+    /**
+     * Returns the SEPA file version as a string.
+     * @param int $version Use the SEPA_PAIN_* constants.
+     * @return string|false SEPA file version as a string or false if the version is invalid.
+     */
+    public static function version2string($version)
+    {
+        switch($version)
+        {   // fall-through's are on purpose
+            case self::SEPA_PAIN_001_001_03_GBIC:
+            case self::SEPA_PAIN_001_001_03: return 'pain.001.001.03';
+            case self::SEPA_PAIN_001_002_03: return 'pain.001.002.03';
+            case self::SEPA_PAIN_001_003_03: return 'pain.001.003.03';
+            case self::SEPA_PAIN_008_001_02_GBIC:
+            case self::SEPA_PAIN_008_001_02_AUSTRIAN_003:
+            case self::SEPA_PAIN_008_001_02: return 'pain.008.001.02';
+            case self::SEPA_PAIN_008_002_02: return 'pain.008.002.02';
+            case self::SEPA_PAIN_008_003_02: return 'pain.008.003.02';
+            default: return false;
+        }
+    }
 }

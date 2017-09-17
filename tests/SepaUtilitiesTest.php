@@ -4,7 +4,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use AbcAeffchen\SepaUtilities\SepaUtilities;
 
-class SepaUtilitiesTest extends PHPUnit_Framework_TestCase
+class SepaUtilitiesTest extends PHPUnit\Framework\TestCase
 {
 
     public function testCheckCreditorIdentifier()
@@ -446,5 +446,17 @@ class SepaUtilitiesTest extends PHPUnit_Framework_TestCase
         static::assertSame('2070-03-30',\AbcAeffchen\SepaUtilities\easterDate(2070)->format('Y-m-d'));
     }
 
+    public function testVersion2string()
+    {
+        static::assertSame('pain.001.001.03', SepaUtilities::version2string(SepaUtilities::SEPA_PAIN_001_001_03));
+        static::assertSame('pain.001.001.03', SepaUtilities::version2string(SepaUtilities::SEPA_PAIN_001_001_03_GBIC));
+        static::assertSame('pain.001.002.03', SepaUtilities::version2string(SepaUtilities::SEPA_PAIN_001_002_03));
+        static::assertSame('pain.001.003.03', SepaUtilities::version2string(SepaUtilities::SEPA_PAIN_001_003_03));
+        static::assertSame('pain.008.001.02', SepaUtilities::version2string(SepaUtilities::SEPA_PAIN_008_001_02));
+        static::assertSame('pain.008.001.02', SepaUtilities::version2string(SepaUtilities::SEPA_PAIN_008_001_02_GBIC));
+        static::assertSame('pain.008.001.02', SepaUtilities::version2string(SepaUtilities::SEPA_PAIN_008_001_02_AUSTRIAN_003));
+        static::assertSame('pain.008.002.02', SepaUtilities::version2string(SepaUtilities::SEPA_PAIN_008_002_02));
+        static::assertSame('pain.008.003.02', SepaUtilities::version2string(SepaUtilities::SEPA_PAIN_008_003_02));
+    }
 }
  
