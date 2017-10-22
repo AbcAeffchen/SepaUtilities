@@ -1,6 +1,13 @@
 Sephpa - Change Log
 ===============
 
+## 1.2.4 - Oct 22, '17
+- Added the function `version2string` to get a string representation
+of a SEPA file version.
+- Changed the long array syntax to the short syntax.
+This breaks support for PHP <5.4 but this should not be used
+and was never officially supported anyway.
+
 ## 1.2.3 - Nov 21, '16
 - added support for pain.008.001.02.austria.003
 
