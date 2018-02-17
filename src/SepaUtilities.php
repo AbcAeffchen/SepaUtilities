@@ -3,7 +3,7 @@
  * SepaUtilities
  *
  * @license   GNU LGPL v3.0 - For details have a look at the LICENSE file
- * @copyright ©2017 Alexander Schickedanz
+ * @copyright ©2018 Alexander Schickedanz
  * @link      https://github.com/AbcAeffchen/SepaUtilities
  *
  * @author    Alexander Schickedanz <abcaeffchen@gmail.com>
@@ -113,6 +113,13 @@ class SepaUtilities
      *           payment transactions
      */
     const BIC_REQUIRED_THRESHOLD = 20160131;
+
+    /**
+     * Valid maximal text length
+     */
+    const TEXT_LENGTH_VERY_SHORT = 35;
+    const TEXT_LENGTH_SHORT = 70;
+    const TEXT_LENGTH_LONG = 140;
 
     private static $ibanPatterns = ['EG' => 'EG[0-9]{2}[0-9A-Z]{23}',
                                     'AL' => 'AL[0-9]{10}[0-9A-Z]{16}',
@@ -655,14 +662,27 @@ class SepaUtilities
                             : self::checkRestrictedIdentificationSEPA2($input);
             case 'initgpty':                                // cannot be empty (and the following things also)
             case 'cdtr':                                    // cannot be empty (and the following things also)
-            case 'dbtr': if(empty($input)) return false;    // cannot be empty
+            case 'dbtr':
+                if(empty($input))
+                    return false;    // cannot be empty
+            case 'orgid_id':
+                return ( self::checkLength($input, self::TEXT_LENGTH_VERY_SHORT)
+                    && self::checkCharset($input) )
+                    ? $input : false;
             case 'orgnlcdtrschmeid_nm':
             case 'ultmtcdtr':
-            case 'ultmtdbtr': return (self::checkLength($input, 70) && self::checkCharset($input)) ? $input : false;
-            case 'rmtinf': return (self::checkLength($input, 140) && self::checkCharset($input)) ? $input : false;
+            case 'ultmtdbtr':
+                return ( self::checkLength($input, self::TEXT_LENGTH_SHORT)
+                    && self::checkCharset($input) )
+                    ? $input : false;
+            case 'rmtinf':
+                return ( self::checkLength($input, self::TEXT_LENGTH_LONG)
+                    && self::checkCharset($input) )
+                    ? $input : false;
             case 'orgnldbtracct_iban':
             case 'iban': return self::checkIBAN($input,$options);
             case 'orgnldbtragt_bic':
+            case 'orgid_bob':
             case 'bic': return self::checkBIC($input,$options);
             case 'ccy': return self::checkActiveOrHistoricCurrencyCode($input);
             case 'amdmntind':
@@ -787,9 +807,9 @@ class SepaUtilities
             return implode(', ', $fieldsWithErrors);
     }
 
-    public static function sanitizeShortText($input,$allowEmpty = false, $flags = 0)
+    public static function sanitizeText($length, $input, $allowEmpty = false, $flags = 0)
     {
-        $res = self::sanitizeLength(self::replaceSpecialChars($input, $flags), 70);
+        $res = self::sanitizeLength(self::replaceSpecialChars($input, $flags), $length);
 
         if($allowEmpty || !empty($res))
             return $res;
@@ -797,14 +817,28 @@ class SepaUtilities
         return false;
     }
 
+    /**
+     * @deprecated
+     * @param      $input
+     * @param bool $allowEmpty
+     * @param int  $flags
+     * @return bool|string
+     */
+    public static function sanitizeShortText($input,$allowEmpty = false, $flags = 0)
+    {
+        return self::sanitizeText(self::TEXT_LENGTH_SHORT, $input, $allowEmpty, $flags);
+    }
+
+    /**
+     * @deprecated1111
+     * @param      $input
+     * @param bool $allowEmpty
+     * @param int  $flags
+     * @return bool|string
+     */
     public static function sanitizeLongText($input,$allowEmpty = false, $flags = 0)
     {
-        $res = self::sanitizeLength(self::replaceSpecialChars($input, $flags), 140);
-
-        if($allowEmpty || !empty($res))
-            return $res;
-
-        return false;
+        return self::sanitizeText(self::TEXT_LENGTH_LONG, $input, $allowEmpty, $flags);
     }
 
     /**
@@ -822,15 +856,20 @@ class SepaUtilities
         $field = strtolower($field);
         switch($field)          // fall-through's are on purpose
         {
+            case 'orgid_id':
+                return self::sanitizeText(self::TEXT_LENGTH_VERY_SHORT, $input, true, $flags);
             case 'ultmtcdrt':
-            case 'ultmtdebtr': return self::sanitizeShortText($input,true,$flags);
+            case 'ultmtdebtr':
+                return self::sanitizeText(self::TEXT_LENGTH_SHORT, $input, true, $flags);
             case 'orgnlcdtrschmeid_nm':
             case 'initgpty':
             case 'cdtr':
             case 'dbtr':
-                return self::sanitizeShortText($input,false,$flags);
-            case 'rmtinf': return self::sanitizeLongText($input,true,$flags);
-            default: return false;
+                return self::sanitizeText(self::TEXT_LENGTH_SHORT, $input, false, $flags);
+            case 'rmtinf':
+                return self::sanitizeText(self::TEXT_LENGTH_LONG, $input, true, $flags);
+            default:
+                return false;
         }
     }
 
