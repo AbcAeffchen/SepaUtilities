@@ -40,6 +40,7 @@ class SepaUtilities
     const SEPA_PAIN_001_003_03      = 100303;
     const SEPA_PAIN_001_001_03      = 100103;
     const SEPA_PAIN_001_001_03_GBIC = 1001031;
+	const SEPA_PAIN_001_001_03_CH02 = 1001032;
     // direct debit versions
     const SEPA_PAIN_008_002_02              = 800202;
     const SEPA_PAIN_008_003_02              = 800302;
@@ -653,6 +654,7 @@ class SepaUtilities
             case 'orgnlcdtrschmeid_id':
             case 'ci': return self::checkCreditorIdentifier($input);
             case 'msgid':
+			case 'instrid':
             case 'pmtid':   // next line
             case 'pmtinfid': return self::checkRestrictedIdentificationSEPA1($input);
             case 'orgnlmndtid':
@@ -882,6 +884,7 @@ class SepaUtilities
                 break;
             case self::SEPA_PAIN_001_001_03:
             case self::SEPA_PAIN_001_001_03_GBIC:
+			case self::SEPA_PAIN_001_001_03_CH02:
             case self::SEPA_PAIN_001_003_03:
                 $requiredKeys = ['pmtInfId', 'dbtr', 'iban'];
                 break;
@@ -909,6 +912,7 @@ class SepaUtilities
                 break;
             case self::SEPA_PAIN_001_001_03:
             case self::SEPA_PAIN_001_001_03_GBIC:
+			case self::SEPA_PAIN_001_001_03_CH02:
             case self::SEPA_PAIN_001_003_03:
                 $requiredKeys = ['pmtId', 'instdAmt', 'iban', 'cdtr'];
                 break;
@@ -1268,6 +1272,7 @@ class SepaUtilities
         switch($version)
         {   // fall-through's are on purpose
             case self::SEPA_PAIN_001_001_03_GBIC:
+			case self::SEPA_PAIN_001_001_03_CH02:
             case self::SEPA_PAIN_001_001_03: return 'pain.001.001.03';
             case self::SEPA_PAIN_001_002_03: return 'pain.001.002.03';
             case self::SEPA_PAIN_001_003_03: return 'pain.001.003.03';
