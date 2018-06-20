@@ -1,5 +1,5 @@
 {
-    "name": "abcaeffchen/sepa-utilities",
+    "name": "tobi76/sepa-utilities",
     "type": "library",
     "description": "SepaUtilities provides useful methods for validating and sanitizing inputs used in SEPA files supporting PHP >= 5.6 and HHVM.",
     "keywords": ["sepa","validate","sanitize","iban","hhvm","php7"],
@@ -23,7 +23,7 @@
     },
     "autoload": {
         "psr-4": {
-            "AbcAeffchen\\SepaUtilities\\": "src/"
+            "tobi76\\SepaUtilities\\": "src/"
         }
     }
 }
