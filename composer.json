@@ -23,7 +23,7 @@
     },
     "autoload": {
         "psr-4": {
-            "tobi76\\SepaUtilities\\": "src/"
+            "AbcAeffchen\\SepaUtilities\\": "src/"
         }
     }
 }
