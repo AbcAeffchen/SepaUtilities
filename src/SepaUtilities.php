@@ -667,6 +667,17 @@ class SepaUtilities
             case 'dbtr':
                 if(empty($input))
                     return false;    // cannot be empty
+			case 'adrline':
+				if(is_array($input)) {
+					foreach($input as $input_value) {
+						return ( self::checkLength($input_value, self::TEXT_LENGTH_VERY_SHORT)
+						&& self::checkCharset($input_value) )
+						? $input : false; }
+				} else {
+					return ( self::checkLength($input, self::TEXT_LENGTH_VERY_SHORT)
+                    && self::checkCharset($input) )
+                    ? $input : false;
+				}
             case 'orgid_id':
                 return ( self::checkLength($input, self::TEXT_LENGTH_VERY_SHORT)
                     && self::checkCharset($input) )
