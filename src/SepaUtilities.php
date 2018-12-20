@@ -648,6 +648,9 @@ class SepaUtilities
     public static function check($field, $input, array $options = null, $version = null)
     {
         $field = strtolower($field);
+        if ($version === null && isset($options['version'])) {
+            $version = $options['version'];
+        }
         switch($field)      // fall-through's are on purpose
         {
             case 'orgnlcdtrschmeid_id':
