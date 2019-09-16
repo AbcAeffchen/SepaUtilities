@@ -675,6 +675,9 @@ class SepaUtilities
                 return ( self::checkLength($input, self::TEXT_LENGTH_SHORT)
                     && self::checkCharset($input) )
                     ? $input : false;
+            case 'ultmtdbtrid': return ( self::checkLength($input, self::TEXT_LENGTH_VERY_SHORT)
+                    && self::checkCharset($input) )
+                    ? $input : false;
             case 'rmtinf':
                 return ( self::checkLength($input, self::TEXT_LENGTH_LONG)
                     && self::checkCharset($input) )
