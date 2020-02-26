@@ -46,6 +46,7 @@ class SepaUtilities
     const SEPA_PAIN_008_001_02              = 800102;
     const SEPA_PAIN_008_001_02_GBIC         = 8001021;
     const SEPA_PAIN_008_001_02_AUSTRIAN_003 = 8001022;
+    const SEPA_PAIN_008_001_02_CH_03        = 8001023;
 
     const HTML_PATTERN_IBAN = '([a-zA-Z]\s*){2}([0-9]\s?){2}\s*([a-zA-Z0-9]\s*){1,30}';
     const HTML_PATTERN_BIC = '([a-zA-Z]\s*){6}[a-zA-Z2-9]\s*[a-nA-Np-zP-Z0-9]\s*(([A-Z0-9]\s*){3}){0,1}';
@@ -100,6 +101,10 @@ class SepaUtilities
      * normal direct debit
      */
     const LOCAL_INSTRUMENT_CORE_DIRECT_DEBIT     = 'CORE';
+    /**
+     * normal direct debit
+     */
+    const LOCAL_INSTRUMENT_LSV_DIRECT_DEBIT     = 'LSV+';
     /**
      * urgent direct debit
      */
@@ -654,6 +659,9 @@ class SepaUtilities
             case 'ci': return self::checkCreditorIdentifier($input);
             case 'msgid':
             case 'pmtid':   // next line
+            case 'esr':
+            case 'mmbid':
+            case 'lsv':
             case 'pmtinfid': return self::checkRestrictedIdentificationSEPA1($input);
             case 'orgnlmndtid':
             case 'mndtid': return $version === self::SEPA_PAIN_008_001_02
@@ -893,6 +901,9 @@ class SepaUtilities
             case self::SEPA_PAIN_008_003_02:
                 $requiredKeys = ['pmtInfId', 'lclInstrm', 'seqTp', 'cdtr', 'iban', 'ci'];
                 break;
+            case self::SEPA_PAIN_008_001_02_CH_03:
+                $requiredKeys = ['pmtInfId', 'lclInstrm', 'seqTp', 'cdtr', 'iban','lsv'];
+                break;
             default:
                 return false;
         }
@@ -919,6 +930,9 @@ class SepaUtilities
             case self::SEPA_PAIN_008_001_02_GBIC:
             case self::SEPA_PAIN_008_003_02:
                 $requiredKeys = ['pmtId', 'instdAmt', 'mndtId', 'dtOfSgntr', 'dbtr', 'iban'];
+                break;
+            case self::SEPA_PAIN_008_001_02_CH_03:
+                $requiredKeys = ['pmtId', 'instdAmt', 'dbtr', 'iban'];
                 break;
             default: return false;
         }
@@ -1179,6 +1193,9 @@ class SepaUtilities
                                self::LOCAL_INSTRUMENT_CORE_DIRECT_DEBIT_D_1,
                                self::LOCAL_INSTRUMENT_BUSINESS_2_BUSINESS];
                 break;
+            case self::SEPA_PAIN_008_001_02_CH_03:
+                $validCases = [self::LOCAL_INSTRUMENT_LSV_DIRECT_DEBIT];
+                break;
             default:
                 return false;
         }
@@ -1273,6 +1290,7 @@ class SepaUtilities
             case self::SEPA_PAIN_001_003_03: return 'pain.001.003.03';
             case self::SEPA_PAIN_008_001_02_GBIC:
             case self::SEPA_PAIN_008_001_02_AUSTRIAN_003:
+            case self::SEPA_PAIN_008_001_02_CH_03:
             case self::SEPA_PAIN_008_001_02: return 'pain.008.001.02';
             case self::SEPA_PAIN_008_002_02: return 'pain.008.002.02';
             case self::SEPA_PAIN_008_003_02: return 'pain.008.003.02';
