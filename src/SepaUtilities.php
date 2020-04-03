@@ -704,8 +704,8 @@ class SepaUtilities
             case 'reqdexctndt': return self::checkDateFormat($input);
             case 'purp': return self::checkPurpose($input);
             case 'ctgypurp': return self::checkCategoryPurpose($input);
+            case 'ref':
             case 'orgnldbtragt': return $input;     // nothing to check here
-            case 'Ref': return self::checkLength($input,27);
             default: return false;
         }
     }
