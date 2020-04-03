@@ -705,6 +705,7 @@ class SepaUtilities
             case 'purp': return self::checkPurpose($input);
             case 'ctgypurp': return self::checkCategoryPurpose($input);
             case 'orgnldbtragt': return $input;     // nothing to check here
+            case 'Ref': return self::checkLength($input,27);
             default: return false;
         }
     }
