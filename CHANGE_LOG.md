@@ -1,13 +1,18 @@
 Sephpa - Change Log
 ===============
 
+## 1.3.0 - Apr 13, '20
+- Minor code cleanup.
+- Add travis tests for PHP 7.3 and 7.4
+- Raise minimal version to PHP 7.1. However, supported is only >=7.2 from now on.
+
 ## 1.2.5 - Feb 21, '18
 - added support for `OrgId` fields `ID` and `BicOrBei`. They can be used in check and sanitize
 functions using the keys `orgid_id` and `orgid_bob`.
 - added constants for max text lengths `SepaUtilities::TEXT_LENGTH_VERY_SHORT`, 
 `SepaUtilities::TEXT_LENGTH_SHORT` and `SepaUtilities::TEXT_LENGTH_LONG`
 - The functions `sanitizeShortText()` and `sanitizeLongText()` are now deprecated and will be
-removed in the next major version. The replacemant is `sanitizeText()` using the `TEXT_LENGTH_*` 
+removed in the next major version. The replacement is `sanitizeText()` using the `TEXT_LENGTH_*` 
 constants.
 
 ## 1.2.4 - Oct 22, '17

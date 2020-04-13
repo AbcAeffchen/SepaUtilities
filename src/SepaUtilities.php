@@ -3,7 +3,7 @@
  * SepaUtilities
  *
  * @license   GNU LGPL v3.0 - For details have a look at the LICENSE file
- * @copyright ©2018 Alexander Schickedanz
+ * @copyright ©2020 Alexander Schickedanz
  * @link      https://github.com/AbcAeffchen/SepaUtilities
  *
  * @author    Alexander Schickedanz <abcaeffchen@gmail.com>
@@ -11,11 +11,14 @@
 
 namespace AbcAeffchen\SepaUtilities;
 
+use DateTime;
+
 /**
  * Returns a DateTime object of easter sunday in the given year.
  * This is calculated with the Gaussian Algorithm.
+ *
  * @param int $year The year written with four digits.
- * @return \DateTime DateTime object pointing to easter sunday of the $year.
+ * @return DateTime DateTime object pointing to easter sunday of the $year.
  */
 function easterDate($year) {
     $G = $year % 19;
@@ -27,7 +30,7 @@ function easterDate($year) {
     $m = 3 + (int)(($L + 40) / 44);
     $d = $L + 28 - 31 * ((int)($m / 4));
 
-    return \DateTime::createFromFormat('Y-n-j', $year . '-' . $m .'-' . $d);
+    return DateTime::createFromFormat('Y-n-j', $year . '-' . $m .'-' . $d);
 }
 
 /**
@@ -434,7 +437,7 @@ class SepaUtilities
 
     private static function checkDateFormat($input)
     {
-        $dateObj = \DateTime::createFromFormat('Y-m-d', $input);
+        $dateObj = DateTime::createFromFormat('Y-m-d', $input);
         if($dateObj !== false && $input === $dateObj->format('Y-m-d'))
             return $input;
         else
@@ -460,20 +463,20 @@ class SepaUtilities
                         'Y/m/d', 'y/m/d', 'Y/n/j', 'y/n/j', 'Y.m.d', 'y.m.d', 'Y.n.j', 'y.n.j'];
 
         // input is already in the correct format?
-        $dateObj = \DateTime::createFromFormat('Y-m-d',$input);
+        $dateObj = DateTime::createFromFormat('Y-m-d',$input);
         if($dateObj !== false)
             return $input;
 
         foreach($preferredFormats as $format)
         {
-            $dateObj = \DateTime::createFromFormat($format,$input);
+            $dateObj = DateTime::createFromFormat($format,$input);
             if($dateObj !== false)
                 return $dateObj->format('Y-m-d');
         }
 
         foreach($dateFormats as $format)
         {
-            $dateObj = \DateTime::createFromFormat($format,$input);
+            $dateObj = DateTime::createFromFormat($format,$input);
             if($dateObj !== false)
                 return $dateObj->format('Y-m-d');
         }
@@ -488,7 +491,7 @@ class SepaUtilities
      */
     public static function checkCreateDateTime($input)
     {
-        $dateObj = \DateTime::createFromFormat('Y-m-d\TH:i:s', $input);
+        $dateObj = DateTime::createFromFormat('Y-m-d\TH:i:s', $input);
         if($dateObj !== false && $input === $dateObj->format('Y-m-d\TH:i:s'))
             return $input;
         else
@@ -499,16 +502,17 @@ class SepaUtilities
      * Reformat a date string from a given format to the ISODate format. Notice: 20.13.2014 is
      * valid and becomes 2015-01-20.
      *
-     * @param string $date A date string of the given input format
+     * @param string $date        A date string of the given input format
      * @param string $inputFormat default is the german format DD.MM.YYYY
      * @return string|false date as YYYY-MM-DD or false, if the input is not a date.
+     * @throws \Exception If $date is provided but does not match the given $inputFormat.
      */
     public static function getDate($date = null, $inputFormat = 'd.m.Y')
     {
         if(empty($date))
-            $dateTimeObj = new \DateTime();
+            $dateTimeObj = new DateTime();
         else
-            $dateTimeObj = \DateTime::createFromFormat($inputFormat, $date);
+            $dateTimeObj = DateTime::createFromFormat($inputFormat, $date);
 
         if($dateTimeObj === false)
             return false;
@@ -523,13 +527,14 @@ class SepaUtilities
      * @param string $today         if set, this date is used as today
      * @param string $inputFormat
      * @return string|false YYYY-MM-DD
+     * @throws \Exception If $date is provided but does not match the given $inputFormat.
      */
     public static function getDateWithOffset($workdayOffset, $today = null, $inputFormat = 'd.m.Y')
     {
         if(empty($today))
-            $dateTimeObj = new \DateTime();
+            $dateTimeObj = new DateTime();
         else
-            $dateTimeObj = \DateTime::createFromFormat($inputFormat, $today);
+            $dateTimeObj = DateTime::createFromFormat($inputFormat, $today);
 
         if($dateTimeObj === false)
             return false;
@@ -550,25 +555,26 @@ class SepaUtilities
     }
 
     /**
-     * Returns the target date, if it has at least the given offset of TARGET2 days form today. Else
-     * the earliest date that respects the offset is returned.
+     * Returns the target date, if it has at least the given offset of TARGET2 days form
+     * today. Else the earliest date that respects the offset is returned.
      *
      * @param string $target
      * @param int    $workdayMinOffset
      * @param string $inputFormat
      * @param string $today
      * @return string
+     * @throws \Exception If $today is provided but does not match the given $inputFormat.
      */
     public static function getDateWithMinOffsetFromToday($target, $workdayMinOffset, $inputFormat = 'd.m.Y', $today = null)
     {
-        $targetDateObj = \DateTime::createFromFormat($inputFormat,$target);
+        $targetDateObj = DateTime::createFromFormat($inputFormat,$target);
 
         $earliestDate = self::getDateWithOffset($workdayMinOffset, $today, $inputFormat);
 
         if($targetDateObj === false || $earliestDate === false)
             return false;
 
-        $earliestDateObj = new \DateTime($earliestDate);
+        $earliestDateObj = new DateTime($earliestDate);
 
         $isTargetDay = self::dateIsTargetDay($targetDateObj);
         while( !$isTargetDay )
@@ -586,10 +592,10 @@ class SepaUtilities
     /**
      * Checks if $date is a SEPA TARGET day. Every day is a TARGET day except for saturdays, sundays
      * new year's day, good friday, easter monday, the may holiday, first and second christmas holiday.
-     * @param \DateTime $date
+     * @param DateTime $date
      * @return bool
      */
-    private static function dateIsTargetDay(\DateTime $date)
+    private static function dateIsTargetDay(DateTime $date)
     {
         // $date is a saturday or sunday?
         if($date->format('N') === '6' || $date->format('N') === '7')
