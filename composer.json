@@ -19,6 +19,7 @@
         "php": ">=7.1"
     },
     "require-dev": {
+        "ext-calendar": "*",
         "phpunit/phpunit": "^9 || ^8 || ^7"
     },
     "autoload": {
