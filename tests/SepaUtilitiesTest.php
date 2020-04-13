@@ -458,5 +458,14 @@ class SepaUtilitiesTest extends PHPUnit\Framework\TestCase
         static::assertSame('pain.008.002.02', SepaUtilities::version2string(SepaUtilities::SEPA_PAIN_008_002_02));
         static::assertSame('pain.008.003.02', SepaUtilities::version2string(SepaUtilities::SEPA_PAIN_008_003_02));
     }
+
+    public function testVersion2transactionType()
+    {
+        static::assertSame(SepaUtilities::SEPA_TRANSACTION_TYPE_CT, SepaUtilities::version2transactionType(SepaUtilities::SEPA_PAIN_001_001_03));
+        static::assertSame(SepaUtilities::SEPA_TRANSACTION_TYPE_CT, SepaUtilities::version2transactionType(SepaUtilities::SEPA_PAIN_001_001_03_GBIC));
+        static::assertSame(SepaUtilities::SEPA_TRANSACTION_TYPE_DD, SepaUtilities::version2transactionType(SepaUtilities::SEPA_PAIN_008_001_02));
+        static::assertSame(SepaUtilities::SEPA_TRANSACTION_TYPE_DD, SepaUtilities::version2transactionType(SepaUtilities::SEPA_PAIN_008_001_02_AUSTRIAN_003));
+        static::assertSame(false, SepaUtilities::version2string(321));
+    }
 }
  

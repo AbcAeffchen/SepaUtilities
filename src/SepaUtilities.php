@@ -50,6 +50,9 @@ class SepaUtilities
     const SEPA_PAIN_008_001_02_GBIC         = 8001021;
     const SEPA_PAIN_008_001_02_AUSTRIAN_003 = 8001022;
 
+    const SEPA_TRANSACTION_TYPE_CT = 1;
+    const SEPA_TRANSACTION_TYPE_DD = 8;
+
     const HTML_PATTERN_IBAN = '([a-zA-Z]\s*){2}([0-9]\s?){2}\s*([a-zA-Z0-9]\s*){1,30}';
     const HTML_PATTERN_BIC = '([a-zA-Z]\s*){6}[a-zA-Z2-9]\s*[a-nA-Np-zP-Z0-9]\s*(([A-Z0-9]\s*){3}){0,1}';
 
@@ -1284,5 +1287,24 @@ class SepaUtilities
             case self::SEPA_PAIN_008_003_02: return 'pain.008.003.02';
             default: return false;
         }
+    }
+
+    /**
+     * Returns a SEPA_TRANSACTION_TYPE_* constant
+     *
+     * @param int $version
+     * @return int|false
+     */
+    public static function version2transactionType(int $version)
+    {
+        $type = (int) ((string) $version)[0];
+
+        if($type === self::SEPA_TRANSACTION_TYPE_CT)
+            return self::SEPA_TRANSACTION_TYPE_CT;
+
+        if($type === self::SEPA_TRANSACTION_TYPE_DD)
+            return self::SEPA_TRANSACTION_TYPE_DD;
+
+        return false;
     }
 }
