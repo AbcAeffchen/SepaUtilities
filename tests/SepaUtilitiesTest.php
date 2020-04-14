@@ -356,9 +356,9 @@ class SepaUtilitiesTest extends PHPUnit\Framework\TestCase
     public function testCheckMandtId()
     {
         static::assertSame('MandtId123',SepaUtilities::check('orgnlmndtid','MandtId123'));
-        static::assertSame('MandtId123',SepaUtilities::check('orgnlmndtid','MandtId123',null,SepaUtilities::SEPA_PAIN_008_001_02_GBIC));
+        static::assertSame('MandtId123',SepaUtilities::check('orgnlmndtid','MandtId123',['version' => SepaUtilities::SEPA_PAIN_008_001_02_GBIC]));
         static::assertFalse(SepaUtilities::check('orgnlmndtid','MandtId 123'));
-        static::assertSame('MandtId 123',SepaUtilities::check('orgnlmndtid','MandtId 123',null,SepaUtilities::SEPA_PAIN_008_001_02_GBIC));
+        static::assertSame('MandtId 123',SepaUtilities::check('orgnlmndtid','MandtId 123',['version' => SepaUtilities::SEPA_PAIN_008_001_02_GBIC]));
     }
 
     public function testCheckCreateDateTime()

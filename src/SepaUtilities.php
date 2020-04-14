@@ -638,12 +638,13 @@ class SepaUtilities
      *                        'ccy','amendment', 'btchbookg','instdamt','seqtp','lclinstrm',
      *                        'elctrncsgntr','reqdexctndt','purp','ctgypurp','orgnldbtragt'
      * @param mixed  $input
-     * @param array  $options See `checkBIC()`, `checkIBAN()` and `checkLocalInstrument()` for details.
-     * @param int    $version Can be used to specify one of the `SEPA_PAIN_*` constants.
+     * @param array  $options See `checkBIC()`, `checkIBAN()` and `checkLocalInstrument()` for
+     *                        details. In addition one can use the key `version`, which is relevant
+     *                        for validation 'mndtid'.
      * @return false|mixed The checked input or false, if it is not valid
      * @noinspection PhpMissingBreakStatementInspection On purpose here.
      */
-    public static function check(string $field, $input, array $options = null, ?int $version = null)
+    public static function check(string $field, $input, array $options = null)
     {
         $field = strtolower($field);
         switch($field)      // fall-through's are on purpose
@@ -654,10 +655,12 @@ class SepaUtilities
             case 'pmtid':   // next line
             case 'pmtinfid': return self::checkRestrictedIdentificationSEPA1($input);
             case 'orgnlmndtid':
-            case 'mndtid': return $version === self::SEPA_PAIN_008_001_02
-                                    || $version === self::SEPA_PAIN_008_001_02_GBIC
-                            ? self::checkRestrictedIdentificationSEPA1($input)
-                            : self::checkRestrictedIdentificationSEPA2($input);
+            case 'mndtid':
+                $version = $options['version'] ?? null;
+                return $version === self::SEPA_PAIN_008_001_02
+                            || $version === self::SEPA_PAIN_008_001_02_GBIC
+                    ? self::checkRestrictedIdentificationSEPA1($input)
+                    : self::checkRestrictedIdentificationSEPA2($input);
             case 'initgpty':                                // cannot be empty (and the following things also)
             case 'cdtr':                                    // cannot be empty (and the following things also)
             case 'dbtr':
@@ -678,10 +681,10 @@ class SepaUtilities
                     && self::checkCharset($input) )
                     ? $input : false;
             case 'orgnldbtracct_iban':
-            case 'iban': return self::checkIBAN($input,$options);
+            case 'iban': return self::checkIBAN($input, $options);
             case 'orgnldbtragt_bic':
             case 'orgid_bob':
-            case 'bic': return self::checkBIC($input,$options);
+            case 'bic': return self::checkBIC($input, $options);
             case 'ccy': return self::checkActiveOrHistoricCurrencyCode($input);
             case 'amdmntind':
             case 'btchbookg': return self::checkBoolean($input);
@@ -704,20 +707,22 @@ class SepaUtilities
      * function can be called as `checkInput($fieldName,$_POST,['input',$fieldName],$options)`
      * and equals `check($fieldName,$_POST['input'][$fieldName],$options)`, but checks first, if
      * the index exists.
-     * @param string $field     see `check()` for valid values.
-     * @param array $inputArray
+     *
+     * @param string             $field   see `check()` for valid values.
+     * @param array              $inputArray
      * @param string|int|mixed[] $inputKeys
-     * @param array $options    see `check()` for valid values.
+     * @param array              $options see `check()` for valid values.
+     * @param int|null           $version
      * @return mixed|false
      */
     public static function checkInput(string $field, array &$inputArray, $inputKeys, array $options = null)
     {
-        $value = self::getValFromMultiDimInput($inputArray,$inputKeys);
+        $value = self::getValFromMultiDimInput($inputArray, $inputKeys);
 
         if($value === false)
             return false;
 
-        return self::check($field,$value,$options);
+        return self::check($field, $value, $options);
     }
 
     /**
@@ -744,7 +749,7 @@ class SepaUtilities
     /**
      * Checks the input and if it is not valid it tries to sanitize it.
      *
-     * @param string $field all fields check and/or sanitize supports
+     * @param string $field   all fields check and/or sanitize supports
      * @param mixed  $input
      * @param int    $flags   see `sanitize()` for details
      * @param array  $options see `check()` for details
@@ -756,7 +761,7 @@ class SepaUtilities
         if($checkedInput !== false)
             return $checkedInput;
 
-        return self::sanitize($field,$input,$flags);
+        return self::sanitize($field, $input, $flags);
     }
 
     /**
