@@ -836,7 +836,6 @@ class SepaUtilities
         $field = strtolower($field);
         switch($field)          // fall-through's are on purpose
         {
-            case 'ultmtdbtrid':
             case 'orgid_id':
                 return self::sanitizeText(self::TEXT_LENGTH_VERY_SHORT, $input, true, $flags);
             case 'ultmtcdrt':
