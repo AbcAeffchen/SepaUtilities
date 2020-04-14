@@ -666,6 +666,7 @@ class SepaUtilities
             case 'dbtr':
                 if(empty($input))
                     return false;    // cannot be empty
+            case 'initgptyid':
             case 'ultmtdbtrid':
             case 'orgid_id':
                 return ( self::checkLength($input, self::TEXT_LENGTH_VERY_SHORT)
