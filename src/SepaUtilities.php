@@ -647,6 +647,7 @@ class SepaUtilities
     public static function check(string $field, $input, array $options = null)
     {
         $field = strtolower($field);
+        $version = $options['version'] ?? null;
         switch($field)      // fall-through's are on purpose
         {
             case 'orgnlcdtrschmeid_id':
@@ -656,17 +657,18 @@ class SepaUtilities
             case 'pmtinfid': return self::checkRestrictedIdentificationSEPA1($input);
             case 'orgnlmndtid':
             case 'mndtid':
-                $version = $options['version'] ?? null;
                 return $version === self::SEPA_PAIN_008_001_02
                             || $version === self::SEPA_PAIN_008_001_02_GBIC
                     ? self::checkRestrictedIdentificationSEPA1($input)
                     : self::checkRestrictedIdentificationSEPA2($input);
+            case 'initgptyid':
+                if($version === self::SEPA_PAIN_008_001_02_AUSTRIAN_003)
+                    return false;   // not supported on this version
             case 'initgpty':                                // cannot be empty (and the following things also)
             case 'cdtr':                                    // cannot be empty (and the following things also)
             case 'dbtr':
                 if(empty($input))
                     return false;    // cannot be empty
-            case 'initgptyid':
             case 'ultmtdbtrid':
             case 'orgid_id':
                 return ( self::checkLength($input, self::TEXT_LENGTH_VERY_SHORT)
