@@ -5,6 +5,11 @@ Sephpa - Change Log
 - Minor code cleanup.
 - Add travis tests for PHP 7.3 and 7.4
 - Raise minimal version to PHP 7.1. However, supported is only >=7.2 from now on.
+- Removed `sanitizeShortText` and `sanitizeLongText` as they were deprecated.
+- Added type hints basically everywhere.
+- Turned on `strict_types`.
+- Removed `version` option from `check()`.
+- Add check for UltmtDbtrId and InitgPtyId
 
 ## 1.2.5 - Feb 21, '18
 - added support for `OrgId` fields `ID` and `BicOrBei`. They can be used in check and sanitize
