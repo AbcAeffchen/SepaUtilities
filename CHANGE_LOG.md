@@ -1,15 +1,18 @@
 Sephpa - Change Log
 ===============
 
-## 1.3.0 - Apr 13, '20
+## 1.3.0 - Apr ?, '20
 - Minor code cleanup.
 - Add travis tests for PHP 7.3 and 7.4
-- Raise minimal version to PHP 7.1. However, supported is only >=7.2 from now on.
+- Raise the minimal version to PHP 7.1. However, supported is only >=7.2 from now on.
 - Removed `sanitizeShortText` and `sanitizeLongText` as they were deprecated.
 - Added type hints basically everywhere.
 - Turned on `strict_types`.
 - Removed `version` option from `check()`.
-- Add check for UltmtDbtrId and InitgPtyId
+- Add check for `ultmtDbtrId` and `initgPtyId`.
+- Add support for Swiss LSV+ DirectDebit pain.008.001.02.ch.03 (merged from [hairacless/SepaUtilities](https://github.com/hairacless/SepaUtilities))
+- Add support for Swiss Credit Transfer pain.001.001.03.ch.02 (merged from [tobi76/SepaUtilities](https://github.com/tobi76/SepaUtilities))
+
 
 ## 1.2.5 - Feb 21, '18
 - added support for `OrgId` fields `ID` and `BicOrBei`. They can be used in check and sanitize
