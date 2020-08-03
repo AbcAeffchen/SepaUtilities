@@ -640,7 +640,7 @@ class SepaUtilities
      *
      * @param string $field   Valid fields are: 'orgnlcdtrschmeid_id','ci','msgid','pmtid','pmtinfid',
      *                        'orgnlmndtid','mndtid','initgpty','cdtr','dbtr','orgnlcdtrschmeid_nm',
-     *                        'ultmtcdrt','ultmtdebtr','rmtinf','orgnldbtracct_iban','iban','bic',
+     *                        'ultmtcdrt','ultmtdbtr','rmtinf','orgnldbtracct_iban','iban','bic',
      *                        'ccy','amendment', 'btchbookg','instdamt','seqtp','lclinstrm',
      *                        'elctrncsgntr','reqdexctndt','purp','ctgypurp','orgnldbtragt'
      * @param mixed  $input
@@ -838,7 +838,7 @@ class SepaUtilities
     /**
      * Tries to sanitize the the input so it fits in the field.
      *
-     * @param string $field Valid fields are: 'ultmtcdrt', 'ultmtdebtr',
+     * @param string $field Valid fields are: 'ultmtcdrt', 'ultmtdbtr',
      *                      'orgnlcdtrschmeid_nm', 'initgpty', 'cdtr', 'dbtr', 'rmtinf'
      * @param mixed  $input
      * @param int    $flags Flags used in replaceSpecialChars()
@@ -853,7 +853,7 @@ class SepaUtilities
             case 'orgid_id':
                 return self::sanitizeText(self::TEXT_LENGTH_VERY_SHORT, $input, true, $flags);
             case 'ultmtcdrt':
-            case 'ultmtdebtr':
+            case 'ultmtdbtr':
                 return self::sanitizeText(self::TEXT_LENGTH_SHORT, $input, true, $flags);
             case 'orgnlcdtrschmeid_nm':
             case 'initgpty':

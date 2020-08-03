@@ -13,7 +13,7 @@ if(isset($_POST['check']))
     foreach($_POST as $field => $input)
     {
         if(!in_array($field, array('pmtinfid', 'dbtr', 'iban', 'bic', 'ccy', 'btchbookg',
-                                   'ultmtdebtr', 'pmtid', 'instdamt', 'cdtr', 'ultmtcdrt',
+                                   'ultmtdbtr', 'pmtid', 'instdamt', 'cdtr', 'ultmtcdrt',
                                    'rmtinf', 'ci')))
             continue;
         $results[$field] = SepaUtilities::check($field, $input);
@@ -22,7 +22,7 @@ if(isset($_POST['check']))
 if(isset($_POST['sanitize']))
     foreach($_POST as $field => $input)
     {
-        if(!in_array($field, array('cdtr', 'dbtr', 'rmtinf', 'ultmtcdrt', 'ultmtdebtr')))
+        if(!in_array($field, array('cdtr', 'dbtr', 'rmtinf', 'ultmtcdrt', 'ultmtdbtr')))
             continue;
         $results[$field] = SepaUtilities::sanitize($field, $input);
     }
@@ -58,8 +58,8 @@ if(isset($_POST['sanitize']))
     <?php if(isset($results['ccy'])){ echo ($results['ccy'] === false ? 'invalid' : 'valid -> ' . $results['ccy']); } ?><br>
     <input type="text" name="btchbookg" placeholder="Batch Booking" value="<?php if(isset($_POST['btchbookg'])) echo $_POST['btchbookg']; ?>">
     <?php if(isset($results['btchbookg'])){ echo ($results['btchbookg'] === false ? 'invalid' : 'valid -> ' . $results['btchbookg']); } ?><br>
-    <input type="text" name="ultmtdebtr" placeholder="Ultimate Debtor" value="<?php if(isset($_POST['ultmtdebtr'])) echo $_POST['ultmtdebtr']; ?>">
-    <?php if(isset($results['ultmtdebtr'])){ echo ($results['ultmtdebtr'] === false ? 'invalid' : 'valid -> ' . $results['ultmtdebtr']); } ?><br>
+    <input type="text" name="ultmtdbtr" placeholder="Ultimate Debtor" value="<?php if(isset($_POST['ultmtdbtr'])) echo $_POST['ultmtdbtr']; ?>">
+    <?php if(isset($results['ultmtdbtr'])){ echo ($results['ultmtdbtr'] === false ? 'invalid' : 'valid -> ' . $results['ultmtdbtr']); } ?><br>
     <input type="text" name="pmtid" placeholder="Payment ID" value="<?php if(isset($_POST['pmtid'])) echo $_POST['pmtid']; ?>">
     <?php if(isset($results['pmtid'])){ echo ($results['pmtid'] === false ? 'invalid' : 'valid -> ' . $results['pmtid']); } ?><br>
     <input type="text" name="instdamt" placeholder="Instructed Amount" value="<?php if(isset($_POST['instdamt'])) echo $_POST['instdamt']; ?>">
