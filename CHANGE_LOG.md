@@ -15,7 +15,8 @@ Sephpa - Change Log
 - Add sanitize function for `adrline` (it is just a 70-character text).
 - Add support for Swiss LSV+ DirectDebit pain.008.001.02.ch.03 (merged from [hairacless/SepaUtilities](https://github.com/hairacless/SepaUtilities))
 - Add support for Swiss Credit Transfer pain.001.001.03.ch.02 (merged from [tobi76/SepaUtilities](https://github.com/tobi76/SepaUtilities))
-
+- **Fixed**: Changed the keyword `ultmtdebtr` to `ultmtdebtr` in sanitize and check function.
+This was a misspelling and only partially supported.
 
 ## 1.2.5 - Feb 21, '18
 - added support for `OrgId` fields `ID` and `BicOrBei`. They can be used in check and sanitize

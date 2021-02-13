@@ -308,7 +308,7 @@ class SepaUtilitiesTest extends PHPUnit\Framework\TestCase
             'btchBookg'     => 'true',              // BatchBooking, only 'true' or 'false'
             //'ctgyPurp'      => ,                  // Do not use this if you do not know how. For further information read the SEPA documentation
             'reqdExctnDt'   => '2013-11-25',        // Date: YYYY-MM-DD
-            'ultmtDebtr'    => 'Ultimate Debtor Name'   // just an information, this do not affect the payment (max 70 characters)
+            'ultmtDbtr'    => 'Ultimate Debtor Name'   // just an information, this do not affect the payment (max 70 characters)
         ];
 
         $validDirectDebitPaymentInformation = [
@@ -345,7 +345,7 @@ class SepaUtilitiesTest extends PHPUnit\Framework\TestCase
             'btchBookg'     => 'true',              // BatchBooking, only 'true' or 'false'
             //'ctgyPurp'      => ,                  // Do not use this if you do not know how. For further information read the SEPA documentation
             'reqdExctnDt'   => '2013-11-25',        // Date: YYYY-MM-DD
-            'ultmtDebtr'    => 'Ultimate Debtor Name'   // just an information, this do not affect the payment (max 70 characters)
+            'ultmtDbtr'    => 'Ultimate Debtor Name'   // just an information, this do not affect the payment (max 70 characters)
         ];
 
         static::assertTrue(SepaUtilities::checkAndSanitizeAll($validCollectionInfo));
