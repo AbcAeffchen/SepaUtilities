@@ -1,7 +1,7 @@
 Sephpa - Change Log
 ===============
 
-## 1.3.0 - Apr ?, '20
+## 1.3.0 - Feb 13, '21
 - Minor code cleanup.
 - Add travis tests for PHP 7.3 and 7.4
 - Raise the minimal version to PHP 7.1. However, supported is only >=7.2 from now on.
@@ -9,7 +9,10 @@ Sephpa - Change Log
 - Added type hints basically everywhere.
 - Turned on `strict_types`.
 - Removed `version` option from `check()`.
-- Add check for `ultmtDbtrId` and `initgPtyId`.
+- Add check for `ultmtDbtrId`, `initgPtyId`, `adrline`, `ctry` and `dbtrpstladr`, where 
+  `dbtrpstladr` is just a shorthand for an array containing at least one of `ctry` and 
+  `adrline` and nothing else.
+- Add sanitize function for `adrline` (it is just a 70-character text).
 - Add support for Swiss LSV+ DirectDebit pain.008.001.02.ch.03 (merged from [hairacless/SepaUtilities](https://github.com/hairacless/SepaUtilities))
 - Add support for Swiss Credit Transfer pain.001.001.03.ch.02 (merged from [tobi76/SepaUtilities](https://github.com/tobi76/SepaUtilities))
 

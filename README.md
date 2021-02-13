@@ -43,8 +43,9 @@ and changes all letters to upper case.
 - `isNationalTransaction($iban1,$iban2)`: Checks if both IBANs are belong to the same country.
 - `checkCharset($str)`: Checks if the string contains only allowed characters.
 - `check($field, $input, $options, $version)`: Checks if the input fits the field. This function also does little
-formatting changes, e.g. correcting letter case. Possible field values are:
+format changes, e.g. correcting letter case. Possible field values are:
   - `initgpty`: Initiating Party
+  - `initgptyid`: Initiating Party ID
   - `msgid`: Message ID
   - `pmtid`: Payment ID
   - `pmtinfid`: Payment Information ID
@@ -52,6 +53,7 @@ formatting changes, e.g. correcting letter case. Possible field values are:
   - `ultmtcdrt`: Ultimate Creditor
   - `dbtr`: Debtor Name
   - `ultmtdebtr`: Ultimate Debtor
+  - `ultmtdbtrid`: Ultimate Debtor ID
   - `iban`: IBAN
   - `bic`: BIC
   - `ccy`: Currency
@@ -61,6 +63,8 @@ formatting changes, e.g. correcting letter case. Possible field values are:
   - `ci`: Creditor Identifier
   - `seqtp`: Sequence Type
   - `lclinstrm`: Local Instrument
+  - `ctry`: Two-letter country code, used in postal address
+  - `adrline`: An address line, or an array of at most two address lines
 
 The `$options` take an array 
 ### Sanitizing
@@ -70,12 +74,13 @@ The `$options` take an array
 - `replaceSpecialChars($str)`: replaces all characters that are not allowed in sepa files by a
 allowed one or removes them. Take a look at this [.xls file](http://www.europeanpaymentscouncil.eu/index.cfm/knowledge-bank/epc-documents/sepa-requirements-for-an-extended-character-set-unicode-subset-best-practices/) for more information
 *Notice:* Cyrillic is not supported yet, but greek letters are.
-- `sanitize($field, $input, $flags)`: tries to sanitize the input so it fits the field. Possible fields are
+- `sanitize($field, $input, $flags)`: tries to sanitize the input, so it fits the field. Possible fields are
   - `cdtr`
   - `dbtr`
   - `rmtinf`
   - `ultmtcdrt`
   - `ultmtdebtr`
+  - `adrline`
 
 ### Wrappers
 - `checkAndSanitize($field, $input, $flags, $options)`: Checks the input and if it is not valid 

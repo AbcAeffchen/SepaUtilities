@@ -642,7 +642,8 @@ class SepaUtilities
      *                        'orgnlmndtid','mndtid','initgpty','cdtr','dbtr','orgnlcdtrschmeid_nm',
      *                        'ultmtcdrt','ultmtdebtr','rmtinf','orgnldbtracct_iban','iban','bic',
      *                        'ccy','amendment', 'btchbookg','instdamt','seqtp','lclinstrm',
-     *                        'elctrncsgntr','reqdexctndt','purp','ctgypurp','orgnldbtragt'
+     *                        'elctrncsgntr','reqdexctndt','purp','ctgypurp','orgnldbtragt', 'adrline'
+     *                        'ctry', 'dbtrpstladr'
      * @param mixed  $input
      * @param array  $options See `checkBIC()`, `checkIBAN()` and `checkLocalInstrument()` for
      *                        details. In addition one can use the key `version`, which is relevant
@@ -659,7 +660,7 @@ class SepaUtilities
             case 'orgnlcdtrschmeid_id':
             case 'ci': return self::checkCreditorIdentifier($input);
             case 'msgid':
-			case 'instrid':
+            case 'instrid':
             case 'pmtid':   // next line
             case 'esr':
             case 'mmbid':
@@ -684,6 +685,18 @@ class SepaUtilities
                 return ( self::checkLength($input, self::TEXT_LENGTH_VERY_SHORT)
                     && self::checkCharset($input) )
                     ? $input : false;
+            case 'adrline': if(is_array($input))
+                {
+                    if(count($input) === 0 || count($input) > 2)
+                        return false;
+
+                    foreach($input as &$value)
+                    {
+                        $value = self::check('adrline', $value, $options);
+                    }
+
+                    return in_array(false, $input, true) ? false : array_values($input);
+                } // if not => fall through
             case 'orgnlcdtrschmeid_nm':
             case 'ultmtcdtr':
             case 'ultmtdbtr':
@@ -713,6 +726,18 @@ class SepaUtilities
             case 'ctgypurp': return self::checkCategoryPurpose($input);
             case 'ref':
             case 'orgnldbtragt': return $input;     // nothing to check here
+            case 'ctry': return self::checkCountryCode($input);
+            case 'dbtrpstladr': if(is_array($input) && count($input) > 0 && count($input) <= 2)
+                {
+                    foreach($input as $key => &$value)
+                    {
+                        if(!in_array(strtolower($key), ['ctry', 'adrline'], true))
+                            return false;
+
+                        $value = self::check($key, $value, $options);
+                    }
+                    return in_array(false, $input, true) ? false : $input;
+                } // if not => fall through
             default: return false;
         }
     }
@@ -758,7 +783,7 @@ class SepaUtilities
         if($value === false)
             return false;
 
-        return self::sanitize($field,$value,$flags);
+        return self::sanitize($field, $value, $flags);
     }
 
     /**
@@ -839,10 +864,10 @@ class SepaUtilities
      * Tries to sanitize the the input so it fits in the field.
      *
      * @param string $field Valid fields are: 'ultmtcdrt', 'ultmtdebtr',
-     *                      'orgnlcdtrschmeid_nm', 'initgpty', 'cdtr', 'dbtr', 'rmtinf'
+     *                      'orgnlcdtrschmeid_nm', 'initgpty', 'cdtr', 'dbtr', 'rmtinf', 'adrline'
      * @param mixed  $input
      * @param int    $flags Flags used in replaceSpecialChars()
-     * @return mixed|false The sanitized input or false if the input is not sanitizeable or
+     * @return mixed|false  The sanitized input or false if the input is not sanitizeable or
      *                      invalid also after sanitizing.
      */
     public static function sanitize(string $field, $input, int $flags = 0)
@@ -852,6 +877,7 @@ class SepaUtilities
         {
             case 'orgid_id':
                 return self::sanitizeText(self::TEXT_LENGTH_VERY_SHORT, $input, true, $flags);
+            case 'adrline':
             case 'ultmtcdrt':
             case 'ultmtdebtr':
                 return self::sanitizeText(self::TEXT_LENGTH_SHORT, $input, true, $flags);
@@ -1190,6 +1216,15 @@ class SepaUtilities
         $input = strtoupper($input);
 
         if(in_array($input, $validValues))
+            return $input;
+
+        return false;
+    }
+
+    private static function checkCountryCode(string $input)
+    {
+        $input = strtoupper($input);
+        if(isset(self::IBAN_PATTERNS[$input]))
             return $input;
 
         return false;

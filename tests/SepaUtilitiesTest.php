@@ -97,7 +97,7 @@ class SepaUtilitiesTest extends PHPUnit\Framework\TestCase
             ['TR330006100519786457841326', 'TR33 0006 1005 1978 6457 8413 26']
         ];
 
-        foreach($testCases as list($expected, $input))
+        foreach($testCases as [$expected, $input])
             static::assertSame('AD1200012030200359100100', SepaUtilities::checkIBAN('AD12 0001 2030 2003 5910 0100', $options));
     }
 
@@ -473,5 +473,60 @@ class SepaUtilitiesTest extends PHPUnit\Framework\TestCase
         static::assertSame(SepaUtilities::SEPA_TRANSACTION_TYPE_DD, SepaUtilities::version2transactionType(SepaUtilities::SEPA_PAIN_008_001_02_AUSTRIAN_003));
         static::assertSame(false, SepaUtilities::version2string(321));
     }
+
+    public function testCtryChecks()
+    {
+        // valid
+        foreach(['EG','AL','DZ','AD', 'AO','AZ','BH','BE','BJ','BA','BR','VG','BG','BF','BI',
+                 'CR','CI','DK','DE','DO','EE','FO','FI','FR','GA','GE','GI','GR','GL','GT',
+                 'IR','IE','IS','IL','IT','JO','CM','CV','KZ','QA','CG','KS','HR','KW','LV',
+                 'LB','LI','LT','LU','MG','ML','MT','MR','MU','MK','MD','MC','ME','MZ','NL',
+                 'NO','AT','TL','PK','PS','PL','PT','RO','SM','ST','SA','SE','CH','SN','RS',
+                 'SK','SI','ES','CZ','TN','TR','HU','AE','GB','CY','CF'] as $ctry)
+        {
+            self::assertSame($ctry, SepaUtilities::check('ctry', $ctry));
+        }
+
+        foreach(['eg','al','dz','ad', 'ao','az','bh','be','bj','ba','br','vg','bg','bf','bi',
+                 'cr','ci','dk','de','do','ee','fo','fi','fr','ga','ge','gi','gr','gl','gt',
+                 'ir','ie','is','il','it','jo','cm','cv','kz','qa','cg','ks','hr','kw','lv',
+                 'lb','li','lt','lu','mg','ml','mt','mr','mu','mk','md','mc','me','mz','nl',
+                 'no','at','tl','pk','ps','pl','pt','ro','sm','st','sa','se','ch','sn','rs',
+                 'sk','si','es','cz','tn','tr','hu','ae','gb','cy','cf'] as $ctry)
+        {
+            self::assertSame(strtoupper($ctry), SepaUtilities::check('ctry', $ctry));
+        }
+
+        // invalid
+        foreach(['a', 'ab', 'abc'] as $ctry)
+        {
+            self::assertFalse(SepaUtilities::check('ctry', $ctry));
+        }
+    }
+
+    public function testAdrLine()
+    {
+        // valid
+        self::assertSame('test', SepaUtilities::check('adrLine', 'test'));
+        self::assertSame(['test'], SepaUtilities::check('adrLine', ['test']));
+        self::assertSame(['test1','test2'], SepaUtilities::check('adrLine', ['test1','test2']));
+
+        // invalid
+        self::assertFalse(SepaUtilities::check('adrLine', []));
+        self::assertFalse(SepaUtilities::check('adrLine', ['test1','test2','test3']));
+    }
+
+    public function testDbtrPstlAdr()
+    {
+        // valid
+        self::assertSame(['ctry' => 'DE'], SepaUtilities::check('dbtrpstladr', ['ctry' => 'dE']));
+        self::assertSame(['adrline' => 'test'], SepaUtilities::check('dbtrpstladr', ['adrline' => 'test']));
+        self::assertSame(['adrline' => ['test']], SepaUtilities::check('dbtrpstladr', ['adrline' => ['test']]));
+        self::assertSame(['ctry' => 'DE', 'adrLine' => ['test']], SepaUtilities::check('dbtrpstladr', ['ctry' => 'dE', 'adrLine' => ['test']]));
+
+        // invalid
+        self::assertFalse(SepaUtilities::check('dbtrpstladr', []));
+        self::assertFalse(SepaUtilities::check('dbtrpstladr', ['test' => 1]));
+        self::assertFalse(SepaUtilities::check('dbtrpstladr', ['ctry' => 'dE', 'adrline' => ['test'], 'somethingelse' => 1]));
+    }
 }
- 
