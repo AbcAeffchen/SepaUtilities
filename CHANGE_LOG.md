@@ -1,6 +1,10 @@
 Sephpa - Change Log
 ===============
 
+## 1.3.1 - Feb 14, 21
+- Fixed: sanitizing of new `adrline` inputs was broken in case an array was used.
+- SepaUtilities are now tested on PHP 8.0.
+
 ## 1.3.0 - Feb 13, '21
 - Minor code cleanup.
 - Add travis tests for PHP 7.3 and 7.4

@@ -8,7 +8,8 @@
     "sanitize",
     "iban",
     "bic",
-    "php7"
+    "php7",
+    "php8"
   ],
   "homepage": "https://github.com/AbcAeffchen/SepaUtilities",
   "license": "LGPL-3.0",

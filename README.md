@@ -12,7 +12,7 @@ SepaUtilities is a PHP class to check and sanitize inputs used in SEPA files
 such as IBAN numbers, creditor identifiers, names and other text.
 
 ## PHP Versions
-SepaUtilities supports PHP >= 7.2.
+SepaUtilities supports PHP >= 7.2 including PHP 8.
 
 ## Installation
 
@@ -22,7 +22,7 @@ You can get SepaUtilities via Composer. Just add
 ```json
 {
     "require": {
-        "abcaeffchen/sepa-utilities": "~1.3"
+        "abcaeffchen/sepa-utilities": "^1.3"
     }
 }
 ```
