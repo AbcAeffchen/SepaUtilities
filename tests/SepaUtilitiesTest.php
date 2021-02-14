@@ -511,6 +511,11 @@ class SepaUtilitiesTest extends PHPUnit\Framework\TestCase
         self::assertSame(['test'], SepaUtilities::check('adrLine', ['test']));
         self::assertSame(['test1','test2'], SepaUtilities::check('adrLine', ['test1','test2']));
 
+        // sanitizable
+        self::assertSame('tast', SepaUtilities::sanitize('adrLine', 'täst'));
+        self::assertSame(['tast'], SepaUtilities::sanitize('adrLine', ['täst']));
+        self::assertSame(['tast','tast'], SepaUtilities::sanitize('adrLine', ['täst','täst']));
+
         // invalid
         self::assertFalse(SepaUtilities::check('adrLine', []));
         self::assertFalse(SepaUtilities::check('adrLine', ['test1','test2','test3']));

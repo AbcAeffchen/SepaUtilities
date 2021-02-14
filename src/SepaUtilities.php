@@ -814,7 +814,7 @@ class SepaUtilities
      * @param array              $inputArray
      * @param string|int|mixed[] $inputKeys
      * @param int                $flags   see `checkAndSanitize()` for valid values.
-     * @param array              $options see `checkAndSanitize()` for valid values.
+     * @param array|null         $options see `checkAndSanitize()` for valid values.
      * @return false|mixed
      */
     public static function checkAndSanitizeInput(string $field, array &$inputArray, $inputKeys, int $flags = 0, array $options = null)
@@ -828,9 +828,9 @@ class SepaUtilities
     }
 
     /**
-     * @param array $inputs A reference to an input array (field => value)
-     * @param int   $flags  Flags for sanitizing
-     * @param array $options Options for checking
+     * @param array      $inputs A reference to an input array (field => value)
+     * @param int        $flags  Flags for sanitizing
+     * @param array|null $options Options for checking
      * @return true|string returns true, if everything is ok or could be sanitized. Otherwise a
      *                     string with fields, that could not be sanitized is returned.
      */
@@ -878,6 +878,13 @@ class SepaUtilities
             case 'orgid_id':
                 return self::sanitizeText(self::TEXT_LENGTH_VERY_SHORT, $input, true, $flags);
             case 'adrline':
+                if(is_array($input))
+                {
+                    foreach($input as &$value)
+                        $value = self::sanitize($field, $value, $flags);
+
+                    return in_array(false, $input, true) ? false : $input;
+                }
             case 'ultmtcdrt':
             case 'ultmtdbtr':
             case 'ultmtdebtr':  // deprecated, just here for backwards compatibility
