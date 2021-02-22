@@ -643,7 +643,7 @@ class SepaUtilities
      *                        'ultmtcdrt','ultmtdbtr','rmtinf','orgnldbtracct_iban','iban','bic',
      *                        'ccy','amendment', 'btchbookg','instdamt','seqtp','lclinstrm',
      *                        'elctrncsgntr','reqdexctndt','purp','ctgypurp','orgnldbtragt', 'adrline'
-     *                        'ctry', 'dbtrpstladr'
+     *                        'ctry', 'dbtrpstladr', 'cdtrpstladr', 'pstladr'
      * @param mixed  $input
      * @param array  $options See `checkBIC()`, `checkIBAN()` and `checkLocalInstrument()` for
      *                        details. In addition one can use the key `version`, which is relevant
@@ -727,6 +727,8 @@ class SepaUtilities
             case 'ref':
             case 'orgnldbtragt': return $input;     // nothing to check here
             case 'ctry': return self::checkCountryCode($input);
+            case 'pstladr':
+            case 'cdtrpstladr':
             case 'dbtrpstladr': if(is_array($input) && count($input) > 0 && count($input) <= 2)
                 {
                     foreach($input as $key => &$value)

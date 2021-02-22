@@ -1,6 +1,9 @@
 Sephpa - Change Log
 ===============
 
+## 1.3.2 - Feb 23, 21
+- Added support for keys `pstladr` and `cdtrpstladr`. Both are aliases for `dbtrpstladr`.
+
 ## 1.3.1 - Feb 14, 21
 - Fixed: sanitizing of new `adrline` inputs was broken in case an array was used.
 - SepaUtilities are now tested on PHP 8.0.

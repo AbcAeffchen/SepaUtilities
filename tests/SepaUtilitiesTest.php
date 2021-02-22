@@ -521,17 +521,22 @@ class SepaUtilitiesTest extends PHPUnit\Framework\TestCase
         self::assertFalse(SepaUtilities::check('adrLine', ['test1','test2','test3']));
     }
 
-    public function testDbtrPstlAdr()
+    public function testPstlAdr()
     {
-        // valid
-        self::assertSame(['ctry' => 'DE'], SepaUtilities::check('dbtrpstladr', ['ctry' => 'dE']));
-        self::assertSame(['adrline' => 'test'], SepaUtilities::check('dbtrpstladr', ['adrline' => 'test']));
-        self::assertSame(['adrline' => ['test']], SepaUtilities::check('dbtrpstladr', ['adrline' => ['test']]));
-        self::assertSame(['ctry' => 'DE', 'adrLine' => ['test']], SepaUtilities::check('dbtrpstladr', ['ctry' => 'dE', 'adrLine' => ['test']]));
+        foreach(['dbtrpstladr', 'cdtrpstladr', 'pstladr'] as $key)
+        {
+            // valid
+            self::assertSame(['ctry' => 'DE'], SepaUtilities::check($key, ['ctry' => 'dE']));
+            self::assertSame(['adrline' => 'test'], SepaUtilities::check($key, ['adrline' => 'test']));
+            self::assertSame(['adrline' => ['test']], SepaUtilities::check($key, ['adrline' => ['test']]));
+            self::assertSame(['ctry' => 'DE', 'adrLine' => ['test']], SepaUtilities::check($key, ['ctry' => 'dE', 'adrLine' => ['test']]));
 
-        // invalid
-        self::assertFalse(SepaUtilities::check('dbtrpstladr', []));
-        self::assertFalse(SepaUtilities::check('dbtrpstladr', ['test' => 1]));
-        self::assertFalse(SepaUtilities::check('dbtrpstladr', ['ctry' => 'dE', 'adrline' => ['test'], 'somethingelse' => 1]));
+            // invalid
+            self::assertFalse(SepaUtilities::check($key, []));
+            self::assertFalse(SepaUtilities::check($key, ['test' => 1]));
+            self::assertFalse(SepaUtilities::check($key, ['ctry'          => 'dE',
+                                                          'adrline'       => ['test'],
+                                                          'somethingelse' => 1]));
+        }
     }
 }
