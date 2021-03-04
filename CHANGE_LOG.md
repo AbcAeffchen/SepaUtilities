@@ -1,6 +1,9 @@
 Sephpa - Change Log
 ===============
 
+## 1.3.3 - Mar 4, 21
+- Fixed typo in `ultmtCdtr` (was `ultmtCdrt` before). The old version still works for backward compatibility. 
+
 ## 1.3.2 - Feb 23, 21
 - Added support for keys `pstladr` and `cdtrpstladr`. Both are aliases for `dbtrpstladr`.
 

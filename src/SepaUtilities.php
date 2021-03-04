@@ -47,7 +47,7 @@ class SepaUtilities
     const SEPA_PAIN_001_003_03       = 100303;
     const SEPA_PAIN_001_001_03       = 100103;
     const SEPA_PAIN_001_001_03_GBIC  = 1001031;
-	const SEPA_PAIN_001_001_03_CH_02 = 1001032;
+    const SEPA_PAIN_001_001_03_CH_02 = 1001032;
     // direct debit versions
     const SEPA_PAIN_008_002_02              = 800202;
     const SEPA_PAIN_008_003_02              = 800302;
@@ -640,7 +640,7 @@ class SepaUtilities
      *
      * @param string $field   Valid fields are: 'orgnlcdtrschmeid_id','ci','msgid','pmtid','pmtinfid',
      *                        'orgnlmndtid','mndtid','initgpty','cdtr','dbtr','orgnlcdtrschmeid_nm',
-     *                        'ultmtcdrt','ultmtdbtr','rmtinf','orgnldbtracct_iban','iban','bic',
+     *                        'ultmtcdtr','ultmtdbtr','rmtinf','orgnldbtracct_iban','iban','bic',
      *                        'ccy','amendment', 'btchbookg','instdamt','seqtp','lclinstrm',
      *                        'elctrncsgntr','reqdexctndt','purp','ctgypurp','orgnldbtragt', 'adrline'
      *                        'ctry', 'dbtrpstladr', 'cdtrpstladr', 'pstladr'
@@ -698,6 +698,7 @@ class SepaUtilities
                     return in_array(false, $input, true) ? false : array_values($input);
                 } // if not => fall through
             case 'orgnlcdtrschmeid_nm':
+            case 'ultmtcdrt':   // deprecated, just here for backwards compatibility
             case 'ultmtcdtr':
             case 'ultmtdbtr':
                 return ( self::checkLength($input, self::TEXT_LENGTH_SHORT)
@@ -865,7 +866,7 @@ class SepaUtilities
     /**
      * Tries to sanitize the the input so it fits in the field.
      *
-     * @param string $field Valid fields are: 'ultmtcdrt', 'ultmtdbtr',
+     * @param string $field Valid fields are: 'ultmtcdtr', 'ultmtdbtr',
      *                      'orgnlcdtrschmeid_nm', 'initgpty', 'cdtr', 'dbtr', 'rmtinf', 'adrline'
      * @param mixed  $input
      * @param int    $flags Flags used in replaceSpecialChars()
@@ -887,7 +888,8 @@ class SepaUtilities
 
                     return in_array(false, $input, true) ? false : $input;
                 }
-            case 'ultmtcdrt':
+            case 'ultmtcdrt':   // deprecated, just here for backwards compatibility
+            case 'ultmtcdtr':
             case 'ultmtdbtr':
             case 'ultmtdebtr':  // deprecated, just here for backwards compatibility
                 return self::sanitizeText(self::TEXT_LENGTH_SHORT, $input, true, $flags);
@@ -1282,7 +1284,7 @@ class SepaUtilities
         switch($version)
         {   // fall-through's are on purpose
             case self::SEPA_PAIN_001_001_03_GBIC:
-			case self::SEPA_PAIN_001_001_03_CH_02:
+            case self::SEPA_PAIN_001_001_03_CH_02:
             case self::SEPA_PAIN_001_001_03: return 'pain.001.001.03';
             case self::SEPA_PAIN_001_002_03: return 'pain.001.002.03';
             case self::SEPA_PAIN_001_003_03: return 'pain.001.003.03';
