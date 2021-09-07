@@ -643,7 +643,7 @@ class SepaUtilities
      *                        'ultmtcdtr','ultmtdbtr','rmtinf','orgnldbtracct_iban','iban','bic',
      *                        'ccy','amendment', 'btchbookg','instdamt','seqtp','lclinstrm',
      *                        'elctrncsgntr','reqdexctndt','purp','ctgypurp','orgnldbtragt', 'adrline'
-     *                        'ctry', 'dbtrpstladr', 'cdtrpstladr', 'pstladr'
+     *                        'ctry', 'dbtrpstladr', 'cdtrpstladr', 'pstladr', 'orgid_id', 'orgid_sm'
      * @param mixed  $input
      * @param array  $options See `checkBIC()`, `checkIBAN()` and `checkLocalInstrument()` for
      *                        details. In addition one can use the key `version`, which is relevant
@@ -681,6 +681,7 @@ class SepaUtilities
                 if(empty($input))
                     return false;    // cannot be empty
             case 'ultmtdbtrid':
+            case 'orgid_sm':
             case 'orgid_id':
                 return ( self::checkLength($input, self::TEXT_LENGTH_VERY_SHORT)
                     && self::checkCharset($input) )
@@ -864,10 +865,11 @@ class SepaUtilities
     }
 
     /**
-     * Tries to sanitize the the input so it fits in the field.
+     * Tries to sanitize the input so it fits in the field.
      *
      * @param string $field Valid fields are: 'ultmtcdtr', 'ultmtdbtr',
      *                      'orgnlcdtrschmeid_nm', 'initgpty', 'cdtr', 'dbtr', 'rmtinf', 'adrline'
+     *                      'orgid_sm', 'orgid_id'
      * @param mixed  $input
      * @param int    $flags Flags used in replaceSpecialChars()
      * @return mixed|false  The sanitized input or false if the input is not sanitizeable or
@@ -878,6 +880,7 @@ class SepaUtilities
         $field = strtolower($field);
         switch($field)          // fall-through's are on purpose
         {
+            case 'orgid_sm':
             case 'orgid_id':
                 return self::sanitizeText(self::TEXT_LENGTH_VERY_SHORT, $input, true, $flags);
             case 'adrline':
@@ -888,6 +891,7 @@ class SepaUtilities
 
                     return in_array(false, $input, true) ? false : $input;
                 }
+                // fallthrough on purpose
             case 'ultmtcdrt':   // deprecated, just here for backwards compatibility
             case 'ultmtcdtr':
             case 'ultmtdbtr':
