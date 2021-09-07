@@ -117,6 +117,8 @@ class SepaUtilitiesTest extends PHPUnit\Framework\TestCase
         static::assertSame('ASDFGHJ0ABC', SepaUtilities::checkBIC('ASDFGHJ0ABC', ['forceLongBic' => true]));
         static::assertSame('ASDFGHJ0ABC', SepaUtilities::checkBIC('ASDFGHJ0', ['forceLongBic' => true, 'forceLongBicStr' => 'ABC']));
         static::assertSame('ASDFGHJ0XXX', SepaUtilities::checkBIC('ASDFGHJ0XXX', ['forceLongBic' => true, 'forceLongBicStr' => 'ABC']));
+        static::assertSame('', SepaUtilities::checkBIC('', ['allowEmptyBic' => true]));
+        static::assertFalse(SepaUtilities::checkBIC('', ['allowEmptyBic' => false]));
     }
 
     public function testFormatDate()
