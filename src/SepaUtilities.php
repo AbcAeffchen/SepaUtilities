@@ -710,6 +710,7 @@ class SepaUtilities
                     && self::checkCharset($input) )
                     ? $input : false;
             case 'orgnldbtracct_iban':
+	    case 'bgnr':
             case 'iban': return self::checkIBAN($input, $options);
             case 'orgnldbtragt_bic':
             case 'orgid_bob':
@@ -920,7 +921,12 @@ class SepaUtilities
             case self::SEPA_PAIN_001_001_03_GBIC:
             case self::SEPA_PAIN_001_001_03_CH_02:
             case self::SEPA_PAIN_001_003_03:
-                $requiredKeys = ['pmtInfId', 'dbtr', 'iban'];
+		if (!isset($inputs['iban'])){
+        	        $requiredKeys = ['pmtInfId', 'dbtr', 'bgnr'];
+
+		} else {
+	                $requiredKeys = ['pmtInfId', 'dbtr', 'iban'];
+		}
                 break;
             case self::SEPA_PAIN_008_002_02:
                 $requiredKeys = ['pmtInfId', 'lclInstrm', 'seqTp', 'cdtr', 'iban', 'bic', 'ci'];
@@ -951,7 +957,12 @@ class SepaUtilities
             case self::SEPA_PAIN_001_001_03_GBIC:
             case self::SEPA_PAIN_001_001_03_CH_02:
             case self::SEPA_PAIN_001_003_03:
-                $requiredKeys = ['pmtId', 'instdAmt', 'iban', 'cdtr'];
+		if (isset($inputs['bgnr'])){
+            $requiredKeys = ['pmtId', 'instdAmt', 'bgnr', 'cdtr'];
+		
+		} else if (isset($inputs['iban'])){
+            $requiredKeys = ['pmtId', 'instdAmt', 'iban', 'cdtr'];
+		}
                 break;
             case self::SEPA_PAIN_008_002_02:
                 $requiredKeys = ['pmtId', 'instdAmt', 'mndtId', 'dtOfSgntr', 'dbtr', 'iban', 'bic'];
