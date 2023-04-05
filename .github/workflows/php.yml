@@ -29,8 +29,6 @@ jobs:
             unsupported: true
 
     continue-on-error: ${{ matrix.unsupported }}
-
-    continue-on-error: true
     
     steps:
     - uses: actions/checkout@v3
