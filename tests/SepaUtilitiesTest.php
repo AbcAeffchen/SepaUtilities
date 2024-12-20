@@ -351,7 +351,7 @@ class SepaUtilitiesTest extends PHPUnit\Framework\TestCase
         ];
 
         static::assertTrue(SepaUtilities::checkAndSanitizeAll($validCollectionInfo));
-        static::assertSame('iban', SepaUtilities::checkAndSanitizeAll($invalidCollectionInfo));
+        static::assertSame(['iban'], SepaUtilities::checkAndSanitizeAll($invalidCollectionInfo));
         static::assertTrue(SepaUtilities::checkAndSanitizeAll($validDirectDebitPaymentInformation));
     }
 
@@ -398,6 +398,8 @@ class SepaUtilitiesTest extends PHPUnit\Framework\TestCase
         static::assertSame(1234.56, SepaUtilities::check('instdamt', '1234.56'));
         static::assertSame(1234.56, SepaUtilities::check('instdamt', '1234,56'));
         static::assertSame(1234.56, SepaUtilities::check('instdamt', '1.234,56'));
+        static::assertSame(1234.56, SepaUtilities::check('instdamt', 1234.56));
+        static::assertSame(1234.0, SepaUtilities::check('instdamt', 1234));
         static::assertFalse(SepaUtilities::check('instdamt', '0.005'));
         static::assertFalse(SepaUtilities::check('instdamt', '9999999999999.99'));
         static::assertFalse(SepaUtilities::check('instdamt', 0.009));
@@ -406,6 +408,7 @@ class SepaUtilitiesTest extends PHPUnit\Framework\TestCase
     public function testIsNationalTransaction()
     {
         static::assertTrue(SepaUtilities::isNationalTransaction('DE87200500001234567890', 'DE87200500001234567890'));
+        static::assertTrue(SepaUtilities::isNationalTransaction('DE87200500001234567890', 'de87200500001234567890'));
         static::assertFalse(SepaUtilities::isNationalTransaction('DE87200500001234567890', 'FR87200500001234567890'));
     }
 

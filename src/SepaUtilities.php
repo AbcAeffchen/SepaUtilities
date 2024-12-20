@@ -18,17 +18,17 @@ use DateTime;
 use Exception;
 
 /**
- * Returns a DateTime object of easter sunday in the given year.
+ * Returns a DateTime object of Easter Sunday in the given year.
  * This is calculated with the Gaussian Algorithm.
  *
  * @param int $year The year written with four digits.
- * @return DateTime DateTime object pointing to easter sunday of the $year.
+ * @return DateTime DateTime object pointing to Easter Sunday of the $year.
  */
 function easterDate(int $year) : DateTime {
     $G = $year % 19;
     $C = (int)($year / 100);
     $H = (int)($C - (int)($C / 4) - (int)((8*$C+13) / 25) + 19*$G + 15) % 30;
-    $I = (int)$H - (int)($H / 28)*(1 - (int)($H / 28)*(int)(29 / ($H + 1))*(int)((21 - $G) / 11));
+    $I = $H - (int)($H / 28)*(1 - (int)($H / 28)*(int)(29 / ($H + 1))*(int)((21 - $G) / 11));
     $J = ($year + (int)($year/4) + $I + 2 - $C + (int)($C/4)) % 7;
     $L = $I - $J;
     $m = 3 + (int)(($L + 40) / 44);
@@ -38,7 +38,7 @@ function easterDate(int $year) : DateTime {
 }
 
 /**
- * Useful methods to validate an sanitize input used in SEPA files
+ * Useful methods to validate and sanitize input used in SEPA files
  */
 class SepaUtilities
 {
@@ -48,6 +48,7 @@ class SepaUtilities
     const SEPA_PAIN_001_001_03       = 100103;
     const SEPA_PAIN_001_001_03_GBIC  = 1001031;
     const SEPA_PAIN_001_001_03_CH_02 = 1001032;
+    const SEPA_PAIN_001_001_09       = 100109;
     // direct debit versions
     const SEPA_PAIN_008_002_02              = 800202;
     const SEPA_PAIN_008_003_02              = 800302;
@@ -55,6 +56,7 @@ class SepaUtilities
     const SEPA_PAIN_008_001_02_GBIC         = 8001021;
     const SEPA_PAIN_008_001_02_AUSTRIAN_003 = 8001022;
     const SEPA_PAIN_008_001_02_CH_03        = 8001023;
+    const SEPA_PAIN_008_001_08              = 800108;
 
     const SEPA_TRANSACTION_TYPE_CT = 1;
     const SEPA_TRANSACTION_TYPE_DD = 8;
@@ -63,11 +65,11 @@ class SepaUtilities
     const HTML_PATTERN_BIC = '([a-zA-Z]\s*){6}[a-zA-Z2-9]\s*[a-nA-Np-zP-Z0-9]\s*(([A-Z0-9]\s*){3}){0,1}';
 
     const PATTERN_IBAN = '[A-Z]{2}[0-9]{2}[A-Z0-9]{1,30}';
-    const PATTERN_BIC  = '[A-Z]{6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3}){0,1}';
+    const PATTERN_BIC  = '[A-Z]{6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3})?';
     /**
      * equates to RestrictedPersonIdentifierSEPA
      */
-    const PATTERN_CREDITOR_IDENTIFIER  = '[a-zA-Z]{2,2}[0-9]{2,2}([A-Za-z0-9]|[\+|\?|/|\-|:|\(|\)|\.|,|\']){3,3}([A-Za-z0-9]|[\+|\?|/|\-|:|\(|\)|\.|,|\']){1,28}';
+    const PATTERN_CREDITOR_IDENTIFIER  = '[a-zA-Z]{2}[0-9]{2}([A-Za-z0-9]|[+?/\-:().,\']){3}([A-Za-z0-9]|[+?/\-:().,\']){1,28}';
     /**
      * used for Names, etc.
      */
@@ -79,11 +81,11 @@ class SepaUtilities
     /**
      * Used for Message-, Payment- and Transfer-IDs (since 2016 also for Mandate-ID)
      */
-    const PATTERN_RESTRICTED_IDENTIFICATION_SEPA1 = '([A-Za-z0-9]|[\+|\?|/|\-|:|\(|\)|\.|,|\'|\s]){1,35}';
+    const PATTERN_RESTRICTED_IDENTIFICATION_SEPA1 = '([A-Za-z0-9]|[+?/\-:().,\'|\s]){1,35}';
     /**
      * Used for Mandate-ID
      */
-    const PATTERN_RESTRICTED_IDENTIFICATION_SEPA2 = '([A-Za-z0-9]|[\+|\?|/|\-|:|\(|\)|\.|,|\']){1,35}';
+    const PATTERN_RESTRICTED_IDENTIFICATION_SEPA2 = '([A-Za-z0-9]|[+?/\-:().,\']){1,35}';
     /**
      * This is just for compatibility to v1.1.*
      */
@@ -251,17 +253,21 @@ class SepaUtilities
                                         'NOTAVAIL'  // used in Austria to mark that no BIC is provided
     ];
 
+    private static function toUpperWithoutWhitespaces(string $input): string
+    {
+        return strtoupper(preg_replace('/\s+/u', '', $input));
+    }
+
     /*
-     * Checks if an creditor identifier (ci) is valid. Note that also if the ci is valid it does
+     * Checks if a creditor identifier (ci) is valid. Note that also if the ci is valid it does
      * not have to exist
      *
      * @param string $ci
      * @return string|false The valid IBAN or false if it is not valid
      */
-    public static function checkCreditorIdentifier(string $ci)
+    public static function checkCreditorIdentifier(string $ci): string|bool
     {
-        $ci = preg_replace('/\s+/u', '', $ci);   // remove whitespaces
-        $ci = strtoupper($ci);
+        $ci = self::toUpperWithoutWhitespaces($ci);
 
         if(!self::checkRestrictedPersonIdentifierSEPA($ci))
             return false;
@@ -275,7 +281,7 @@ class SepaUtilities
 
         $concat = preg_replace('#[^a-zA-Z0-9]#u', '', $concat);      // remove all non-alpha-numeric characters
 
-        $concat = $check = str_replace(self::ALPHABET, self::ALPHABET_VALUES, $concat);
+        $concat = str_replace(self::ALPHABET, self::ALPHABET_VALUES, $concat);
 
         if(self::iso7064Mod97m10ChecksumCheck($concat))
             return $ciCopy;
@@ -287,19 +293,18 @@ class SepaUtilities
      * Checks if an iban is valid. Note that also if the iban is valid it does not have to exist
      *
      * @param string $iban
-     * @param array  $options valid keys:
+     * @param ?array  $options valid keys:
      *                        - checkByCheckSum (boolean): If true, the IBAN checksum is
      *                        calculated (default:true)
      *                        - checkByFormat (boolean): If true, the format is checked by
      *                        regular expression (default: true)
      * @return string|false The valid iban or false if it is not valid
      */
-    public static function checkIBAN(string $iban, ?array $options = null)
+    public static function checkIBAN(string $iban, ?array $options = null): string|bool
     {
-        $iban = preg_replace('/\s+/u', '' , $iban );     // remove whitespaces
-        $iban = strtoupper($iban);
+        $iban = self::toUpperWithoutWhitespaces($iban);
 
-        if(!preg_match('/^' . self::PATTERN_IBAN . '$/',$iban))
+        if(self::checkStringAgainstRegex($iban, self::PATTERN_IBAN) === false)
             return false;
 
         $ibanCopy = $iban;
@@ -308,13 +313,13 @@ class SepaUtilities
         {
             $countryCode = substr($iban, 0, 2);
             if(isset(self::IBAN_PATTERNS[$countryCode])
-                && !preg_match('/^' . self::IBAN_PATTERNS[$countryCode] . '$/',$iban))
+                && self::checkStringAgainstRegex($iban, self::IBAN_PATTERNS[$countryCode]) === false)
                 return false;
         }
 
         if(!isset($options['checkByCheckSum']) || $options['checkByCheckSum'])
         {
-            $iban = $check = str_replace(self::ALPHABET, self::ALPHABET_VALUES, $iban);
+            $iban = str_replace(self::ALPHABET, self::ALPHABET_VALUES, $iban);
 
             $bban  = substr($iban, 6);
             $check = substr($iban, 0, 6);
@@ -344,16 +349,16 @@ class SepaUtilities
      * Checks if a bic is valid. Note that also if the bic is valid it does not have to exist
      *
      * @param string $bic
-     * @param array  $options Takes the following keys:
+     * @param ?array $options Takes the following keys:
      *                        - `allowEmptyBic`: (bool) The BIC can be empty.
      *                        - `forceLongBic`: (bool) If the BIC has exact 8 characters, `forceLongBicStr`
      *                        is added. (default false)
      *                        - `forceLongBicStr`: string (default 'XXX')
      * @return string|false the valid bic or false if it is not valid
      */
-    public static function checkBIC(string $bic, ?array $options = null)
+    public static function checkBIC(string $bic, ?array $options = null): string|bool
     {
-        $bic = preg_replace('/\s+/u', '' , $bic );   // remove whitespaces
+        $bic = self::toUpperWithoutWhitespaces($bic);
 
         if(!empty($options['forceLongBic']) && strlen($bic) === 8)
             $bic .= empty($options['forceLongBicStr']) ? 'XXX' : $options['forceLongBicStr'];
@@ -363,10 +368,7 @@ class SepaUtilities
 
         $bic = strtoupper($bic);                    // use only capital letters
 
-        if(preg_match('/^' . self::PATTERN_BIC . '$/', $bic))
-            return $bic;
-
-        return false;
+        return self::checkStringAgainstRegex($bic, self::PATTERN_BIC);
     }
 
     /**
@@ -379,12 +381,11 @@ class SepaUtilities
      */
     public static function isNationalTransaction(string $iban1, string $iban2) : bool
     {
-        // remove whitespaces
-        $iban1 = preg_replace('#\s+#', '', $iban1);
-        $iban2 = preg_replace('#\s+#', '', $iban2);
+        $iban1 = self::toUpperWithoutWhitespaces($iban1);
+        $iban2 = self::toUpperWithoutWhitespaces($iban2);
 
         // check the country code
-        return stripos($iban1, substr($iban2, 0, 2)) === 0;
+        return substr($iban1, 0, 2) === substr($iban2, 0, 2);
     }
 
     /**
@@ -397,9 +398,8 @@ class SepaUtilities
      */
     public static function isEEATransaction(string $iban1, string $iban2) : bool
     {
-        // remove whitespaces
-        $iban1 = preg_replace('#\s+#','',$iban1);
-        $iban2 = preg_replace('#\s+#','',$iban2);
+        $iban1 = self::toUpperWithoutWhitespaces($iban1);
+        $iban2 = self::toUpperWithoutWhitespaces($iban2);
 
         // check if both county codes belong to the EEA
         $EEA = ['IS' => 1, 'LI' => 1, 'NO' => 1, 'BE' => 1, 'BG' => 1, 'DK' => 1, 'DE' => 1,
@@ -408,7 +408,7 @@ class SepaUtilities
                 'PT' => 1, 'RO' => 1, 'SE' => 1, 'SK' => 1, 'SI' => 1, 'ES' => 1, 'CZ' => 1,
                 'HU' => 1, 'GB' => 1, 'CY' => 1];
 
-        return isset($EEA[strtoupper(substr($iban1, 0, 2))], $EEA[strtoupper(substr($iban2, 0, 2))]);
+        return isset($EEA[substr($iban1, 0, 2)], $EEA[substr($iban2, 0, 2)]);
     }
 
     /**
@@ -425,20 +425,19 @@ class SepaUtilities
         if(in_array(strtoupper($bic), self::EXCEPTIONAL_BICS))
             return true;
 
-        // remove whitespaces
-        $iban = preg_replace('#\s+#','',$iban);
-        $bic  = preg_replace('#\s+#','',$bic);
+        $iban = self::toUpperWithoutWhitespaces($iban);
+        $bic  = self::toUpperWithoutWhitespaces($bic);
 
         // check the country code
-        $ibanCountryCode = strtoupper(substr($iban, 0, 2));
-        $bicCountryCode  = strtoupper(substr($bic, 4, 2));
+        $ibanCountryCode = substr($iban, 0, 2);
+        $bicCountryCode  = substr($bic, 4, 2);
 
         return $ibanCountryCode === $bicCountryCode
             || (isset(self::BIC_IBAN_COUNTRY_CODE_EXCEPTIONS[$ibanCountryCode])
                 && in_array($bicCountryCode,self::BIC_IBAN_COUNTRY_CODE_EXCEPTIONS[$ibanCountryCode]));
     }
 
-    private static function checkDateFormat(string $input)
+    private static function checkDateFormat(string $input): string|bool
     {
         $dateObj = DateTime::createFromFormat('Y-m-d', $input);
         if($dateObj !== false && $input === $dateObj->format('Y-m-d'))
@@ -454,13 +453,13 @@ class SepaUtilities
      * Notice that this method tries to interpret the first number as day-of-month. This can
      * lead to wrong dates if you have something like the 1st of April 2016 written as 04.01.2016.
      * This will be interpreted as the 4th of January 2016. This is why you have to call this
-     * method on your owen risk and it is not included in the sanitize() method.
+     * method on your owen risk, and it is not included in the sanitize() method.
      *
      * @param string $input The date that should be reformatted
      * @param array  $preferredFormats An array of formats that will be checked first.
      * @return string|false The sanitized date or false, if it is not sanitizable.
      */
-    public static function sanitizeDateFormat(string $input, array $preferredFormats = [])
+    public static function sanitizeDateFormat(string $input, array $preferredFormats = []): string|bool
     {
         $dateFormats = ['d.m.Y', 'd.m.y', 'j.n.Y', 'j.n.y', 'm.d.Y', 'm.d.y', 'n.j.Y', 'n.j.y',
                         'Y/m/d', 'y/m/d', 'Y/n/j', 'y/n/j', 'Y.m.d', 'y.m.d', 'Y.n.j', 'y.n.j'];
@@ -492,7 +491,7 @@ class SepaUtilities
      * @param string $input
      * @return string|false Returns $input if it is valid and false else.
      */
-    public static function checkCreateDateTime(string $input)
+    public static function checkCreateDateTime(string $input): string|bool
     {
         $dateObj = DateTime::createFromFormat('Y-m-d\TH:i:s', $input);
         if($dateObj !== false && $input === $dateObj->format('Y-m-d\TH:i:s'))
@@ -501,18 +500,28 @@ class SepaUtilities
         return false;
     }
 
+    private static function getDateObj(?string $date = null, string $inputFormat = 'd.m.Y'): DateTime|bool {
+        try
+        {
+            return empty($date) ? new DateTime() : DateTime::createFromFormat($inputFormat, $date);
+        }
+        catch(Exception)
+        {
+            return false;
+        }
+    }
+
     /**
      * Reformat a date string from a given format to the ISODate format. Notice: 20.13.2014 is
      * valid and becomes 2015-01-20.
      *
-     * @param string $date        A date string of the given input format
-     * @param string $inputFormat default is the german format DD.MM.YYYY
-     * @return string|false date as YYYY-MM-DD or false, if the input is not a date.
-     * @throws Exception If $date is provided but does not match the given $inputFormat.
+     * @param ?string $date        A date string of the given input format
+     * @param string  $inputFormat default is the german format DD.MM.YYYY
+     * @return string|false date as YYYY-MM-DD or false if the input is invalid
      */
-    public static function getDate(?string $date = null, string $inputFormat = 'd.m.Y')
+    public static function getDate(?string $date = null, string $inputFormat = 'd.m.Y'): string|bool
     {
-        $dateTimeObj = empty($date) ? new DateTime() : DateTime::createFromFormat($inputFormat, $date);
+        $dateTimeObj = self::getDateObj($date, $inputFormat);
 
         if($dateTimeObj === false)
             return false;
@@ -523,15 +532,14 @@ class SepaUtilities
     /**
      * Computes the next TARGET2 day (including today) with respect to a TARGET2 offset.
      *
-     * @param int    $workdayOffset a positive number of workdays to skip.
-     * @param string $today         if set, this date is used as today
-     * @param string $inputFormat
-     * @return string|false YYYY-MM-DD
-     * @throws Exception If $date is provided but does not match the given $inputFormat.
+     * @param int     $workdayOffset a positive number of workdays to skip.
+     * @param ?string $today         if set, this date is used as today
+     * @param string  $inputFormat
+     * @return string|false date as YYYY-MM-DD or false if the input is invalid
      */
-    public static function getDateWithOffset(int $workdayOffset, ?string $today = null, string $inputFormat = 'd.m.Y')
+    public static function getDateWithOffset(int $workdayOffset, ?string $today = null, string $inputFormat = 'd.m.Y'): string|bool
     {
-        $dateTimeObj = empty($today) ? new DateTime() : DateTime::createFromFormat($inputFormat, $today);
+        $dateTimeObj = self::getDateObj($today, $inputFormat);
 
         if($dateTimeObj === false)
             return false;
@@ -540,7 +548,7 @@ class SepaUtilities
 
         while( !$isTargetDay || $workdayOffset > 0 )
         {
-            $dateTimeObj->modify('+1 day');
+            date_modify($dateTimeObj, '+1 day');
 
             if($isTargetDay)
                 $workdayOffset--;
@@ -555,28 +563,33 @@ class SepaUtilities
      * Returns the target date, if it has at least the given offset of TARGET2 days form
      * today. Else the earliest date that respects the offset is returned.
      *
-     * @param string $target
-     * @param int    $workdayMinOffset
-     * @param string $inputFormat
-     * @param string $today
-     * @return string|false
-     * @throws Exception If $today is provided but does not match the given $inputFormat.
+     * @param string  $target
+     * @param int     $workdayMinOffset
+     * @param string  $inputFormat
+     * @param ?string $today
+     * @return string|false date as YYYY-MM-DD or false if the input is invalid
      */
-    public static function getDateWithMinOffsetFromToday(string $target, int $workdayMinOffset, string $inputFormat = 'd.m.Y', ?string $today = null)
+    public static function getDateWithMinOffsetFromToday(string $target, int $workdayMinOffset, string $inputFormat = 'd.m.Y', ?string $today = null): string|bool
     {
-        $targetDateObj = DateTime::createFromFormat($inputFormat,$target);
-
+        $targetDateObj = self::getDateObj($target, $inputFormat);
         $earliestDate = self::getDateWithOffset($workdayMinOffset, $today, $inputFormat);
 
         if($targetDateObj === false || $earliestDate === false)
             return false;
 
-        $earliestDateObj = new DateTime($earliestDate);
+        try
+        {
+            $earliestDateObj = new DateTime($earliestDate);
+        }
+        catch (Exception)
+        {
+            return false;
+        }
 
         $isTargetDay = self::dateIsTargetDay($targetDateObj);
         while( !$isTargetDay )
         {
-            $targetDateObj->modify('+1 day');
+            date_modify($targetDateObj, '+1 day');
             $isTargetDay = self::dateIsTargetDay($targetDateObj);
         }
 
@@ -588,7 +601,7 @@ class SepaUtilities
 
     /**
      * Checks if $date is a SEPA TARGET day. Every day is a TARGET day except for saturdays, sundays
-     * new year's day, good friday, easter monday, the may holiday, first and second christmas holiday.
+     * New Year's Day, Good Friday, Easter Monday, the may holiday, first and second Christmas holiday.
      * @param DateTime $date
      * @return bool
      */
@@ -599,16 +612,17 @@ class SepaUtilities
             return false;
 
         $day = $date->format('m-d');
-        if($day === '01-01'             // new year's day
+        if($day === '01-01'             // New Year's Day
             || $day === '05-01'         // labour day
-            || $day === '12-25'         // first christmas day
-            || $day === '12-26')        // second christmas day
+            || $day === '12-25'         // first Christmas day
+            || $day === '12-26')        // second Christmas day
             return false;
 
         $year = $date->format('Y');
-        $easter = easterDate((int) $year);      // contains easter sunday
-        $goodFriday =   $easter->modify('-2 days')->format('m-d');      // $easter contains now good friday
-        $easterMonday = $easter->modify('+3 days')->format('m-d');      // $easter contains now easter monday
+        $easter = easterDate((int) $year);      // contains Easter Sunday
+        // date_modify does not throw in contrast to Date->modify. The date string is static so exception handling is not needed
+        $goodFriday   = date_modify($easter, '-2 days')->format('m-d');     // $easter contains now Good Friday
+        $easterMonday = date_modify($easter, '+3 days')->format('m-d');     // $easter contains now Easter Monday
 
         if($day === $goodFriday || $day === $easterMonday)
             return false;
@@ -617,13 +631,13 @@ class SepaUtilities
     }
 
     /**
-     * @param mixed[]             $input Reference to an array
+     * @param array $input Reference to an array
      * @param int|string|string[] $keys  The keys of the multidimensional array in order of
      *                                   appearance. e.g. `['key1','key2']` checks
      *                                   `$arr['key1']['key2']`
      * @return mixed|false Returns the value of the field or null if the field does not exist.
      */
-    private static function getValFromMultiDimInput(array &$input, $keys)
+    private static function getValFromMultiDimInput(array &$input, int|string|array $keys): mixed
     {
         $key = is_array($keys) ? array_shift($keys) : $keys;
         if( !isset( $input[$key] ) )
@@ -638,20 +652,19 @@ class SepaUtilities
     /**
      * Checks if the input holds for the field.
      *
-     * @param string $field   Valid fields are: 'orgnlcdtrschmeid_id','ci','msgid','pmtid','pmtinfid',
+     * @param string  $field Valid fields are: 'orgnlcdtrschmeid_id','ci','msgid','pmtid','pmtinfid',
      *                        'orgnlmndtid','mndtid','initgpty','cdtr','dbtr','orgnlcdtrschmeid_nm',
      *                        'ultmtcdtr','ultmtdbtr','rmtinf','orgnldbtracct_iban','iban','bic',
      *                        'ccy','amendment', 'btchbookg','instdamt','seqtp','lclinstrm',
      *                        'elctrncsgntr','reqdexctndt','purp','ctgypurp','orgnldbtragt', 'adrline'
      *                        'ctry', 'dbtrpstladr', 'cdtrpstladr', 'pstladr', 'orgid_id', 'orgid_sm'
      * @param mixed  $input
-     * @param array  $options See `checkBIC()`, `checkIBAN()` and `checkLocalInstrument()` for
+     * @param ?array $options See `checkBIC()`, `checkIBAN()` and `checkLocalInstrument()` for
      *                        details. In addition one can use the key `version`, which is relevant
      *                        for validation 'mndtid'.
      * @return false|mixed The checked input or false, if it is not valid
-     * @noinspection PhpMissingBreakStatementInspection On purpose here.
      */
-    public static function check(string $field, $input, array $options = null)
+    public static function check(string $field, mixed $input, ?array $options = null): mixed
     {
         $field = strtolower($field);
         $version = $options['version'] ?? null;
@@ -675,11 +688,13 @@ class SepaUtilities
             case 'initgptyid':
                 if($version === self::SEPA_PAIN_008_001_02_AUSTRIAN_003)
                     return false;   // not supported on this version
-            case 'initgpty':                                // cannot be empty (and the following things also)
-            case 'cdtr':                                    // cannot be empty (and the following things also)
+                // if not => fall through to dbtr
+            case 'initgpty':        // cannot be empty (and the following things also)
+            case 'cdtr':            // cannot be empty (and the following things also)
             case 'dbtr':
                 if(empty($input))
-                    return false;    // cannot be empty
+                    return false;   // cannot be empty
+                // if not => fall through to orgid_id
             case 'ultmtdbtrid':
             case 'orgid_sm':
             case 'orgid_id':
@@ -697,7 +712,7 @@ class SepaUtilities
                     }
 
                     return in_array(false, $input, true) ? false : array_values($input);
-                } // if not => fall through
+                } // if not => fall through to ultmtdbtr
             case 'orgnlcdtrschmeid_nm':
             case 'ultmtcdrt':   // deprecated, just here for backwards compatibility
             case 'ultmtcdtr':
@@ -752,14 +767,13 @@ class SepaUtilities
      * and equals `check($fieldName,$_POST['input'][$fieldName],$options)`, but checks first, if
      * the index exists.
      *
-     * @param string             $field   see `check()` for valid values.
-     * @param array              $inputArray
-     * @param string|int|mixed[] $inputKeys
-     * @param array              $options see `check()` for valid values.
-     * @param int|null           $version
+     * @param string           $field   see `check()` for valid values.
+     * @param array            $inputArray
+     * @param string|int|array $inputKeys
+     * @param ?array           $options see `check()` for valid values.
      * @return mixed|false
      */
-    public static function checkInput(string $field, array &$inputArray, $inputKeys, array $options = null)
+    public static function checkInput(string $field, array &$inputArray, string|int|array $inputKeys, array $options = null): mixed
     {
         $value = self::getValFromMultiDimInput($inputArray, $inputKeys);
 
@@ -776,11 +790,11 @@ class SepaUtilities
      * the index exists.
      * @param string $field     see `sanitize()` for valid values.
      * @param array $inputArray
-     * @param string|int|mixed[] $inputKeys
+     * @param string|int|array $inputKeys
      * @param int   $flags    see `sanitize()` for valid values.
      * @return mixed|false
      */
-    public static function sanitizeInput(string $field, array &$inputArray, $inputKeys, $flags = 0)
+    public static function sanitizeInput(string $field, array &$inputArray, string|int|array $inputKeys, int $flags = 0): mixed
     {
         $value = self::getValFromMultiDimInput($inputArray,$inputKeys);
 
@@ -791,15 +805,15 @@ class SepaUtilities
     }
 
     /**
-     * Checks the input and if it is not valid it tries to sanitize it.
+     * Checks the input and tries to sanitize it if it is not valid.
      *
      * @param string $field   all fields check and/or sanitize supports
      * @param mixed  $input
      * @param int    $flags   see `sanitize()` for details
-     * @param array  $options see `check()` for details
+     * @param ?array  $options see `check()` for details
      * @return mixed|false
      */
-    public static function checkAndSanitize(string $field, $input, $flags = 0, array $options = null)
+    public static function checkAndSanitize(string $field, mixed $input, int $flags = 0, ?array $options = null): mixed
     {
         $checkedInput = self::check($field, $input, $options);
         if($checkedInput !== false)
@@ -809,19 +823,19 @@ class SepaUtilities
     }
 
     /**
-     * This function checks if the index of the inputArray exists and if the input is valid. The
+     * Checks if the index of the inputArray exists and if the input is valid. The
      * function can be called as `checkAndSanitizeInput($fieldName,$_POST,['input',$fieldName],$flags,$options)`
      * and equals `checkAndSanitize($fieldName,$_POST['input'][$fieldName],$flags,$options)`, but checks first, if
      * the index exists.
      *
-     * @param string             $field   see `checkAndSanitize()` for valid values.
-     * @param array              $inputArray
-     * @param string|int|mixed[] $inputKeys
-     * @param int                $flags   see `checkAndSanitize()` for valid values.
-     * @param array|null         $options see `checkAndSanitize()` for valid values.
-     * @return false|mixed
+     * @param string           $field   see `checkAndSanitize()` for valid values.
+     * @param array            $inputArray
+     * @param string|int|array $inputKeys
+     * @param int              $flags   see `checkAndSanitize()` for valid values.
+     * @param ?array           $options see `checkAndSanitize()` for valid values.
+     * @return mixed|false
      */
-    public static function checkAndSanitizeInput(string $field, array &$inputArray, $inputKeys, int $flags = 0, array $options = null)
+    public static function checkAndSanitizeInput(string $field, array &$inputArray, string|int|array $inputKeys, int $flags = 0, ?array $options = null): mixed
     {
         $value = self::getValFromMultiDimInput($inputArray, $inputKeys);
 
@@ -832,13 +846,14 @@ class SepaUtilities
     }
 
     /**
+     * Checks and sanitizes all fields in $input. $input is modified!
      * @param array      $inputs A reference to an input array (field => value)
      * @param int        $flags  Flags for sanitizing
      * @param array|null $options Options for checking
-     * @return true|string returns true, if everything is ok or could be sanitized. Otherwise a
-     *                     string with fields, that could not be sanitized is returned.
+     * @return true|array returns true if everything is ok or could be sanitized. Otherwise an
+     *                     array of field keys that could not be sanitized is returned.
      */
-    public static function checkAndSanitizeAll(array &$inputs, int $flags = 0, array $options = null)
+    public static function checkAndSanitizeAll(array &$inputs, int $flags = 0, array $options = null): bool|array
     {
         $fieldsWithErrors = [];
         foreach($inputs as $field => &$input)
@@ -851,10 +866,17 @@ class SepaUtilities
         if(empty($fieldsWithErrors))
             return true;
 
-        return implode(', ', $fieldsWithErrors);
+        return $fieldsWithErrors;
     }
 
-    public static function sanitizeText(int $length, string $input, bool $allowEmpty = false, int $flags = 0)
+    /**
+     * @param int $length Use SepaUtilities::TEXT_LENGTH_* constants
+     * @param string $input
+     * @param bool $allowEmpty
+     * @param int $flags See `replaceSpecialChars()` for allowed flags
+     * @return string|false Sanitized $input or false if the input could not be sanitized.
+     */
+    public static function sanitizeText(int $length, string $input, bool $allowEmpty = false, int $flags = 0): string|bool
     {
         $res = self::sanitizeLength(self::replaceSpecialChars($input, $flags), $length);
 
@@ -872,10 +894,10 @@ class SepaUtilities
      *                      'orgid_sm', 'orgid_id'
      * @param mixed  $input
      * @param int    $flags Flags used in replaceSpecialChars()
-     * @return mixed|false  The sanitized input or false if the input is not sanitizeable or
+     * @return mixed|false  The sanitized input or false if the input is not sanitizable or
      *                      invalid also after sanitizing.
      */
-    public static function sanitize(string $field, $input, int $flags = 0)
+    public static function sanitize(string $field, mixed $input, int $flags = 0): mixed
     {
         $field = strtolower($field);
         switch($field)          // fall-through's are on purpose
@@ -909,7 +931,12 @@ class SepaUtilities
         }
     }
 
-    public static function checkRequiredCollectionKeys(array $inputs, int $version)
+    /**
+     * @param array $inputs
+     * @param int $version Use SepaUtilities::SEPA_PAIN_* constants
+     * @return bool true if $input contains all keys required for the given version
+     */
+    public static function checkRequiredCollectionKeys(array $inputs, int $version): bool
     {
         switch($version)    // fall-through's are on purpose
         {
@@ -940,7 +967,12 @@ class SepaUtilities
         return self::containsAllKeys($inputs, $requiredKeys);
     }
 
-    public static function checkRequiredPaymentKeys(array $inputs, int $version)
+    /**
+     * @param array $inputs
+     * @param int $version Use SepaUtilities::SEPA_PAIN_* constants
+     * @return bool true if $input contains all keys required for the given version
+     */
+    public static function checkRequiredPaymentKeys(array $inputs, int $version): bool
     {
         switch($version)
         {
@@ -967,14 +999,14 @@ class SepaUtilities
             default: return false;
         }
 
-        return self::containsAllKeys($inputs,$requiredKeys);
+        return self::containsAllKeys($inputs, $requiredKeys);
     }
 
     /**
-     * Checks if $arr misses one of the given $keys
+     * Checks if $arr misses any of the given $keys
      * @param array $arr
      * @param array $keys
-     * @return bool false, if at least one key is missing, else true
+     * @return bool false if any key is missing else true
      */
     public static function containsAllKeys(array $arr, array $keys) : bool
     {
@@ -988,10 +1020,10 @@ class SepaUtilities
     }
 
     /**
-     * Checks if $arr not contains any key of $keys
+     * Checks if $arr contains none of the given $keys
      * @param array $arr
      * @param array $keys
-     * @return bool true, if $arr contains not even on the the keys, else false
+     * @return bool true if $arr contains none of the given $keys, else false
      */
     public static function containsNotAnyKey(array $arr, array $keys) : bool
     {
@@ -1005,12 +1037,12 @@ class SepaUtilities
     }
 
     /**
-     * Checks if the currency code has a valid format. Also if it has a valid format it has not to exist.
+     * Checks if the currency code has a valid format. Also, if it has a valid format it has not to exist.
      * If it has a valid format it will also be changed to upper case only.
      * @param string $ccy
      * @return string|false The valid input (in upper case only) or false if it is not valid.
      */
-    private static function checkActiveOrHistoricCurrencyCode(string $ccy)
+    private static function checkActiveOrHistoricCurrencyCode(string $ccy): string|bool
     {
         $ccy = strtoupper($ccy);
 
@@ -1020,7 +1052,12 @@ class SepaUtilities
         return false;
     }
 
-    private static function checkBoolean($input)
+    /**
+     * Validates $input to be a boolean.
+     * @param mixed $input
+     * @return string|bool 'true' or 'false' if the input could be validated to be a boolean, false otherwise.
+     */
+    private static function checkBoolean(mixed $input): string|bool
     {
         $bbi = filter_var($input, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
 
@@ -1034,12 +1071,14 @@ class SepaUtilities
     }
 
     /**
+     * Checks if $input is valid with respect to $regex.
      * @param string $input
-     * @return string|bool
+     * @param string $regex
+     * @return string|bool $input if valide else false
      */
-    private static function checkRestrictedIdentificationSEPA1(string $input)
+    private static function checkStringAgainstRegex(string $input, string $regex):string|bool
     {
-        if(preg_match('#^' . self::PATTERN_RESTRICTED_IDENTIFICATION_SEPA1 . '$#', $input))
+        if(preg_match('#^' . $regex . '$#', $input))
             return $input;
 
         return false;
@@ -1047,26 +1086,29 @@ class SepaUtilities
 
     /**
      * @param string $input
-     * @return string|bool
+     * @return string|false $input if valide else false
      */
-    private static function checkRestrictedIdentificationSEPA2(string $input)
+    private static function checkRestrictedIdentificationSEPA1(string $input): string|bool
     {
-        if(preg_match('#^' . self::PATTERN_RESTRICTED_IDENTIFICATION_SEPA2 . '$#', $input))
-            return $input;
-
-        return false;
+        return self::checkStringAgainstRegex($input, self::PATTERN_RESTRICTED_IDENTIFICATION_SEPA1);
     }
 
     /**
      * @param string $input
-     * @return string|bool
+     * @return string|false $input if valide else false
      */
-    private static function checkRestrictedPersonIdentifierSEPA(string $input)
+    private static function checkRestrictedIdentificationSEPA2(string $input): string|bool
     {
-        if(preg_match('#^' . self::PATTERN_CREDITOR_IDENTIFIER . '$#',$input))
-            return $input;
+        return self::checkStringAgainstRegex($input, self::PATTERN_RESTRICTED_IDENTIFICATION_SEPA2);
+    }
 
-        return false;
+    /**
+     * @param string $input
+     * @return string|false $input if valide else false
+     */
+    private static function checkRestrictedPersonIdentifierSEPA(string $input): string|bool
+    {
+        return self::checkStringAgainstRegex($input, self::PATTERN_CREDITOR_IDENTIFIER);
     }
 
     /**
@@ -1082,7 +1124,7 @@ class SepaUtilities
     }
 
     /**
-     * Shortens the input string to the max length if it is to long.
+     * Shortens the input string to the max length if it is too long.
      * @param string $input
      * @param int $maxLen
      * @return string sanitized string
@@ -1090,7 +1132,7 @@ class SepaUtilities
     public static function sanitizeLength(string $input, int $maxLen) : string
     {
         if(isset($input[$maxLen]))     // take string as array of chars
-            return substr($input,0,$maxLen);
+            return substr($input, 0, $maxLen);
 
         return $input;
     }
@@ -1148,13 +1190,12 @@ class SepaUtilities
      * Checks if the amount fits the format: A float with only two decimals, not lower than 0.01,
      * not greater than 999,999,999.99.
      *
-     * @param mixed $amount float or string with or without thousand separator (use , or .). You
-     *                      can use '.' or ',' as decimal point, but not one sign as thousand separator
-     *                      and decimal point. So 1234.56; 1,234.56; 1.234,56; 1234,56 ar valid
-     *                      inputs.
+     * @param int|float|string $amount float or string with or without thousands separator (use , or .). You
+     *                                 can use both '.' and ',' as decimal point and thousands separator, but not the same
+     *                                 symbole for both. So `1234.56`, `1,234.56`, `1.234,56`, `1234,56` are all valid inputs.
      * @return float|false
      */
-    private static function checkAmountFormat($amount)
+    private static function checkAmountFormat(int|float|string $amount): float|bool
     {
         // $amount is a string -> check for '1,234.56'
         $result = filter_var($amount, FILTER_VALIDATE_FLOAT, FILTER_FLAG_ALLOW_THOUSAND);
@@ -1174,7 +1215,7 @@ class SepaUtilities
      * @param string $seqTp
      * @return string|false
      */
-    private static function checkSeqType(string $seqTp)
+    private static function checkSeqType(string $seqTp): string|bool
     {
         $seqTp = strtoupper($seqTp);
 
@@ -1187,12 +1228,13 @@ class SepaUtilities
 
     /**
      * @param string $input
-     * @param array $options Can contain the key `version` with values `SepaUtilities::SEPA_PAIN_008_*`
+     * @param ?array $options Can contain the key `version` with values `SepaUtilities::SEPA_PAIN_008_*`.
+     *                        Default version is SEPA_PAIN_008_002_02.
      * @return bool|string
      */
-    private static function checkLocalInstrument(string $input, ?array $options = null)
+    private static function checkLocalInstrument(string $input, ?array $options = null): string|bool
     {
-        $version = empty($options['version']) ? self::SEPA_PAIN_008_002_02 : $options['version'];
+        $version = $options['version'] ?? self::SEPA_PAIN_008_002_02;
 
         $input = strtoupper($input);
 
@@ -1222,7 +1264,7 @@ class SepaUtilities
         return false;
     }
 
-    private static function checkCategoryPurpose(string $input)
+    private static function checkCategoryPurpose(string $input): string|bool
     {
         $validValues = ['BONU', 'CASH', 'CBLK', 'CCRD', 'CORT', 'DCRD', 'DIVI', 'EPAY',
                         'FCOL', 'GOVT', 'HEDG', 'ICCP', 'IDCP', 'INTC', 'INTE', 'LOAN',
@@ -1237,7 +1279,7 @@ class SepaUtilities
         return false;
     }
 
-    private static function checkCountryCode(string $input)
+    private static function checkCountryCode(string $input): string|bool
     {
         $input = strtoupper($input);
         if(isset(self::IBAN_PATTERNS[$input]))
@@ -1246,7 +1288,7 @@ class SepaUtilities
         return false;
     }
 
-    private static function checkPurpose(string $input)
+    private static function checkPurpose(string $input): string|bool
     {
         $validValues = ['CBLK', 'CDCB', 'CDCD', 'CDCS', 'CDDP', 'CDOC', 'CDQC', 'ETUP',
                         'FCOL', 'MTUP', 'ACCT', 'CASH', 'COLL', 'CSDB', 'DEPT', 'INTC',
@@ -1283,23 +1325,23 @@ class SepaUtilities
      * @param int $version Use the SEPA_PAIN_* constants.
      * @return string|false SEPA file version as a string or false if the version is invalid.
      */
-    public static function version2string(int $version)
+    public static function version2string(int $version): string|bool
     {
-        switch($version)
-        {   // fall-through's are on purpose
-            case self::SEPA_PAIN_001_001_03_GBIC:
-            case self::SEPA_PAIN_001_001_03_CH_02:
-            case self::SEPA_PAIN_001_001_03: return 'pain.001.001.03';
-            case self::SEPA_PAIN_001_002_03: return 'pain.001.002.03';
-            case self::SEPA_PAIN_001_003_03: return 'pain.001.003.03';
-            case self::SEPA_PAIN_008_001_02_GBIC:
-            case self::SEPA_PAIN_008_001_02_AUSTRIAN_003:
-            case self::SEPA_PAIN_008_001_02_CH_03:
-            case self::SEPA_PAIN_008_001_02: return 'pain.008.001.02';
-            case self::SEPA_PAIN_008_002_02: return 'pain.008.002.02';
-            case self::SEPA_PAIN_008_003_02: return 'pain.008.003.02';
-            default: return false;
-        }
+        return match ($version)
+        {
+            self::SEPA_PAIN_001_001_03_GBIC,
+            self::SEPA_PAIN_001_001_03_CH_02,
+            self::SEPA_PAIN_001_001_03 => 'pain.001.001.03',
+            self::SEPA_PAIN_001_002_03 => 'pain.001.002.03',
+            self::SEPA_PAIN_001_003_03 => 'pain.001.003.03',
+            self::SEPA_PAIN_008_001_02_GBIC,
+            self::SEPA_PAIN_008_001_02_AUSTRIAN_003,
+            self::SEPA_PAIN_008_001_02_CH_03,
+            self::SEPA_PAIN_008_001_02 => 'pain.008.001.02',
+            self::SEPA_PAIN_008_002_02 => 'pain.008.002.02',
+            self::SEPA_PAIN_008_003_02 => 'pain.008.003.02',
+            default => false,
+        };
     }
 
     /**
@@ -1308,7 +1350,7 @@ class SepaUtilities
      * @param int $version
      * @return int|false
      */
-    public static function version2transactionType(int $version)
+    public static function version2transactionType(int $version): int|bool
     {
         $type = (int) ((string) $version)[0];
 
