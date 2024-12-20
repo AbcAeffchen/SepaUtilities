@@ -1,14 +1,13 @@
 {
   "name": "abcaeffchen/sepa-utilities",
   "type": "library",
-  "description": "SepaUtilities provides useful methods for validating and sanitizing inputs used in SEPA files supporting PHP >= 7.2.",
+  "description": "SepaUtilities provides useful methods for validating and sanitizing inputs used in SEPA files supporting PHP >= 8.1.",
   "keywords": [
     "sepa",
     "validate",
     "sanitize",
     "iban",
     "bic",
-    "php7",
     "php8"
   ],
   "homepage": "https://github.com/AbcAeffchen/SepaUtilities",
@@ -24,11 +23,11 @@
     "issues": "https://github.com/AbcAeffchen/SepaUtilities/issues"
   },
   "require": {
-    "php": ">=7.1"
+    "php": ">=8.1"
   },
   "require-dev": {
     "ext-calendar": "*",
-    "phpunit/phpunit": "^9 || ^8 || ^7"
+    "phpunit/phpunit": "^11"
   },
   "autoload": {
     "psr-4": {

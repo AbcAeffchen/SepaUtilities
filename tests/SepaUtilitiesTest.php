@@ -172,7 +172,7 @@ class SepaUtilitiesTest extends PHPUnit\Framework\TestCase
         $allValidChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 /-?:().,\'+';
         static::assertSame($allValidChars, SepaUtilities::replaceSpecialChars($allValidChars));
 
-        // All replaced characters (contains greek an cyrillic characters)
+        // All replaced characters (contains greek and cyrillic characters)
         $input = ';[\]^_`{|}~¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿĀāĂăĄąĆćĈĉĊċČčĎďĐđĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħĨĩĪīĬĭĮįİıĲĳĴĵĶķĸĹĺĻļĽľĿŀŁłŃńŅņŇňŐőŒœŔŕŖŗŘřŚśŜŝŞşŠšŢţŤťŦŧŨũŪūŬŭŮůŰűŲųŴŵŶŷŸŹźŻżŽžȘșȚțΆΈΉΊΌΎΏΐΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩΪΫάέήίΰαβγδεζηθικλμνξοπρςστυφχψωϊϋόύώАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЬЮЯабвгдежзийклмнопрстуфхцчшщъьюя€';
         $result = ',(/).-\'(/)-?AAAAAAACEEEEIIIIDNOOOOOOUUUUYTsaaaaaaaceeeeiiiidnoooooouuuuytyAaAaAaCcCcCcCcDdDdEeEeEeEeEeGgGgGgGgHhHhIiIiIiIiIiIiJjKk.LlLlLlLlLlNnNnNnOoOoRrRrRrSsSsSsSsTtTtTtUuUuUuUuUuUuWwYyYZzZzZzSsTtAEIIOYOiAVGDEZITHIKLMNXOPRSTYFCHPSOIYaeiiyavgdezithiklmnxoprsstyfchpsoiyoyoABVGDEZHZIYKLMNOPRSTUFHTSCHSHSHTAYYUYAabvgdezhziyklmnoprstufhtschshshtayyuyaE';
         static::assertSame($result, SepaUtilities::replaceSpecialChars($input));
@@ -282,7 +282,7 @@ class SepaUtilitiesTest extends PHPUnit\Framework\TestCase
             // optional
             'amdmntInd'     => 'false',                 // Did the mandate change
             'elctrncSgntr'  => 'test',                  // do not use this if there is a paper-based mandate
-            'ultmtDbtr'     => 'Ultimate Debtor Name',  // just an information, this do not affect the payment (max 70 characters)
+            'ultmtDbtr'     => 'Ultimate Debtor Name',  // just an information, this does not affect the payment (max 70 characters)
             //'purp'        => ,                        // Do not use this if you not know how. For further information read the SEPA documentation
             'rmtInf'        => 'Remittance Information',// unstructured information about the remittance (max 140 characters)
             // only use this if 'amdmntInd' is 'true'. at least one must be used
@@ -310,7 +310,7 @@ class SepaUtilitiesTest extends PHPUnit\Framework\TestCase
             'btchBookg'     => 'true',              // BatchBooking, only 'true' or 'false'
             //'ctgyPurp'      => ,                  // Do not use this if you do not know how. For further information read the SEPA documentation
             'reqdExctnDt'   => '2013-11-25',        // Date: YYYY-MM-DD
-            'ultmtDbtr'    => 'Ultimate Debtor Name'   // just an information, this do not affect the payment (max 70 characters)
+            'ultmtDbtr'    => 'Ultimate Debtor Name'   // just an information, this does not affect the payment (max 70 characters)
         ];
 
         $validDirectDebitPaymentInformation = [
@@ -325,7 +325,7 @@ class SepaUtilitiesTest extends PHPUnit\Framework\TestCase
             // optional
             'amdmntInd'     => 'false',                 // Did the mandate change
             'elctrncSgntr'  => 'test',                  // do not use this if there is a paper-based mandate
-            'ultmtDbtr'     => 'Ultimate Debtor Name',  // just an information, this do not affect the payment (max 70 characters)
+            'ultmtDbtr'     => 'Ultimate Debtor Name',  // just an information, this does not affect the payment (max 70 characters)
             //'purp'        => ,                        // Do not use this if you not know how. For further information read the SEPA documentation
             'rmtInf'        => 'Remittance Information',// unstructured information about the remittance (max 140 characters)
             // only use this if 'amdmntInd' is 'true'. at least one must be used
@@ -347,7 +347,7 @@ class SepaUtilitiesTest extends PHPUnit\Framework\TestCase
             'btchBookg'     => 'true',              // BatchBooking, only 'true' or 'false'
             //'ctgyPurp'      => ,                  // Do not use this if you do not know how. For further information read the SEPA documentation
             'reqdExctnDt'   => '2013-11-25',        // Date: YYYY-MM-DD
-            'ultmtDbtr'    => 'Ultimate Debtor Name'   // just an information, this do not affect the payment (max 70 characters)
+            'ultmtDbtr'    => 'Ultimate Debtor Name'   // just an information, this does not affect the payment (max 70 characters)
         ];
 
         static::assertTrue(SepaUtilities::checkAndSanitizeAll($validCollectionInfo));
