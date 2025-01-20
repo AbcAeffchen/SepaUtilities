@@ -375,6 +375,12 @@ class SepaUtilitiesTest extends PHPUnit\Framework\TestCase
         static::assertFalse(SepaUtilities::checkCreateDateTime('19.10.2014'));
     }
 
+    public function testCheckDateTimeFormat()
+    {
+        static::assertSame('2014-10-19', SepaUtilities::check('dtofsgntr', '2014-10-19'));
+        static::assertFalse(SepaUtilities::checkCreateDateTime('19.10.2014'));
+    }
+
     public function testCrossIbanBicCheck()
     {
         // IBAN and BIC is not validated. It is only checked if the country codes belong together.

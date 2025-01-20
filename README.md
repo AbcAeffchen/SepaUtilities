@@ -12,7 +12,7 @@ SepaUtilities is a PHP class to check and sanitize inputs used in SEPA files
 such as IBAN numbers, creditor identifiers, names and other text.
 
 ## PHP Versions
-SepaUtilities supports PHP >= 7.2 including PHP 8.
+SepaUtilities supports PHP >= 8.1.
 
 ## Installation
 
@@ -22,7 +22,7 @@ You can get SepaUtilities via Composer. Just add
 ```json
 {
     "require": {
-        "abcaeffchen/sepa-utilities": "^1.3"
+        "abcaeffchen/sepa-utilities": "^2.0"
     }
 }
 ```
@@ -43,7 +43,7 @@ and changes all letters to upper case.
 - `isNationalTransaction($iban1,$iban2)`: Checks if both IBANs are belong to the same country.
 - `checkCharset($str)`: Checks if the string contains only allowed characters.
 - `check($field, $input, $options, $version)`: Checks if the input fits the field. This function also does little
-format changes, e.g. correcting letter case. Possible field values are:
+format changes, e.g. correcting letter case. Possible field values are (case-insensitive):
   - `initgpty`: Initiating Party
   - `initgptyid`: Initiating Party ID
   - `msgid`: Message ID
@@ -64,7 +64,21 @@ format changes, e.g. correcting letter case. Possible field values are:
   - `seqtp`: Sequence Type
   - `lclinstrm`: Local Instrument
   - `ctry`: Two-letter country code, used in postal address
-  - `adrline`: An address line, or an array of at most two address lines
+  - Subfield of `pstlAdr`
+    - `adrline`: An address line, or an array of at most two address lines
+    - `bldgnm`: Building name
+    - `bldgnb`: Building number
+    - `twnnm`: Town name
+    - `twnlctnnm`: Town location name (within a town)
+    - `dstrctnm`: District name
+    - `ctrysubdvsn`: country subdivision, e.g. state, region, county
+    - `pstbx`: Postbox
+    - `pstcd`: Postal code
+    - `dept`: Department
+    - `subdept`: Subdepartment
+    - `strtnm`: Street name
+    - `flr`: Floor
+    - `room`: Room
 
 The `$options` take an array 
 ### Sanitizing

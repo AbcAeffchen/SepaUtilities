@@ -1,5 +1,17 @@
-Sephpa - Change Log
+SepaUtilities - Change Log
 ===============
+
+## 2.0.0 - Jan 20, 24
+ - Minimal required PHP version is now 8.1 as it is the currently oldest supported version.
+ - **Add support for pain.001.001.09 and pain.008.001.08.**
+   - `check()` supports new fields: `reqdexctndttm`, subfields of `pstladr` (`bldgnm`,`bldgnb`, `twnnm`, `twnlctnnm`, `dstrctnm`, 
+    `ctrysubdvsn`, `pstbx`, `pstcd`, `dept`, `subdept`, `strtnm`, `flr`, `room`). All fields are case-insensitive.
+ - Add missing parameter and return types.
+ - `getDate()`, `getDateWithOffset()` do not throw anymore to simplify checking for errors.
+ - `checkAndSanitizeAll()` now returns an array instead of a string in case of an error.
+
+# 1.3.4 - Sep 8, 21
+- Add key `orgid_sm` to the check and sanitize functions.
 
 ## 1.3.3 - Mar 4, 21
 - Fixed typo in `ultmtCdtr` (was `ultmtCdrt` before). The old version still works for backward compatibility. 
@@ -84,7 +96,7 @@ and was never officially supported anyway.
 
 ## 1.0.7 - Dec 18, '14
 - added `checkInput()`,`sanitizeInput()` and `checkAndSanitizeInput()` to validate user inputs.
-With this functions it is not required to check first, if an array index like `$_POST['key1']['key2']` 
+With these functions it is not required to check first, if an array index like `$_POST['key1']['key2']` 
 exists, before validating the values.
 
 ## 1.0.6 - Oct 24, '14
