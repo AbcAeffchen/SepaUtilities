@@ -1,7 +1,7 @@
 SepaUtilities - Change Log
 ===============
 
-## 2.0.0 - Jan 20, 24
+# 2.0.0 - Jan 20, 24
  - Minimal required PHP version is now 8.1 as it is the currently oldest supported version.
  - **Add support for pain.001.001.09 and pain.008.001.08.**
    - `check()` supports new fields: `reqdexctndttm`, subfields of `pstladr` (`bldgnm`,`bldgnb`, `twnnm`, `twnlctnnm`, `dstrctnm`, 
@@ -10,7 +10,7 @@ SepaUtilities - Change Log
  - `getDate()`, `getDateWithOffset()` do not throw anymore to simplify checking for errors.
  - `checkAndSanitizeAll()` now returns an array instead of a string in case of an error.
 
-# 1.3.4 - Sep 8, 21
+## 1.3.4 - Sep 8, 21
 - Add key `orgid_sm` to the check and sanitize functions.
 
 ## 1.3.3 - Mar 4, 21
