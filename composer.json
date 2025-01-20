@@ -27,7 +27,7 @@
   },
   "require-dev": {
     "ext-calendar": "*",
-    "phpunit/phpunit": "^11"
+    "phpunit/phpunit": "^11 || ^10"
   },
   "autoload": {
     "psr-4": {
