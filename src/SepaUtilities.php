@@ -847,7 +847,7 @@ class SepaUtilities
      * @param ?array           $options see `check()` for valid values.
      * @return mixed|false
      */
-    public static function checkInput(string $field, array &$inputArray, string|int|array $inputKeys, array $options = null): mixed
+    public static function checkInput(string $field, array &$inputArray, string|int|array $inputKeys, ?array $options = null): mixed
     {
         $value = self::getValFromMultiDimInput($inputArray, $inputKeys);
 
@@ -927,7 +927,7 @@ class SepaUtilities
      * @return true|array returns true if everything is ok or could be sanitized. Otherwise an
      *                            array of field keys that could not be sanitized is returned.
      */
-    public static function checkAndSanitizeAll(array &$inputs, int $flags = 0, array $options = null): bool|array
+    public static function checkAndSanitizeAll(array &$inputs, int $flags = 0, ?array $options = null): bool|array
     {
         $fieldsWithErrors = [];
         foreach($inputs as $field => &$input)
