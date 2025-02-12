@@ -1,6 +1,10 @@
 SepaUtilities - Change Log
 ===============
 
+# 2.0.1 - Feb 12, 24
+- Fix some php deprecation warnings (thanks @JurianArie)
+- Warnings will now fail the unit tests.
+
 # 2.0.0 - Jan 20, 24
  - Minimal required PHP version is now 8.1 as it is the currently oldest supported version.
  - **Add support for pain.001.001.09 and pain.008.001.08.**
