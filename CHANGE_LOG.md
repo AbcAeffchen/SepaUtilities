@@ -1,11 +1,11 @@
 SepaUtilities - Change Log
 ===============
 
-# 2.0.1 - Feb 12, 24
+# 2.0.1 - Feb 12, '25
 - Fix some php deprecation warnings (thanks @JurianArie)
 - Warnings will now fail the unit tests.
 
-# 2.0.0 - Jan 20, 24
+# 2.0.0 - Jan 20, '25
  - Minimal required PHP version is now 8.1 as it is the currently oldest supported version.
  - **Add support for pain.001.001.09 and pain.008.001.08.**
    - `check()` supports new fields: `reqdexctndttm`, subfields of `pstladr` (`bldgnm`,`bldgnb`, `twnnm`, `twnlctnnm`, `dstrctnm`, 
@@ -14,16 +14,16 @@ SepaUtilities - Change Log
  - `getDate()`, `getDateWithOffset()` do not throw anymore to simplify checking for errors.
  - `checkAndSanitizeAll()` now returns an array instead of a string in case of an error.
 
-## 1.3.4 - Sep 8, 21
+## 1.3.4 - Sep 8, '21
 - Add key `orgid_sm` to the check and sanitize functions.
 
-## 1.3.3 - Mar 4, 21
+## 1.3.3 - Mar 4, '21
 - Fixed typo in `ultmtCdtr` (was `ultmtCdrt` before). The old version still works for backward compatibility. 
 
-## 1.3.2 - Feb 23, 21
+## 1.3.2 - Feb 23, '21
 - Added support for keys `pstladr` and `cdtrpstladr`. Both are aliases for `dbtrpstladr`.
 
-## 1.3.1 - Feb 14, 21
+## 1.3.1 - Feb 14, '21
 - Fixed: sanitizing of new `adrline` inputs was broken in case an array was used.
 - SepaUtilities are now tested on PHP 8.0.
 
